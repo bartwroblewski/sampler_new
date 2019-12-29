@@ -40,13 +40,33 @@ form button {
 
 #thumbnails { 
     display: flex;
-    background: grey;
+    overflow-x: auto;
+    scrollbar-color: rgb(225, 100, 100) rgb(220, 220, 220);
 }
 
 .thumbnail {
-    width: 100px;
-    height: 100px;
-    background: 'black';
-    border: 1px solid pink;
+    width: 100%;
+    height: 100%;
 }
+
+#video_modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#video_modal_contents {
+    display: flex;
+    width: 30%;
+    height: 30%;
+    background: white;
+    align-items: center;
+    justify-content: center;
 

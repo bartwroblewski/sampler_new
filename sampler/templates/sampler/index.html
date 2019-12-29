@@ -19,11 +19,14 @@
                     <button type="submit">Search</button>
                 </form>
             </div>
+            <div id="thumbnails"></div>
             <div id="sampler">
                 <div id="pads">pads</div>
                 <div id="cart">cart</div>
             </div>
-            <div id="thumbnails">thumbnails</div>
+            <div id="video_modal">
+                <div id="video_modal_contents">VIDEO MODAL CONTENTS</div>
+            </div>
         </body>
         <script>
             const get_videos_url = "{% absurl 'sampler:get_videos' %}"

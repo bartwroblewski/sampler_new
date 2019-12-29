@@ -43,11 +43,20 @@ class View {
     }
     
     createThumbnail(video) {
-        let el = this.createEl('div', 'thumbnail')
-        this.thumbnails.appendChild(el)
+        let thumbnail = this.createEl('a', 'thumbnail')
+        let thumbnail_img = this.createEl('img')
+        
+        thumbnail_img.src = video['thumbnail_url']
+        thumbnail.href = video['embed_url']
+        thumbnail.innerHTML = thumbnail_img.outerHTML
+        this.thumbnails.appendChild(thumbnail)
+        //~ thumbnail_el.addEventListener('click', function (e) {
+        //~ e.preventDefault() // prevents following the href link when a thumbnail is clicked
+        //~ download_url = video['video_watch_url']
+        //~ download_video_name = video['video_title']
+        //~ open_video_modal(embed_url=this.href)
     }
 }
-
 
 class Controller {
     constructor(model, view) {
