@@ -20,8 +20,8 @@ class View {
 
         this.video_modal = {
             el: self.getEl('#video_modal'),
-            embed_url: '', //assigned upon thumbnail click
-            watch_url: '', //assigned upon thumbnail click
+            embed_url: 'https://www.youtube.com/embed/2a4Uxdy9TQY', //assigned upon thumbnail click
+            watch_url: 'https://www.youtube.com/watch?v=2a4Uxdy9TQY', //assigned upon thumbnail click
             contents: self.getEl('#video_modal_contents'),
             iframe: self.getEl('#video_modal_iframe'),
             sample_btn: self.getEl('#video_modal_sample_it'),
