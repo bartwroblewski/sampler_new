@@ -30,13 +30,11 @@ def cart_show(request):
     
 def get_videos(request):
     keyword = request.GET.get('keyword')
-    print(keyword)
-    #~ videos = client.get_videos('test')
-    videos = {'videos': 'videos for keyword {}'.format(keyword)}
+    videos = client.get_videos('test')
     response = {
         'videos': videos,
     }
-    return JsonResponse(videos)
+    return JsonResponse(response)
     
 def download(request):
     from .audio import Audio

@@ -7,8 +7,8 @@ from django.conf import settings
 def video(item):
     v = {}
     v['id'] = item['id']['videoId']
-    v['watch_url'] = 'https://www.youtube.com/watch?v={}'.format(item['video_id'])
-    v['embed_url'] = 'https://www.youtube.com/embed/{}'.format(item['video_id'])
+    v['watch_url'] = 'https://www.youtube.com/watch?v={}'.format(v['id'])
+    v['embed_url'] = 'https://www.youtube.com/embed/{}'.format(v['id'])
     v['thumbnail_url'] = item['snippet']['thumbnails']['medium']['url']
     v['title'] = item['snippet']['title']
     return v
