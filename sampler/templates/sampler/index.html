@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+    {% load static %}
+    {% load customtags %}
+    <html>
+        <head>
+            <link href="{% static 'sampler/index.css' %}" rel="stylesheet"></link>
+        </head>
+        <body>
+            <nav>
+                <ul>
+                    <li>sample shop</li>
+                    <li>logo</li>
+                    <li>settings</li>
+                </ul>
+            </nav>
+            <div id="search">
+                <input type="text" value="Keyword...">
+            </div>
+            <div id="sampler">
+                <div id="pads">pads</div>
+                <div id="cart">cart</div>
+            </div>
+            <div id="thumbnails">thumbnails</div>
+        </body>
+        <script>
+            const get_videos_url = "{% absurl 'sampler:get_videos' %}"
+        </script>
+        <script src="{% static 'sampler/index.js' %}"></script>
+    </html>
