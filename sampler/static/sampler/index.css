@@ -19,6 +19,12 @@ nav ul {
     background: rgb(155, 100, 100);
 }
 
+form button {
+/*
+    display: none;
+*/
+}
+
 #sampler {
     display: flex;
     justify-content: space-between;
@@ -35,5 +41,12 @@ nav ul {
 #thumbnails { 
     display: flex;
     background: grey;
+}
+
+.thumbnail {
+    width: 100px;
+    height: 100px;
+    background: 'black';
+    border: 1px solid pink;
 }
 

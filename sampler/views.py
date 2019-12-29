@@ -30,7 +30,7 @@ def cart_show(request):
     
 def get_videos(request):
     keyword = request.GET.get('keyword')
-    videos = client.get_videos('test')
+    videos = client.get_videos(keyword)
     response = {
         'videos': videos,
     }
