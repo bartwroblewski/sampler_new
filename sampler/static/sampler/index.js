@@ -22,11 +22,20 @@ class View {
             el: self.getEl('#video_modal'),
             contents: self.getEl('#video_modal_contents'),
             iframe: self.getEl('#video_modal_iframe'),
-            open(embed_url) {
+            sample_btn: self.getEl('#video_modal_sample_it'),
+            open(embed_url, watch_url) {
                 this.iframe.setAttribute('src', embed_url)
+                //~ this.sample_btn.name = download_url
+                this.sample_btn.addEventListener('click', e => {
+                    self.download(watch_url)
+                })
                 this.el.style.display = 'flex'
             },
         }
+    }
+    
+    download(watch_url) {
+        console.log('downloading', watch_url)
     }
     
     getEl(selector) {
@@ -67,7 +76,10 @@ class View {
             e.preventDefault() // prevents following the href link when a thumbnail is clicked
             //~ download_url = video['video_watch_url']
             //~ download_video_name = video['video_title']
-            this.video_modal.open(thumbnail.href)
+            this.video_modal.open(
+                embed_url=thumbnail.href,
+                watch_url=video['watch_url']
+            )
         })
     }
 }
