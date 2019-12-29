@@ -9,6 +9,15 @@ class Model {
         const json = await response.json()
         return json.videos
     }
+    
+    async download(watch_url) {
+        let url = new URL(download_url)
+        let params = new URLSearchParams({'watch_url': watch_url})
+        url.search = params
+        const response = await fetch(url)
+        const json = response.json()
+        return json.downloaded_sample_id
+    }
 }
 
 class View {
@@ -97,8 +106,10 @@ class Controller {
         this.view.createThumbnails(videos)
     }
     
-    handleDownload = watch_url => {
+    handleDownload = async watch_url => {
         console.log('downloading', watch_url)
+        let downloaded_sample_id = await this.model.download(watch_url)
+        console.log('downloaded sample id', downloaded_sample_id)
     }
 }
 

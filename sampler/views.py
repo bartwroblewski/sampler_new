@@ -3,7 +3,10 @@ from django.http import HttpResponse, JsonResponse
 
 from .models import Sample
 from .cart import Cart
-from sampler import client
+from sampler import (
+    client,
+    #~ audio,
+)
 
 def index(request):
     return render(request, 'sampler/index.html')
@@ -37,8 +40,11 @@ def get_videos(request):
     return JsonResponse(response)
     
 def download(request):
-    from .audio import Audio
-    audio = Audio()
-    url = 'https://www.youtube.com/watch?v=2a4Uxdy9TQY&t=76s'
-    audio.download(url)
-    return HttpResponse('Audio downloaded!')
+    watch_url = request.GET.get('watch_url')
+    sample = Sample()
+    sample.download(watch_url)
+    print(sample.id, sample.pk)
+    response = {
+        'downloaded_sample_id': sample.id,
+    }
+    return JsonResponse(response)

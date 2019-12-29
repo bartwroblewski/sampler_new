@@ -12,4 +12,4 @@ urlpatterns = [
     path('cart_show', views.cart_show, name='cart_show'),
     path('get_videos', views.get_videos, name='get_videos'),
     path('download', views.download, name='download'),
-] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
