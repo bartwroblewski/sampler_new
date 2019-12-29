@@ -15,7 +15,7 @@ class Model {
         let params = new URLSearchParams({'watch_url': watch_url})
         url.search = params
         const response = await fetch(url)
-        const json = response.json()
+        const json = await response.json()
         return json.downloaded_sample_id
     }
 }

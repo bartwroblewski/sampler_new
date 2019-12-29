@@ -43,7 +43,6 @@ def download(request):
     watch_url = request.GET.get('watch_url')
     sample = Sample()
     sample.download(watch_url)
-    print(sample.id, sample.pk)
     response = {
         'downloaded_sample_id': sample.id,
     }
