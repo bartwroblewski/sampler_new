@@ -17,25 +17,22 @@ class View {
         this.thumbnails = this.getEl('#thumbnails')
         
         let self = this
-        console.log()
+
         this.video_modal = {
             el: self.getEl('#video_modal'),
+            embed_url: '', //assigned upon thumbnail click
+            watch_url: '', //assigned upon thumbnail click
             contents: self.getEl('#video_modal_contents'),
             iframe: self.getEl('#video_modal_iframe'),
             sample_btn: self.getEl('#video_modal_sample_it'),
-            open(embed_url, watch_url) {
-                this.iframe.setAttribute('src', embed_url)
-                //~ this.sample_btn.name = download_url
+            open() {
+                this.iframe.setAttribute('src', this.embed_url)
                 this.sample_btn.addEventListener('click', e => {
-                    self.download(watch_url)
+                    this.download(this.watch_url)
                 })
                 this.el.style.display = 'flex'
             },
         }
-    }
-    
-    download(watch_url) {
-        console.log('downloading', watch_url)
     }
     
     getEl(selector) {
@@ -46,6 +43,10 @@ class View {
         let el = document.createElement(tag)
         if (class_name) el.className = class_name
         return el
+    }
+    
+    bindDownload(handler) {
+        this.video_modal.download = handler
     }
     
     bindGetVideos(handler) {
@@ -74,12 +75,10 @@ class View {
         
         thumbnail.addEventListener('click', e => {
             e.preventDefault() // prevents following the href link when a thumbnail is clicked
-            //~ download_url = video['video_watch_url']
-            //~ download_video_name = video['video_title']
-            this.video_modal.open(
-                embed_url=thumbnail.href,
-                watch_url=video['watch_url']
-            )
+            this.video_modal.embed_url = thumbnail.href
+            this.video_modal.watch_url = video['watch_url']
+            this.video_modal.open()
+
         })
     }
 }
@@ -90,11 +89,16 @@ class Controller {
         this.view = view
         
         this.view.bindGetVideos(this.handleGetVideos)
+        this.view.bindDownload(this.handleDownload)
     }
     
     handleGetVideos = async keyword => {
         let videos = await this.model.getVideos(keyword)
         this.view.createThumbnails(videos)
+    }
+    
+    handleDownload = watch_url => {
+        console.log('downloading', watch_url)
     }
 }
 
