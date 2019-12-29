@@ -29,8 +29,10 @@ def cart_show(request):
     return JsonResponse(response)
     
 def get_videos(request):
+    keyword = request.GET.get('keyword')
+    print(keyword)
     #~ videos = client.get_videos('test')
-    videos = {'videos': 'dummy'}
+    videos = {'videos': 'videos for keyword {}'.format(keyword)}
     response = {
         'videos': videos,
     }
