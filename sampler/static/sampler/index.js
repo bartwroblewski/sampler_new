@@ -28,7 +28,7 @@ class View {
             open() {
                 this.iframe.setAttribute('src', this.embed_url)
                 this.sample_btn.addEventListener('click', e => {
-                    this.download(this.watch_url)
+                    self.download(this.watch_url)
                 })
                 this.el.style.display = 'flex'
             },
@@ -46,7 +46,7 @@ class View {
     }
     
     bindDownload(handler) {
-        this.video_modal.download = handler
+        this.download = handler
     }
     
     bindGetVideos(handler) {
