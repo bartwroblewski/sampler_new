@@ -20,14 +20,10 @@ class View {
         console.log()
         this.video_modal = {
             el: self.getEl('#video_modal'),
-            contents() {
-                return this.el.children[0]
-            },
-            iframe() {
-                return this.contents().children[1]
-            },
+            contents: self.getEl('#video_modal_contents'),
+            iframe: self.getEl('#video_modal_iframe'),
             open(embed_url) {
-                this.iframe().setAttribute('src', embed_url)
+                this.iframe.setAttribute('src', embed_url)
                 this.el.style.display = 'flex'
             },
         }
