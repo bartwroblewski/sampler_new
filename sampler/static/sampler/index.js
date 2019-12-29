@@ -15,6 +15,22 @@ class View {
     constructor() {
         this.search_form = this.getEl('#search_form')
         this.thumbnails = this.getEl('#thumbnails')
+        
+        let self = this
+        console.log()
+        this.video_modal = {
+            el: self.getEl('#video_modal'),
+            contents() {
+                return this.el.children[0]
+            },
+            iframe() {
+                return this.contents().children[1]
+            },
+            open(embed_url) {
+                this.iframe().setAttribute('src', embed_url)
+                this.el.style.display = 'flex'
+            },
+        }
     }
     
     getEl(selector) {
@@ -50,11 +66,13 @@ class View {
         thumbnail.href = video['embed_url']
         thumbnail.innerHTML = thumbnail_img.outerHTML
         this.thumbnails.appendChild(thumbnail)
-        //~ thumbnail_el.addEventListener('click', function (e) {
-        //~ e.preventDefault() // prevents following the href link when a thumbnail is clicked
-        //~ download_url = video['video_watch_url']
-        //~ download_video_name = video['video_title']
-        //~ open_video_modal(embed_url=this.href)
+        
+        thumbnail.addEventListener('click', e => {
+            e.preventDefault() // prevents following the href link when a thumbnail is clicked
+            //~ download_url = video['video_watch_url']
+            //~ download_video_name = video['video_title']
+            this.video_modal.open(thumbnail.href)
+        })
     }
 }
 

@@ -2,7 +2,6 @@ html {
     width: 100%;
     height: 100%;
 }
-
 body {
 /*
     width: 100%;
@@ -11,46 +10,38 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 nav ul {
     list-style-type: none;
     display: flex;
     justify-content: space-around;
     background: rgb(155, 100, 100);
 }
-
 form button {
 /*
     display: none;
 */
 }
-
 #sampler {
     display: flex;
     justify-content: space-between;
 }
-
 #pads {
     background: pink;
 }
-
 #cart {
     background: powderblue;
 }
-
 #thumbnails { 
     display: flex;
     overflow-x: auto;
     scrollbar-color: rgb(225, 100, 100) rgb(220, 220, 220);
 }
-
 .thumbnail {
     width: 100%;
     height: 100%;
 }
-
 #video_modal {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     position: fixed; 
@@ -61,12 +52,25 @@ form button {
     height: 100%; 
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
-
 #video_modal_contents {
     display: flex;
-    width: 30%;
-    height: 30%;
-    background: white;
+    flex-direction: column;
+    width: 50%;
+    height: 50%;
+    background: black;
     align-items: center;
     justify-content: center;
-
+}
+#video_modal_controls {
+    background: rgb(30, 30, 30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10%;
+    width: 100%;
+}
+iframe {
+    border: 10px solid black;
+    width: 100%;
+    height: 100%;
+}
