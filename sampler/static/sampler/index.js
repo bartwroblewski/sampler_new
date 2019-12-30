@@ -18,6 +18,19 @@ class Model {
         const json = await response.json()
         return json.downloaded_sample_id
     }
+    
+    async slc(sample_id, num_of_slices, slice_duration) {
+        let url = new URL(slice_url)
+        let params = new URLSearchParams({
+            'sample_id': sample_id,
+            'num_of_slices': num_of_slices,
+            'slice_duration': slice_duration,
+        })
+        url.search = params
+        const response = await fetch(url)
+        const json = await response.json()
+        return json.slices_ids
+    }
 }
 
 class View {
@@ -94,7 +107,6 @@ class View {
             this.video_modal.embed_url = thumbnail.href
             this.video_modal.watch_url = video['watch_url']
             this.video_modal.open()
-
         })
     }
 }
@@ -117,6 +129,17 @@ class Controller {
         console.log('downloading', watch_url)
         let downloaded_sample_id = await this.model.download(watch_url)
         console.log('downloaded sample id', downloaded_sample_id)
+        this.onSampleDownloaded(downloaded_sample_id)
+    }
+    
+    onSampleDownloaded = async sample_id => {
+        console.log('slicing sample with ID', sample_id)
+        let slices_ids = await this.model.slc(
+            sample_id,
+            16,
+            1000,
+        )
+        console.log('got the following slices IDs:', slices_ids)
     }
 }
 

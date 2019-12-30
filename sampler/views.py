@@ -19,7 +19,6 @@ def cart_add(request, sample_id):
     
 def cart_remove(request, sample_id):
     sample = Sample.objects.get(id=sample_id)
-    print(sample.file.name)
     cart = Cart(request)
     cart.remove_sample(sample)
     return HttpResponse('{} was removed from cart'.format(str(sample_id)))
@@ -45,5 +44,17 @@ def download(request):
     sample.download(watch_url)
     response = {
         'downloaded_sample_id': sample.id,
+    }
+    return JsonResponse(response)
+    
+def slc(request):
+    sample_id = request.GET.get('sample_id')
+    num_of_slices = int(request.GET.get('num_of_slices'))
+    slice_duration = int(request.GET.get('slice_duration'))
+    
+    sample = Sample.objects.get(id=sample_id)
+    slices = sample.slc(num_of_slices, slice_duration)
+    response = {
+        'slices_ids': [x.id for x in slices],
     }
     return JsonResponse(response)
