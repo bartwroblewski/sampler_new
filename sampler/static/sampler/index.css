@@ -75,6 +75,10 @@ form button {
     color: white;
     font-weight: bold;
 }
+#video_modal_close:hover {
+    color: red;
+    cursor: pointer;
+}
 #video_modal_iframe {
     border: none;   
     width: 100%;

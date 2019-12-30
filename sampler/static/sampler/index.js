@@ -34,14 +34,21 @@ class View {
             contents: self.getEl('#video_modal_contents'),
             iframe: self.getEl('#video_modal_iframe'),
             sample_btn: self.getEl('#video_modal_sample_it'),
+            close_btn: self.getEl('#video_modal_close'),
             open() {
                 this.iframe.setAttribute('src', this.embed_url)
-                this.sample_btn.addEventListener('click', e => {
-                    self.download(this.watch_url)
-                })
                 this.el.style.display = 'flex'
             },
+            close() {
+                this.el.style.display = 'none'
+            },
         }
+        this.video_modal.sample_btn.addEventListener('click', e => {
+            self.download(this.video_modal.watch_url)
+        })
+        this.video_modal.close_btn.addEventListener('click', e => {
+            this.video_modal.close()
+        })
     }
     
     getEl(selector) {
