@@ -23,6 +23,7 @@ class Sample(models.Model):
                 f, 
                 #~ save=True,
             )
+        os.remove(filepath)
         
     def slc(self, num_of_slices, slice_duration):
         slices = []
