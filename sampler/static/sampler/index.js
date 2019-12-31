@@ -29,7 +29,7 @@ class Model {
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
-        return json.slices_ids
+        return json.slices
     }
 }
 
@@ -118,6 +118,7 @@ class Controller {
         
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
+        this.onSampleDownloaded = function(x){}//this.slc
     }
     
     handleGetVideos = async keyword => {
@@ -132,14 +133,14 @@ class Controller {
         this.onSampleDownloaded(downloaded_sample_id)
     }
     
-    onSampleDownloaded = async sample_id => {
+    slc = async sample_id => {
         console.log('slicing sample with ID', sample_id)
-        let slices_ids = await this.model.slc(
+        let slices = await this.model.slc(
             sample_id,
             16,
             1000,
         )
-        console.log('got the following slices IDs:', slices_ids)
+        console.log('got the following slices:', slices)
     }
 }
 

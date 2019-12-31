@@ -9,29 +9,20 @@ from django.db import models
 from django.core.files import File
 from django.conf import settings
 
-class Slice(models.Model):
-    file = models.FileField()
-    sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
+from sampler import audio
 
 class Sample(models.Model):
-    file = models.FileField()
+    audio = models.FileField(upload_to='samples')
     
     def download(self, watch_url):
-        yt = pytube.YouTube(watch_url)
-        all_streams = yt.streams.all()
-        audio_mp4_stream_itag = [
-            stream.itag \
-            for stream in all_streams \
-            if stream.mime_type == 'audio/mp4' \
-            ][0]
-        audio_stream = yt.streams.get_by_itag(audio_mp4_stream_itag)
-        download_path = settings.MEDIA_ROOT
-        filepath = audio_stream.download(download_path)
-
+        filepath = audio.download(watch_url)
+        filename = os.path.basename(filepath)
         with open(filepath, 'rb') as f:
-            field_file = File(f)
-            self.file = field_file
-            self.save()
+            self.audio.save(
+                filename,
+                f, 
+                #~ save=True,
+            )
         
     def slc(self, num_of_slices, slice_duration):
         slices = []
@@ -59,7 +50,7 @@ class Sample(models.Model):
             return samples
 
         pydub.AudioSegment.converter = settings.CONVERTER_PATH
-        song = pydub.AudioSegment.from_file(self.file.path, "mp4")
+        song = pydub.AudioSegment.from_file(self.audio.path, "mp4")
         samples = get_samples(song=song)
         for index, sample in enumerate(samples):
             filepath = os.path.join(settings.MEDIA_ROOT, str(index))
@@ -68,14 +59,18 @@ class Sample(models.Model):
                 format='mp3',
                 codec='mp3',
             )
-            slc = Slice()
-            slc.sample = self
+            slc = Sample()
             with open(filepath, 'rb') as f:
                 field_file = File(f)
-                slc.file = field_file
-                slc.save()
+                self.audio = field_file
+                self.save() # self.audio.save('sample_{}'.format(self.id), f, save=True)
                 slices.append(slc)
-        return slices
-     
+        return slices   
         
+    def to_dict(self):
+        d = {
+            'id': self.id,
+            'url': self.audio.url,
+        }
+        return d
         

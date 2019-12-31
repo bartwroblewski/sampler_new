@@ -1,6 +1,6 @@
 from django.urls import path
-#~ from django.conf import settings
-#~ from django.conf.urls.static import static
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -13,4 +13,4 @@ urlpatterns = [
     path('get_videos', views.get_videos, name='get_videos'),
     path('download', views.download, name='download'),
     path('slc', views.slc, name='slc'),
-] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

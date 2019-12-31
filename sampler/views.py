@@ -55,6 +55,7 @@ def slc(request):
     sample = Sample.objects.get(id=sample_id)
     slices = sample.slc(num_of_slices, slice_duration)
     response = {
-        'slices_ids': [x.id for x in slices],
+        'slices': [s.to_dict() for s in slices],
     }
+    print(response)
     return JsonResponse(response)
