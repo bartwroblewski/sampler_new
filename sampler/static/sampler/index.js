@@ -118,7 +118,7 @@ class Controller {
         
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
-        this.onSampleDownloaded = function(x){}//this.slc
+        this.onSampleDownloaded = this.slc
     }
     
     handleGetVideos = async keyword => {
