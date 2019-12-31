@@ -18,11 +18,7 @@ class Sample(models.Model):
         filepath = audio.download(watch_url)
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as f:
-            self.audio.save(
-                filename,
-                f, 
-                #~ save=True,
-            )
+            self.audio.save(filename, f)
         os.remove(filepath)
         
     def slc(self, num_of_slices, slice_duration):
@@ -35,7 +31,10 @@ class Sample(models.Model):
         
         marker = 0
         for i in range(num_of_slices):
-            slice_name = 'slice_{}.mp3'.format(i)
+            slice_name = '{}_slice_{}.mp3'.format(
+                os.path.basename(self.audio.name),
+                i,
+            )
             slice_path = os.path.join(settings.MEDIA_ROOT, slice_name)
             slice_start = uniform(marker, (marker + container_duration) - slice_duration)
             slice_end = slice_start + slice_duration 
@@ -44,10 +43,13 @@ class Sample(models.Model):
                 format='mp3',
                 codec='mp3',
             )
+            
             slc = Sample()
             with open(slice_path, 'rb') as f:
                 slc.audio.save(slice_name, f)
+            os.remove(slice_path)
             slices.append(slc)
+            
             marker += container_duration  
         return slices  
          

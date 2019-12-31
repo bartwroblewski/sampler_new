@@ -1,3 +1,6 @@
+import os
+import uuid
+
 import pytube
 
 from django.conf import settings
@@ -11,8 +14,11 @@ def download(watch_url):
         if stream.mime_type == 'audio/mp4' \
         ][0]
     audio_stream = yt.streams.get_by_itag(audio_mp4_stream_itag)
-    download_path = settings.MEDIA_ROOT
-    downloaded_file_path = audio_stream.download(download_path)
-    return downloaded_file_path
+    download_folder = os.path.join(settings.MEDIA_ROOT, 'samples')
+    downloaded_filepath = audio_stream.download(
+        output_path=download_folder,
+        filename_prefix=str(uuid.uuid4()),
+    )
+    return downloaded_filepath
 
         
