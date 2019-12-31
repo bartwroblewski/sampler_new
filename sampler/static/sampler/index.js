@@ -37,6 +37,7 @@ class View {
     constructor() {
         this.search_form = this.getEl('#search_form')
         this.thumbnails = this.getEl('#thumbnails')
+        this.pads = this.getEl('#pads')
         
         let self = this
 
@@ -109,6 +110,24 @@ class View {
             this.video_modal.open()
         })
     }
+    
+    createPads(slices) {
+        slices.forEach(slice => {
+            this.createPad(slice)
+        })      
+    }
+    
+    createPad(slice) {
+        console.log('creating pad for slice', slice)
+        let pad = this.createEl('div', 'pad')
+        let audio = this.createEl('audio')
+        
+        audio.src = slice.url
+        audio.controls = true
+        
+        pad.appendChild(audio)
+        this.pads.appendChild(pad)
+    }
 }
 
 class Controller {
@@ -118,7 +137,6 @@ class Controller {
         
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
-        this.onSampleDownloaded = this.slc
     }
     
     handleGetVideos = async keyword => {
@@ -130,7 +148,7 @@ class Controller {
         console.log('downloading', watch_url)
         let downloaded_sample_id = await this.model.download(watch_url)
         console.log('downloaded sample id', downloaded_sample_id)
-        this.onSampleDownloaded(downloaded_sample_id)
+        this.slc(downloaded_sample_id)
     }
     
     slc = async sample_id => {
@@ -141,6 +159,7 @@ class Controller {
             1000,
         )
         console.log('got the following slices:', slices)
+        this.view.createPads(slices)
     }
 }
 
