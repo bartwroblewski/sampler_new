@@ -141,6 +141,7 @@ class View {
         let audio = this.createEl('audio')
         
         pad.id = slice.id
+        pad.textContent = slice.id
         audio.src = slice.url
         audio.controls = false
         
@@ -177,8 +178,21 @@ class Controller {
         this.view.bindDownload(this.handleDownload)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
+        
+        this.fake(128)
     }
-    
+    fake(num_of_slices) {
+        let slices = []
+        for (let i=0; i < num_of_slices; i++) {
+            let slice = {
+                id: i, 
+                url: 'some_url',
+            }
+            slices.push(slice)
+        }
+        this.view.pads.innerHTML = ''
+        this.view.createPads(slices)
+    }
     handleGetVideos = async keyword => {
         let videos = await this.model.getVideos(keyword)
         this.view.createThumbnails(videos)
