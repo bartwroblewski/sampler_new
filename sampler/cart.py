@@ -1,28 +1,21 @@
 class Cart:
     def __init__(self, request):
         self.session = request.session
-        self.cart = unjsonify(request.session.get('cart', {}))
+        self.cart = request.session.get('cart', [])
         
     def add_sample(self, sample):
-        self.cart[sample.id] = {
-            'name': sample.file.name,
-            'path': sample.file.path,
-        }
-        self.save()
+        if not sample.id in self.cart:
+            self.cart.append(sample.id)
+            self.save()
+            return '{} has been added to cart.'.format(sample.id)
+        return '{} is already in the cart.'.format(sample.id)
     
     def remove_sample(self, sample):
-        del self.cart[sample.id]
-        self.save()
+        if sample.id in self.cart:
+            self.cart.remove(sample.id)
+            self.save()
+            return '{} has been removed from cart.'.format(sample.id)
+        return '{} is not in the cart.'.format(sample.id)
         
     def save(self):
         self.session['cart'] = self.cart
-            
-
-def unjsonify(dictionary):
-    '''Reverts session's default JSON conversion'''
-    unjsonified = {}
-    for k, v in dictionary.items():
-        if isinstance(k, str):
-            k = int(k)
-        unjsonified[k] = v
-    return unjsonified

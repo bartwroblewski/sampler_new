@@ -31,6 +31,24 @@ class Model {
         const json = await response.json()
         return json.slices
     }
+    
+    async cartAdd(sample_id) {
+        let url = new URL(cart_add_url)
+        let params = new URLSearchParams({'sample_id': sample_id})
+        url.search = params
+        const response = await fetch(url)
+        const text = await response.text()
+        return text
+    }
+    
+    async cartRemove(sample_id) {
+        let url = new URL(cart_remove_url)
+        let params = new URLSearchParams({'sample_id': sample_id})
+        url.search = params
+        const response = await fetch(url)
+        const text = await response.text()
+        return text
+    }
 }
 
 class View {
@@ -122,11 +140,31 @@ class View {
         let pad = this.createEl('div', 'pad')
         let audio = this.createEl('audio')
         
+        pad.id = slice.id
         audio.src = slice.url
-        audio.controls = true
+        audio.controls = false
+        
+        pad.addEventListener('click', e => {
+            audio.play()
+        })
+        pad.addEventListener('dblclick', e => {
+            this.cart_add(e.target.id)
+        })
+        pad.addEventListener('contextmenu', e => {
+            e.preventDefault()
+            this.cart_remove(e.target.id)
+        })
         
         pad.appendChild(audio)
         this.pads.appendChild(pad)
+    }
+    
+    bindCartAdd(handler) {
+        this.cart_add = handler
+    }
+    
+    bindCartRemove(handler) {
+        this.cart_remove = handler
     }
 }
 
@@ -137,6 +175,8 @@ class Controller {
         
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
+        this.view.bindCartAdd(this.cartAdd)
+        this.view.bindCartRemove(this.cartRemove)
     }
     
     handleGetVideos = async keyword => {
@@ -160,6 +200,16 @@ class Controller {
         )
         console.log('got the following slices:', slices)
         this.view.createPads(slices)
+    }
+    
+    cartAdd = async sample_id => {
+        let confirmation = await this.model.cartAdd(sample_id)
+        console.log(confirmation)
+    }
+    
+    cartRemove = async sample_id => {
+        let confirmation = await this.model.cartRemove(sample_id)
+        console.log(confirmation)
     }
 }
 

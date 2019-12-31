@@ -26,7 +26,14 @@ form button {
     justify-content: space-between;
 }
 #pads {
+    display: flex;
     background: pink;
+}
+.pad {
+    width: 80px;
+    height: 80px;
+    background: black;
+    border: 1px solid white;
 }
 #cart {
     background: powderblue;

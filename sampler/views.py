@@ -11,17 +11,19 @@ from sampler import (
 def index(request):
     return render(request, 'sampler/index.html')
 
-def cart_add(request, sample_id):
+def cart_add(request):
+    sample_id = request.GET.get('sample_id')
     sample = Sample.objects.get(id=sample_id)
     cart = Cart(request)
-    cart.add_sample(sample)
-    return HttpResponse('{} was added to cart'.format(str(sample_id)))
+    confirmation = cart.add_sample(sample)
+    return HttpResponse(confirmation)
     
-def cart_remove(request, sample_id):
+def cart_remove(request):
+    sample_id = request.GET.get('sample_id')
     sample = Sample.objects.get(id=sample_id)
     cart = Cart(request)
-    cart.remove_sample(sample)
-    return HttpResponse('{} was removed from cart'.format(str(sample_id)))
+    confirmation = cart.remove_sample(sample)
+    return HttpResponse(confirmation)
     
 def cart_show(request):
     cart = Cart(request)
