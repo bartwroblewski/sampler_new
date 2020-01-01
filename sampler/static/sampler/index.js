@@ -56,6 +56,7 @@ class View {
         this.search_form = this.getEl('#search_form')
         this.thumbnails = this.getEl('#thumbnails')
         this.pads = this.getEl('#pads')
+        this.waveform = this.getEl('#waveform')
         
         let self = this
 
@@ -167,6 +168,18 @@ class View {
     bindCartRemove(handler) {
         this.cart_remove = handler
     }
+    
+    bindWaveformMousedown(handler) {
+        this.waveform.addEventListener('mousedown', e => {
+            let x_percent = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth * 100;
+            handler(x_percent)
+        })
+    }
+    bindWaveformMouseup(handler) {
+        this.waveform.addEventListener('mouseup', e => {
+            handler()
+        })
+    }
 }
 
 class Controller {
@@ -179,7 +192,9 @@ class Controller {
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         
-        this.fake(128)
+        //~ this.fake(128)
+        this.view.bindWaveformMousedown(this.handleWaveformMousedown)
+        this.view.bindWaveformMouseup(this.handleWaveformMouseup)
     }
     fake(num_of_slices) {
         let slices = []
@@ -191,6 +206,7 @@ class Controller {
             slices.push(slice)
         }
         this.view.pads.innerHTML = ''
+        this.view.createThumbnails(slices)
         this.view.createPads(slices)
     }
     handleGetVideos = async keyword => {
@@ -224,6 +240,20 @@ class Controller {
     cartRemove = async sample_id => {
         let confirmation = await this.model.cartRemove(sample_id)
         console.log(confirmation)
+    }
+    
+    handleWaveformMousedown = x_percent => {
+        this.view.audio = document.createElement('audio')
+        this.view.audio.src = '/media/samples/b0c86324-6260-479a-914f-fb5d8868dfc4Idiot_Test_-_90_fail.mp4'
+        console.log(this.view.audio.duration)
+        this.view.audio.currentTime = x_percent
+        this.view.audio.play()
+        console.log('playing at', x_percent, 'percent')
+        
+    }
+    
+    handleWaveformMouseup = () => {
+        this.view.audio.pause()
     }
 }
 

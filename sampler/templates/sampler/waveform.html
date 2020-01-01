@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+    <html>
+        <head>
+            <style>
+                #waveform {
+                    margin-left: 299px;
+                    margin-top: 233px;
+                    width: 500px;
+                    height: 100px;
+                    background: powderblue;
+                }                    
+            </style>
+        </head>
+        <body>
+            <div id="waveform"></div>
+        </body>
+        <script>
+            class Waveform {
+                constructor(audio_src) {
+                    this.audio = this.getAudio(audio_src)
+                    this.el = document.getElementById('waveform')
+                    this.el.appendChild(this.audio)
+                    
+                    this.registerListeners()
+                        
+                }
+                
+                getAudio(audio_src) {
+                    let audio = document.createElement('audio')
+                    audio.preload = 'metadata'
+                    audio.src = audio_src
+                    audio.controls = false
+                    return audio
+                }
+                
+                registerListeners() {
+                    this.el.addEventListener('mousedown', e => {
+                        let x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
+                        if (e.button === 0 ) {
+                            let current_time = x_location * this.audio.duration
+                            this.audio.currentTime = current_time
+                            this.audio.play()
+                        } else if (e.button === 2) {
+                            console.log('start drawing', x_location)
+                            let slc = document.createElement('div')
+                            slc.style.position = 'absolute'
+                            slc.style.height = e.target.offsetHeight + 'px'
+                            slc.style.width = '20px'
+                            slc.style.left = e.clientX + 'px'
+                            console.log(e.clientX)
+                            //~ slc.offsetLeft = e.target.offsetLeft
+                            slc.style.backgroundColor = 'black'
+                            e.target.appendChild(slc)
+                            
+                        }
+                        
+                    })
+                    this.el.addEventListener('mouseup', e => {
+                        if (e.button === 0) {
+                            this.audio.pause()
+                        } else if (e.button === 2) {
+                            let x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
+                            console.log('end drawing', x_location)
+                        }
+                    })
+                    this.el.addEventListener('contextmenu', e => {
+                        e.preventDefault()
+                    })
+                }
+            }
+            let src = '/home/bart/python_projects/sampler/sampler_proj/media/samples/b0c86324-6260-479a-914f-fb5d8868dfc4Idiot_Test_-_90_fail.mp4'
+            let waveform = new Waveform(src)
+            document.body.appendChild(waveform.el)
+        </script>
+    </html>
