@@ -21,6 +21,8 @@
                     this.el = document.getElementById('waveform')
                     this.el.appendChild(this.audio)
                     
+                    this.slc = {}
+                    
                     this.registerListeners()
                         
                 }
@@ -34,6 +36,7 @@
                 }
                 
                 registerListeners() {
+                    
                     this.el.addEventListener('mousedown', e => {
                         let x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
                         if (e.button === 0 ) {
@@ -42,16 +45,17 @@
                             this.audio.play()
                         } else if (e.button === 2) {
                             console.log('start drawing', x_location)
-                            let slc = document.createElement('div')
-                            slc.style.position = 'absolute'
-                            slc.style.height = e.target.offsetHeight + 'px'
-                            slc.style.width = '20px'
-                            slc.style.left = e.clientX + 'px'
-                            console.log(e.clientX)
-                            //~ slc.offsetLeft = e.target.offsetLeft
-                            slc.style.backgroundColor = 'black'
-                            e.target.appendChild(slc)
-                            
+                            this.slc = document.createElement('div')
+                            this.slc.style.position = 'absolute'
+                            this.slc.style.height = e.target.offsetHeight + 'px'
+                            this.slc.style.width = '1px'
+                            this.slc.style.left = e.clientX + 'px'
+                            this.slc.style.backgroundColor = 'black'
+                            this.increase_slice_width = () => {
+                                this.slc.style.width = (this.slc.offsetWidth + 1) + 'px'
+                            }
+                            this.el.addEventListener('mousemove', this.increase_slice_width)
+                            e.target.appendChild(this.slc)  
                         }
                         
                     })
@@ -60,6 +64,7 @@
                             this.audio.pause()
                         } else if (e.button === 2) {
                             let x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
+                            this.el.removeEventListener('mousemove', this.increase_slice_width)
                             console.log('end drawing', x_location)
                         }
                     })
