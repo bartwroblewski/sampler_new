@@ -125,6 +125,13 @@
                         }
                     })
                 }
+                
+                randomRegions(num_of_regions) {
+					for (let i = 0; i < num_of_regions; i++) {
+						let region = new WaveformRegion(this, 310 + (i*10))
+						region.resize(region.start_x + 7)
+					}
+				}
             }
             let src = 'M:/javascript_projects/waveform/bensound-summer.mp3'
             let waveform = new Waveform(src)

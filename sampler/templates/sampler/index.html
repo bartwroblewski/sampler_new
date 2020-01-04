@@ -4,6 +4,7 @@
     <html>
         <head>
             <link href="{% static 'sampler/index.css' %}" rel="stylesheet"></link>
+            <link href="{% static 'sampler/waveform.css' %}" rel="stylesheet"></link>
         </head>
         <body>
             <nav>
@@ -43,5 +44,6 @@
             const cart_add_url = "{% absurl 'sampler:cart_add' %}"
             const cart_remove_url = "{% absurl 'sampler:cart_remove' %}"
         </script>
-        <script src="{% static 'sampler/index.js' %}"></script>
+        <script src="{% static 'sampler/index.js' %}" type="module"></script>
+        <script src="{% static 'sampler/waveform.js' %}" type="module"></script>
     </html>
