@@ -113,12 +113,12 @@ class Waveform {
 		})
 	}
 	
-	randomRegions(num_of_regions) {
+	createRandomRegions(num_of_regions, ) {
 		for (let i = 0; i < num_of_regions; i++) {
-			
-			let start = getRandomInt(1, 100)
-			let region = new WaveformRegion(this, 310 + (i*10))
-			region.resize(region.start_x + 7)
+			let start_x = getRandomInt(this.el.offsetLeft, this.el.offsetLeft + this.el.offsetWidth) // will work only if waveform's parent is the body of the documnet(offsetParent)?
+			let width = getRandomInt(2, 50)
+			let region = new WaveformRegion(this, start_x)
+			region.resize(region.start_x + width)
 		}
 	}
 }
@@ -127,4 +127,8 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomRGB() {
+	
 }
