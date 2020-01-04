@@ -13,5 +13,8 @@ media
 *.py[cod] 
 *$py.class 
 
+# Vritualenv #
+env
+
 # Other #
 todo.txt
