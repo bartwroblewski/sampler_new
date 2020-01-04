@@ -5,7 +5,9 @@ class WaveformRegion {
 		this.waveform = waveform
 		this.start_x = start_x
 		this.render()
-		this.registerListeners()    
+		this.registerListeners()   
+		
+		this.waveform.regions.push(this) 
 	}
 	
 	render() {
@@ -15,7 +17,7 @@ class WaveformRegion {
 		this.el.style.width = '1px'
 		this.el.style.position = 'absolute'
 		this.el.style.left = this.start_x +'px'
-		this.el.style.backgroundColor = 'black'
+		this.el.style.backgroundColor = getRandomRGB()
 		this.waveform.el.appendChild(this.el)
 	}
 	
@@ -31,7 +33,15 @@ class WaveformRegion {
 		}
 	}
 	
-	resize(end_x) {
+	resize(end_x) {		
+		// if region is generated randomly, its ending point may be
+		// past waveform's ending point - in such case, try again 
+		let waveform_end_x = this.waveform.el.offsetLeft + this.waveform.el.offsetWidth
+		if (end_x > this.waveform_end_x) {
+			this.resize(end_x - 1)
+		}
+			
+			
 		let width = (end_x - this.start_x) 
 		if (width < 0) {
 			console.log('width below 0, cannot resize')
@@ -53,7 +63,9 @@ class WaveformRegion {
 }
 
 class Waveform {
-	constructor() {}
+	constructor() {
+		this.regions = []
+	}
 	
 	loadAudio(audio_url) {
 		this.audio = this.renderAudio(audio_url)
@@ -94,6 +106,7 @@ class Waveform {
 	registerListeners() {
 		this.el.addEventListener('mousedown', e => {
 			let clicked_x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
+			console.log(e.clientX)
 			if (e.button === 0 ) {  
 				let current_time = clicked_x_location * this.audio.duration
 				console.log(clicked_x_location, this.audio)
@@ -114,6 +127,12 @@ class Waveform {
 	}
 	
 	createRandomRegions(num_of_regions, ) {
+		//clear previously created regions
+		this.regions.forEach(region => {
+			this.el.removeChild(region.el)
+		})
+		
+		// create new regions
 		for (let i = 0; i < num_of_regions; i++) {
 			let start_x = getRandomInt(this.el.offsetLeft, this.el.offsetLeft + this.el.offsetWidth) // will work only if waveform's parent is the body of the documnet(offsetParent)?
 			let width = getRandomInt(2, 50)
@@ -130,5 +149,6 @@ function getRandomInt(min, max) {
 }
 
 function getRandomRGB() {
-	
+	let randint = getRandomInt(10, 255)
+	return `rgba(${randint}, 0, 0, 0.5)`
 }
