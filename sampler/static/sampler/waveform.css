@@ -1,4 +1,5 @@
 #waveform {
+	display: none;
 	width: 500px;
 	height: 100px;
 	background: powderblue;

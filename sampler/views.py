@@ -45,7 +45,7 @@ def download(request):
     sample = Sample()
     sample.download(watch_url)
     response = {
-        'downloaded_sample_id': sample.id,
+        'downloaded_sample_url': sample.audio.url,
     }
     return JsonResponse(response)
     

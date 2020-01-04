@@ -18,7 +18,7 @@ class Model {
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
-        return json.downloaded_sample_id
+        return json.downloaded_sample_url
     }
     
     async slc(sample_id, num_of_slices, slice_duration) {
@@ -169,6 +169,14 @@ class View {
     bindCartRemove(handler) {
         this.cart_remove = handler
     }
+    
+    createWaveform = sample_url => {
+		console.log(sample_url)
+		let waveform = new Waveform()
+		waveform.loadAudio(sample_url)
+		waveform.render('#waveform')
+		return waveform
+	}
 }
 
 class Controller {
@@ -180,10 +188,9 @@ class Controller {
         this.view.bindDownload(this.handleDownload)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
-        
         //~ this.fake(128)
         
-        this.createWaveform('http://127.0.0.1:8000/media/nemesis.mp3')
+       // this.createWaveform('http://127.0.0.1:8000/media/nemesis.mp3')
         
     }
     fake(num_of_slices) {
@@ -207,9 +214,10 @@ class Controller {
     
     handleDownload = async watch_url => {
         console.log('downloading', watch_url)
-        let downloaded_sample_id = await this.model.download(watch_url)
-        console.log('downloaded sample id', downloaded_sample_id)
-        this.slc(downloaded_sample_id)
+        let downloaded_sample_url = await this.model.download(watch_url)
+        console.log('downloaded sample url', downloaded_sample_url)
+        this.view.createWaveform(downloaded_sample_url)
+        //~ this.slc(downloaded_sample_id)
     }
     
     slc = async sample_id => {
@@ -223,12 +231,6 @@ class Controller {
         this.view.createPads(slices)
     }
     
-    createWaveform = sample_url => {
-		let waveform = new Waveform()
-		waveform.loadAudio(sample_url)
-		waveform.render('#waveform')
-	}
-    
     cartAdd = async sample_id => {
         let confirmation = await this.model.cartAdd(sample_id)
         console.log(confirmation)
@@ -240,4 +242,4 @@ class Controller {
     }
 }
 
-let app = new Controller(new Model(), new View())
+window.app = new Controller(new Model(), new View())

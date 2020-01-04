@@ -61,6 +61,7 @@ class Waveform {
 	
 	render(container_selector) {
 		this.el = document.querySelector(container_selector)
+		this.el.style.display = 'block'
 		this.el.appendChild(this.audio)
 		this.registerListeners()
 	}
@@ -95,6 +96,7 @@ class Waveform {
 			let clicked_x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
 			if (e.button === 0 ) {  
 				let current_time = clicked_x_location * this.audio.duration
+				console.log(clicked_x_location, this.audio)
 				this.audio.currentTime = current_time
 				this.audio.play()
 			} else if (e.button === 2) {
