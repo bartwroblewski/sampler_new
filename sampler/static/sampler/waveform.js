@@ -50,6 +50,11 @@ class WaveformRegion {
 		this.end_x = end_x
 	}    
 	
+	remove() {
+		this.waveform.regions = this.waveform.regions.filter(region => this.el !== region.el)
+		this.waveform.el.removeChild(this.el)
+	}
+	
 	registerListeners() {
 		this.el.addEventListener('click', e => {
 			this.handleRegionClick(e)
@@ -106,7 +111,6 @@ class Waveform {
 	registerListeners() {
 		this.el.addEventListener('mousedown', e => {
 			let clicked_x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
-			console.log(e.clientX)
 			if (e.button === 0 ) {  
 				let current_time = clicked_x_location * this.audio.duration
 				console.log(clicked_x_location, this.audio)
@@ -127,12 +131,11 @@ class Waveform {
 	}
 	
 	createRandomRegions(num_of_regions, ) {
-		//clear previously created regions
+		// clear previous
 		this.regions.forEach(region => {
-			this.el.removeChild(region.el)
+			region.remove()
 		})
 		
-		// create new regions
 		for (let i = 0; i < num_of_regions; i++) {
 			let start_x = getRandomInt(this.el.offsetLeft, this.el.offsetLeft + this.el.offsetWidth) // will work only if waveform's parent is the body of the documnet(offsetParent)?
 			let width = getRandomInt(2, 50)
