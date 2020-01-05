@@ -178,12 +178,19 @@ class View {
 		let waveform = new Waveform()
 		waveform.loadAudio(sample_url)
 		waveform.render('#waveform')
-		this.waveform = waveform.el
+		this.waveform = waveform
+		this.waveform.el.addEventListener('region_created', e => {
+			let region = e.detail
+			let audio_bounds = region.audio_bounds()
+			region.el.addEventListener('click', e => {
+				this.onRegionClicked(audio_bounds)
+			})
+		})
 		return waveform
 	}
 	
-	bindRegionExport(handler) {
-		//
+	bindOnRegionClicked(callback) {
+		this.onRegionClicked = callback
 	}
 }
 
@@ -195,6 +202,7 @@ class Controller {
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
         this.model.bindOnDownloaded(this.onDownloaded)
+        this.view.bindOnRegionClicked(this.exportRegion)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         //~ this.fake(128)
@@ -230,6 +238,10 @@ class Controller {
 		this.view.createWaveform(sample_url)
 	}
     
+    exportRegion = audio_bounds => {
+		console.log('exporting bounds:', audio_bounds)
+	}
+	
     slc = async sample_id => {
         console.log('slicing sample with ID', sample_id)
         let slices = await this.model.slc(

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+	<html>
+		<head>
+
+		</head>
+		<body>test
+			<div id="listens"></div>
+		</body>
+		<script>
+			
+			class Point {
+				constructor(x, y, listens) {
+					this.x = x
+					this.y = y
+					
+					let created = new CustomEvent('point_created', {detail: {
+						'this': this,
+						'x': this.x,
+					}
+					
+					})
+					listens.dispatchEvent(created)
+				}
+				
+				getCoordinates() {
+					return {
+						x: this.x,
+						y: this.y,
+					}
+				}
+			}
+			
+			let listens = document.getElementById('listens')
+			listens.addEventListener('point_created', e => {
+				//~ let point = e.detail
+				console.log(e.detail)
+			})
+			let point = new Point(12, 43, listens)
+	
+				
+		</script>
+	</html>

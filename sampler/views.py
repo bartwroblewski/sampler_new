@@ -61,3 +61,6 @@ def slc(request):
     }
     print(response)
     return JsonResponse(response)
+    
+def test(request):
+	return render(request, 'sampler/test.html')

@@ -8,6 +8,9 @@ class WaveformRegion {
 		this.registerListeners()   
 		
 		this.waveform.regions.push(this) 
+		
+		let created = new CustomEvent('region_created', {detail: this})
+		this.waveform.el.dispatchEvent(created)
 	}
 	
 	render() {
@@ -62,7 +65,7 @@ class WaveformRegion {
 	}
 	
 	handleRegionClick(e) {
-		console.log('exporting region. The bounds are', this.audio_bounds())
+		//~ console.log('exporting region. The bounds are', this.audio_bounds())
 	}
 	
 }
@@ -96,6 +99,8 @@ class Waveform {
 			this, 
 			e.clientX,
 		)
+		let regionCreatedEvent = new CustomEvent('region_created', {detail: region})
+		this.el.dispatchEvent(regionCreatedEvent, region)
 		
 		this.handleWaveformMousemove = function(e) {
 			region.resize(e.clientX)
