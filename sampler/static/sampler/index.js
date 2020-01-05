@@ -18,7 +18,7 @@ class Model {
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
-        return json.downloaded_sample_url
+        this.onDownloaded(json.downloaded_sample_url)
     }
     
     async slc(sample_id, num_of_slices, slice_duration) {
@@ -51,6 +51,10 @@ class Model {
         const text = await response.text()
         return text
     }
+    
+    bindOnDownloaded(callback) {
+		this.onDownloaded = callback
+	}
 }
 
 class View {
@@ -170,12 +174,16 @@ class View {
         this.cart_remove = handler
     }
     
-    createWaveform = sample_url => {
-		console.log(sample_url)
+    createWaveform(sample_url) {
 		let waveform = new Waveform()
 		waveform.loadAudio(sample_url)
 		waveform.render('#waveform')
+		this.waveform = waveform.el
 		return waveform
+	}
+	
+	bindRegionExport(handler) {
+		//
 	}
 }
 
@@ -186,6 +194,7 @@ class Controller {
         
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
+        this.model.bindOnDownloaded(this.onDownloaded)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         //~ this.fake(128)
@@ -214,11 +223,12 @@ class Controller {
     
     handleDownload = async watch_url => {
         console.log('downloading', watch_url)
-        let downloaded_sample_url = await this.model.download(watch_url)
-        console.log('downloaded sample url', downloaded_sample_url)
-        this.view.createWaveform(downloaded_sample_url)
-        //~ this.slc(downloaded_sample_id)
+        await this.model.download(watch_url)
     }
+    
+    onDownloaded = sample_url=> {
+		this.view.createWaveform(sample_url)
+	}
     
     slc = async sample_id => {
         console.log('slicing sample with ID', sample_id)
