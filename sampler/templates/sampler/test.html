@@ -47,6 +47,7 @@
                 mouseMove = e => {
                     if (this.drag) {
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                        this.redrawAllRects()
                         this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
                         this.drawRect(
                             this.rect.x,
@@ -59,19 +60,25 @@
                 
                 mouseUp = e => {
                     this.drag = false
+                    
+                    // store rects to redraw them on mousemove
                     this.rects.push({
                         'x': this.rect.x,
                         'y': this.rect.y,
                         'w': this.rect.w,
                         'h': this.rect.h,
-                    })
+                    }) 
+                    this.redrawAllRects()
+                }
+                
+                redrawAllRects() {
                     this.rects.forEach(rect => {
                         this.drawRect(rect.x, rect.y, rect.w, rect.h)
                     })
                 }
                 
                 drawRect(x, y, w, h) {
-                    this.ctx.fillRect(x, y, w, h)
+                    this.ctx.strokeRect(x, y, w, h)
                 }
             }
             
