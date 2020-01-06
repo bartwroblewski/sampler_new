@@ -2,29 +2,51 @@
 	<html>
 		<head>
 			<style>
-				canvas {
-					border: 1px solid black;
-				}
+
 			</style>
 		</head>
 		<body>
-			<canvas id="canvas"></canvas>
+			<canvas id="waveform"></canvas>
 		</body>
 		<script>
 			
-			let canvas = document.getElementById('canvas')
-			canvas.width = 800
-			canvas.height = 300
-			let ctx = canvas.getContext('2d')
-			canvas.addEventListener('click', click)
-			
-			function click(e) {
-				let x = e.clientX - this.offsetLeft
-				let y = e.clientY - this.offsetTop
-				let w = 10
-				let h = 10
-				ctx.fillRect(x, y, w, h)
-			}
+            class Waveform {
+                constructor(container_selector) {
+                    this.render(container_selector)
+                }
+                
+                render(container_selector) {
+                    this.canvas = document.querySelector(container_selector)
+                    //this.canvas.width = 800
+                    //this.canvas.height = 150
+                    this.canvas.style.border = '1px solid black'
+                    this.ctx = this.canvas.getContext('2d')
+                    
+                    this.canvas.addEventListener('mousedown', this.mouseDown)
+                    this.canvas.addEventListener('mousemove', this.mouseMove)
+                    this.canvas.addEventListener('mouseup', this.mouseUp)
+                }
+                
+                mouseDown = e => {
+                    let x = e.clientX - this.canvas.offsetLeft
+                    let y = e.clientY - this.canvas.offsetTop
+                    let w = 10
+                    let h = 10
+                    this.ctx.fillRect(x, y, w, h)
+                     
+                    //console.log('down')
+                }
+                
+                mouseMove = e => {
+                    //console.log('move')
+                }
+                
+                mouseUp = e => {
+                    //console.log('up')
+                }
+            }
+            
+            let waveform = new Waveform('#waveform')
 		
 		</script>
 	</html>
