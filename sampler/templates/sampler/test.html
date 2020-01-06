@@ -13,6 +13,7 @@
             class Waveform {
                 constructor(container_selector) {
                     this.render(container_selector)
+                    this.rects = []
                 }
                 
                 render(container_selector) {
@@ -21,6 +22,7 @@
                     this.canvas.height = 150
                     this.canvas.style.border = '1px solid black'
                     this.ctx = this.canvas.getContext('2d')
+                    this.ctx.fillStyle = 'rgba(200, 0, 0, 0.3)'
                     
                     this.canvas.addEventListener('mousedown', this.mouseDown)
                     this.canvas.addEventListener('mousemove', this.mouseMove)
@@ -34,24 +36,22 @@
                     this.rect.y = 0
                     this.rect.w = 1
                     this.rect.h = this.canvas.height
-                    this.ctx.fillRect(
+                    this.drawRect(
                         this.rect.x,
                         this.rect.y,
                         this.rect.w,
                         this.rect.h,
                     )
-                     
-                    //console.log('down')
                 }
                 
                 mouseMove = e => {
                     if (this.drag) {
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-                        let w =  (e.clientX - this.canvas.offsetLeft) - this.rect.x;
-                        this.ctx.fillRect(
+                        this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
+                        this.drawRect(
                             this.rect.x,
                             this.rect.y,
-                            w,
+                            this.rect.w,
                             this.rect.h,
                         )
                     }
@@ -59,6 +59,19 @@
                 
                 mouseUp = e => {
                     this.drag = false
+                    this.rects.push({
+                        'x': this.rect.x,
+                        'y': this.rect.y,
+                        'w': this.rect.w,
+                        'h': this.rect.h,
+                    })
+                    this.rects.forEach(rect => {
+                        this.drawRect(rect.x, rect.y, rect.w, rect.h)
+                    })
+                }
+                
+                drawRect(x, y, w, h) {
+                    this.ctx.fillRect(x, y, w, h)
                 }
             }
             
