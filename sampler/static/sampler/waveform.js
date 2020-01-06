@@ -3,14 +3,14 @@ export {Waveform, WaveformRegion}
 class WaveformRegion {
 	constructor(waveform, start_x) {
 		this.waveform = waveform
-		this.start_x = start_x
+		this.start_x = start_x	
 		this.render()
 		this.registerListeners()   
 		
 		this.waveform.regions.push(this) 
 		
-		let created = new CustomEvent('region_created', {detail: this})
-		this.waveform.el.dispatchEvent(created)
+		this.created = new CustomEvent('region_created', {detail: this})
+		this.waveform.el.dispatchEvent(this.created)
 	}
 	
 	render() {
@@ -29,7 +29,7 @@ class WaveformRegion {
 		return ((x - this.waveform.el.offsetLeft) / this.waveform.el.offsetWidth) * this.waveform.audio.duration
 	}
 	
-	audio_bounds() {                     
+	audio_bounds() {                    
 		return {
 			'start_milisec': this.x_to_sec(this.start_x) * 1000,
 			'end_milisec': this.x_to_sec(this.end_x) * 1000,
@@ -99,8 +99,6 @@ class Waveform {
 			this, 
 			e.clientX,
 		)
-		let regionCreatedEvent = new CustomEvent('region_created', {detail: region})
-		this.el.dispatchEvent(regionCreatedEvent, region)
 		
 		this.handleWaveformMousemove = function(e) {
 			region.resize(e.clientX)

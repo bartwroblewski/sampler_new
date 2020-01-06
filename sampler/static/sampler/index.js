@@ -181,7 +181,10 @@ class View {
 		this.waveform = waveform
 		this.waveform.el.addEventListener('region_created', e => {
 			let region = e.detail
-			let audio_bounds = region.audio_bounds()
+			let audio_bounds = setTimeout(function() {
+				region.audio_bounds()
+			}, 0)
+			console.log(audio_bounds)
 			region.el.addEventListener('click', e => {
 				this.onRegionClicked(audio_bounds)
 			})

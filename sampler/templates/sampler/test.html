@@ -1,42 +1,30 @@
 <!DOCTYPE HTML>
 	<html>
 		<head>
-
+			<style>
+				canvas {
+					border: 1px solid black;
+				}
+			</style>
 		</head>
-		<body>test
-			<div id="listens"></div>
+		<body>
+			<canvas id="canvas"></canvas>
 		</body>
 		<script>
 			
-			class Point {
-				constructor(x, y, listens) {
-					this.x = x
-					this.y = y
-					
-					let created = new CustomEvent('point_created', {detail: {
-						'this': this,
-						'x': this.x,
-					}
-					
-					})
-					listens.dispatchEvent(created)
-				}
-				
-				getCoordinates() {
-					return {
-						x: this.x,
-						y: this.y,
-					}
-				}
-			}
+			let canvas = document.getElementById('canvas')
+			canvas.width = 800
+			canvas.height = 300
+			let ctx = canvas.getContext('2d')
+			canvas.addEventListener('click', click)
 			
-			let listens = document.getElementById('listens')
-			listens.addEventListener('point_created', e => {
-				//~ let point = e.detail
-				console.log(e.detail)
-			})
-			let point = new Point(12, 43, listens)
-	
-				
+			function click(e) {
+				let x = e.clientX - this.offsetLeft
+				let y = e.clientY - this.offsetTop
+				let w = 10
+				let h = 10
+				ctx.fillRect(x, y, w, h)
+			}
+		
 		</script>
 	</html>
