@@ -34,7 +34,7 @@
                     this.rect = {}
                     this.rect.x = e.clientX - this.canvas.offsetLeft
                     this.rect.y = 0
-                    this.rect.w = 1
+                    this.rect.w = 1 // marker-like
                     this.rect.h = this.canvas.height
                     this.drawRect(
                         this.rect.x,
@@ -46,8 +46,13 @@
                 
                 mouseMove = e => {
                     if (this.drag) {
+                        // clear entire canvas
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-                        this.redrawAllRects()
+                        
+                        //redraw all stored rects
+                        this.drawAllRects()
+                        
+                        // resize current rect
                         this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
                         this.drawRect(
                             this.rect.x,
@@ -68,17 +73,16 @@
                         'w': this.rect.w,
                         'h': this.rect.h,
                     }) 
-                    this.redrawAllRects()
+                }
+
+                drawRect(x, y, w, h) {
+                    this.ctx.fillRect(x, y, w, h)
                 }
                 
-                redrawAllRects() {
+                drawAllRects() {
                     this.rects.forEach(rect => {
                         this.drawRect(rect.x, rect.y, rect.w, rect.h)
                     })
-                }
-                
-                drawRect(x, y, w, h) {
-                    this.ctx.strokeRect(x, y, w, h)
                 }
             }
             
