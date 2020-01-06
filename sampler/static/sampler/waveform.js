@@ -71,81 +71,77 @@ class WaveformRegion {
 }
 
 class Waveform {
-	constructor() {
-		this.regions = []
-	}
-	
-	loadAudio(audio_url) {
-		this.audio = this.renderAudio(audio_url)
-	}
-	
-	render(container_selector) {
-		this.el = document.querySelector(container_selector)
-		this.el.style.display = 'block'
-		this.el.appendChild(this.audio)
-		this.registerListeners()
-	}
-		
-	renderAudio(audio_src) {
-		let audio = document.createElement('audio')
-		audio.preload = 'metadata'
-		audio.src = audio_src
-		audio.controls = false
-		return audio
-	}
-	
-	handleWaveformMousedownRight(e) {
-		let region = new WaveformRegion(
-			this, 
-			e.clientX,
-		)
-		
-		this.handleWaveformMousemove = function(e) {
-			region.resize(e.clientX)
-		}   
-		
-		e.target.addEventListener('mousemove', this.handleWaveformMousemove)   
-	}
-					
-	handleWaveformMouseupRight(e) {
-		e.target.removeEventListener('mousemove', this.handleWaveformMousemove)
-	}
+    constructor(container_selector) {
+        this.render(container_selector)
+        this.renderAudio()
+        this.rects = []
+    }
+    
+    render(container_selector) {
+        this.canvas = document.querySelector(container_selector)
+        this.canvas.width = this.canvas.parentNode.offsetWidth
+        this.canvas.height = 150
+        this.canvas.style.border = '1px solid black'
+        this.ctx = this.canvas.getContext('2d')
+        
+        // rect color
+        this.ctx.fillStyle = 'rgba(200, 0, 0, 0.3)'
+        
+        this.canvas.addEventListener('mousedown', this.mouseDown)
+        this.canvas.addEventListener('mousemove', this.mouseMove)
+        this.canvas.addEventListener('mouseup', this.mouseUp)
+    }
+    
+    renderAudio() {
+        this.audio = document.createElement('audio')
+        this.audio.controls = true
+        document.body.appendChild(this.audio)
+    }
+    
+    loadAudio(audio_url) {
+        this.audio.src = audio_url
+    }
+    
+    mouseDown = e => {
+        this.drag = true
+        this.rect = {}
+        this.rect.x = e.clientX - this.canvas.offsetLeft
+        this.rect.y = 0
+        this.rect.w = 1 // marker-like
+        this.rect.h = this.canvas.height
+        this.drawRect(this.rect)
+    }
+    
+    mouseMove = e => {
+        if (this.drag) {
+            // clear entire canvas
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+            
+            //redraw all stored rects
+            this.drawAllRects()
+            
+            // resize current rect
+            this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
+            this.drawRect(this.rect)
+        }
+    }
+    
+    mouseUp = e => {
+        this.drag = false
+        
+        // store rects to redraw them on mousemove
+        this.rects.push(this.rect)
+    }
 
-	registerListeners() {
-		this.el.addEventListener('mousedown', e => {
-			let clicked_x_location = (e.clientX-e.target.offsetLeft) / e.target.offsetWidth
-			if (e.button === 0 ) {  
-				let current_time = clicked_x_location * this.audio.duration
-				console.log(clicked_x_location, this.audio)
-				this.audio.currentTime = current_time
-				this.audio.play()
-			} else if (e.button === 2) {
-				this.handleWaveformMousedownRight(e)
-			}
-			
-		})
-		this.el.addEventListener('mouseup', e => {
-			if (e.button === 0) {
-				this.audio.pause()
-			} else if (e.button === 2) {
-				this.handleWaveformMouseupRight(e)
-			}
-		})
-	}
-	
-	createRandomRegions(num_of_regions, ) {
-		// clear previous
-		this.regions.forEach(region => {
-			region.remove()
-		})
-		
-		for (let i = 0; i < num_of_regions; i++) {
-			let start_x = getRandomInt(this.el.offsetLeft, this.el.offsetLeft + this.el.offsetWidth) // will work only if waveform's parent is the body of the documnet(offsetParent)?
-			let width = getRandomInt(2, 50)
-			let region = new WaveformRegion(this, start_x)
-			region.resize(region.start_x + width)
-		}
-	}
+    drawRect(rect) {
+        this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
+    }
+    
+    drawAllRects() {
+        this.rects.forEach(rect => {
+            this.drawRect(rect)
+        })
+    }
 }
 
 function getRandomInt(min, max) {

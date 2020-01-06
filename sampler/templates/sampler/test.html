@@ -2,6 +2,10 @@
 	<html>
 		<head>
 			<style>
+                body {
+                    display: flex;
+                    flex-direction: column;
+                }
 
 			</style>
 		</head>
@@ -18,7 +22,7 @@
                 
                 render(container_selector) {
                     this.canvas = document.querySelector(container_selector)
-                    this.canvas.width = 800
+                    this.canvas.width = this.canvas.parentNode.offsetWidth
                     this.canvas.height = 150
                     this.canvas.style.border = '1px solid black'
                     this.ctx = this.canvas.getContext('2d')

@@ -24,11 +24,6 @@ form button {
     display: none;
 */
 }
-#waveform {
-    width: 50%;
-    height: 30px;
-    background: rgb(150, 150, 150);
-}
 #sampler {
     display: flex;
     width: 100%;
