@@ -36,12 +36,7 @@
                     this.rect.y = 0
                     this.rect.w = 1 // marker-like
                     this.rect.h = this.canvas.height
-                    this.drawRect(
-                        this.rect.x,
-                        this.rect.y,
-                        this.rect.w,
-                        this.rect.h,
-                    )
+                    this.drawRect(this.rect)
                 }
                 
                 mouseMove = e => {
@@ -54,12 +49,7 @@
                         
                         // resize current rect
                         this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
-                        this.drawRect(
-                            this.rect.x,
-                            this.rect.y,
-                            this.rect.w,
-                            this.rect.h,
-                        )
+                        this.drawRect(this.rect)
                     }
                 }
                 
@@ -67,21 +57,16 @@
                     this.drag = false
                     
                     // store rects to redraw them on mousemove
-                    this.rects.push({
-                        'x': this.rect.x,
-                        'y': this.rect.y,
-                        'w': this.rect.w,
-                        'h': this.rect.h,
-                    }) 
+                    this.rects.push(this.rect)
                 }
 
-                drawRect(x, y, w, h) {
-                    this.ctx.fillRect(x, y, w, h)
+                drawRect(rect) {
+                    this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
                 }
                 
                 drawAllRects() {
                     this.rects.forEach(rect => {
-                        this.drawRect(rect.x, rect.y, rect.w, rect.h)
+                        this.drawRect(rect)
                     })
                 }
             }
