@@ -17,8 +17,8 @@
                 
                 render(container_selector) {
                     this.canvas = document.querySelector(container_selector)
-                    //this.canvas.width = 800
-                    //this.canvas.height = 150
+                    this.canvas.width = 800
+                    this.canvas.height = 150
                     this.canvas.style.border = '1px solid black'
                     this.ctx = this.canvas.getContext('2d')
                     
@@ -28,21 +28,37 @@
                 }
                 
                 mouseDown = e => {
-                    let x = e.clientX - this.canvas.offsetLeft
-                    let y = e.clientY - this.canvas.offsetTop
-                    let w = 10
-                    let h = 10
-                    this.ctx.fillRect(x, y, w, h)
+                    this.drag = true
+                    this.rect = {}
+                    this.rect.x = e.clientX - this.canvas.offsetLeft
+                    this.rect.y = 0
+                    this.rect.w = 1
+                    this.rect.h = this.canvas.height
+                    this.ctx.fillRect(
+                        this.rect.x,
+                        this.rect.y,
+                        this.rect.w,
+                        this.rect.h,
+                    )
                      
                     //console.log('down')
                 }
                 
                 mouseMove = e => {
-                    //console.log('move')
+                    if (this.drag) {
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                        let w =  (e.clientX - this.canvas.offsetLeft) - this.rect.x;
+                        this.ctx.fillRect(
+                            this.rect.x,
+                            this.rect.y,
+                            w,
+                            this.rect.h,
+                        )
+                    }
                 }
                 
                 mouseUp = e => {
-                    //console.log('up')
+                    this.drag = false
                 }
             }
             
