@@ -1,22 +1,17 @@
 <!DOCTYPE HTML>
-	<html>
-		<head>
-			<style>
-                body {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-			</style>
-		</head>
-		<body>
-			<canvas id="waveform"></canvas>
-		</body>
-		<script>
-			
+    <html>
+        <head>
+            <style>               
+            </style>
+        </head>
+        <body>
+            <canvas id="waveform"></canvas>
+        </body>
+        <script>
             class Waveform {
                 constructor(container_selector) {
                     this.render(container_selector)
+                    this.renderAudio()
                     this.rects = []
                 }
                 
@@ -35,14 +30,26 @@
                     this.canvas.addEventListener('mouseup', this.mouseUp)
                 }
                 
+                renderAudio() {
+                    this.audio = document.createElement('audio')
+                    this.audio.controls = true
+                    document.body.appendChild(this.audio)
+                }
+                
+                loadAudio(audio_url) {
+                    this.audio.src = audio_url
+                }
+                
                 mouseDown = e => {
-                    this.drag = true
-                    this.rect = {}
-                    this.rect.x = e.clientX - this.canvas.offsetLeft
-                    this.rect.y = 0
-                    this.rect.w = 1 // marker-like
-                    this.rect.h = this.canvas.height
-                    this.drawRect(this.rect)
+                    this.drag = !this.rectHovered
+                    if (this.drag) {
+                        this.rect = new Rect()
+                        this.rect.x = e.clientX - this.canvas.offsetLeft
+                        this.rect.y = 0
+                        this.rect.w = 1 // marker-like
+                        this.rect.h = this.canvas.height
+                        this.drawRect(this.rect)
+                    }
                 }
                 
                 mouseMove = e => {
@@ -50,20 +57,40 @@
                         // clear entire canvas
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                         
+                        // // redraw background image (waveform)
+                        // let image = new Image(800, 150)
+                        // image.src = 'Sticky.PNG'
+                        // this.ctx.drawImage(image, 0, 0)
+                        
                         //redraw all stored rects
                         this.drawAllRects()
                         
                         // resize current rect
                         this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
                         this.drawRect(this.rect)
+                    } else {
+                        if (this.rects.some(rect => rect.contains_x(e.clientX))) {
+                            document.body.style.cursor = 'move'
+                            this.rectHovered = true
+                        } else {
+                            document.body.style.cursor = 'default'
+                            this.rectHovered = false
+                        }           
+                    }
+                    
+                    if (this.rectHovered) {
+                        console.log('rect hovered')
                     }
                 }
                 
                 mouseUp = e => {
-                    this.drag = false
-                    
-                    // store rects to redraw them on mousemove
-                    this.rects.push(this.rect)
+                        this.drag = false
+                         
+                        // store rects to redraw them on mousemove
+                        if (!this.rectHovered) {
+                            this.rects.push(this.rect)
+                        }
+                        console.log(this.rects)
                 }
 
                 drawRect(rect) {
@@ -75,9 +102,38 @@
                         this.drawRect(rect)
                     })
                 }
+                
+                rectToRegion = rect => {
+                    let el = document.createElement('div')
+                    el.style.display = 'absolute'
+                    el.style.left = rect.x
+                    el.style.top = rect.y
+                    el.style.width = rect.w + 'px'
+                    el.style.height = rect.h + 'px'
+                    el.style.backgroundColor = 'yellow'
+                    document.body.appendChild(el)
+                    return el
+                }
+                
+            }                  
+            
+            class Rect {
+                constructor() {
+                    this.x = 0
+                    this.y = 0
+                    this.w = 0
+                    this.h = 0
+                }
+                
+                contains_x = x => 
+                    (x >= this.x && x <= this.x + this.w) || // rect drawn left to right (has positive width)
+                    (x <= this.x && x >= this.x + this.w)    // rect drawn right to left (has negative width)
+                    ? true : false  
             }
             
-            let waveform = new Waveform('#waveform')
-		
-		</script>
-	</html>
+            let waveform = new Waveform('#waveform')        
+            
+            
+            
+        </script>
+    </html>
