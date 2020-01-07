@@ -41,8 +41,9 @@
                 }
                 
                 mouseDown = e => {
-                    this.drag = !this.rectHovered
-                    if (this.drag) {
+                    this.drag = true
+                    this.resize = !this.move
+                    if (this.drag && this.resize) {
                         this.rect = new Rect()
                         this.rect.x = e.clientX - this.canvas.offsetLeft
                         this.rect.y = 0
@@ -53,7 +54,16 @@
                 }
                 
                 mouseMove = e => {
-                    if (this.drag) {
+                    
+                    if (this.rects.some(rect => rect.contains_x(e.clientX))) {
+                            document.body.style.cursor = 'move'
+                            this.move = true
+                        } else {
+                            document.body.style.cursor = 'default'
+                            this.move = false
+                        }           
+                    
+                    if (this.drag && this.resize) {
                         // clear entire canvas
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                         
@@ -68,18 +78,10 @@
                         // resize current rect
                         this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
                         this.drawRect(this.rect)
-                    } else {
-                        if (this.rects.some(rect => rect.contains_x(e.clientX))) {
-                            document.body.style.cursor = 'move'
-                            this.rectHovered = true
-                        } else {
-                            document.body.style.cursor = 'default'
-                            this.rectHovered = false
-                        }           
                     }
                     
-                    if (this.rectHovered) {
-                        console.log('rect hovered')
+                    if (this.drag && this.move) {
+                        console.log('moving rect')
                     }
                 }
                 
@@ -87,7 +89,7 @@
                         this.drag = false
                          
                         // store rects to redraw them on mousemove
-                        if (!this.rectHovered) {
+                        if (!this.move) {
                             this.rects.push(this.rect)
                         }
                         console.log(this.rects)
