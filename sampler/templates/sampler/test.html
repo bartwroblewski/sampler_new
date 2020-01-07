@@ -58,7 +58,6 @@
                 }
                 
                 mouseMove = e => {
-                    
                     if (!this.drag) {
                         if (this.rects.some(rect => rect.contains_x(e.clientX))) {
                                 document.body.style.cursor = 'move'
@@ -88,9 +87,9 @@
                     
                     if (this.drag && this.move) {
                         console.log('moving rect')
-                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-                        this.drawAllRects()
-                        this.rect.x = e.clientX
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)  
+                        this.drawAllRects(this.rect) // avoid drawing same rect again
+                        this.rect.x = this.rect.x + (e.clientX - this.rect.x) 
                         this.drawRect(this.rect)
                     }
                 }
@@ -109,9 +108,9 @@
                     this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
                 }
                 
-                drawAllRects() {
+                drawAllRects(exclude_rect) {
                     this.rects.forEach(rect => {
-                        this.drawRect(rect)
+                        if (rect !== exclude_rect) this.drawRect(rect)
                     })
                 }
                 
