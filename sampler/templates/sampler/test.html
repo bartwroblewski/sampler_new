@@ -88,7 +88,10 @@
                     if (this.drag && this.move) {
                         console.log('moving rect')
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)  
-                        this.drawAllRects(this.rect) // avoid drawing same rect again
+                        
+                        // avoid drawing same rect again
+                        this.drawAllRects(this.rect)
+                        
                         this.rect.x = this.rect.x + (e.clientX - this.rect.x) 
                         this.drawRect(this.rect)
                     }
@@ -101,7 +104,12 @@
                         if (!this.move) {
                             this.rects.push(this.rect)
                         }
-                        console.log(this.rects)
+                        
+                        if (e.button === 2) {
+                            console.log('adding rect to sampler')
+                         }
+                        
+                        //console.log(this.rects)
                 }
 
                 drawRect(rect) {
