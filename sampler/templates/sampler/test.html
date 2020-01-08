@@ -44,6 +44,9 @@
                 mouseDown = e => {
                     if (e.button === 2) {
                             console.log('removing rect')
+                            this.rects = this.rects.filter(rect => !rect.contains_x(e.clientX))
+                            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                            this.drawAllRects()
                     }  else {
                         this.drag = true
                         if (this.drag && !this.move) {
