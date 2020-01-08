@@ -42,18 +42,22 @@
                 }
                 
                 mouseDown = e => {
-                    this.drag = true
-                    if (this.drag && !this.move) {
-                        this.rect = new Rect()
-                        this.rect.x = e.clientX - this.canvas.offsetLeft
-                        this.rect.y = 0
-                        this.rect.w = 1 // marker-like
-                        this.rect.h = this.canvas.height
-                        this.drawRect(this.rect)
-                    }
-                    
-                    if (this.drag && this.move) {
-                        this.rect = this.rects.find(rect => rect.contains_x(e.clientX))
+                    if (e.button === 2) {
+                            console.log('removing rect')
+                    }  else {
+                        this.drag = true
+                        if (this.drag && !this.move) {
+                            this.rect = new Rect()
+                            this.rect.x = e.clientX - this.canvas.offsetLeft
+                            this.rect.y = 0
+                            this.rect.w = 1 // marker-like
+                            this.rect.h = this.canvas.height
+                            this.drawRect(this.rect)
+                        }
+                        
+                        if (this.drag && this.move) {
+                            this.rect = this.rects.find(rect => rect.contains_x(e.clientX))
+                        }
                     }
                 }
                 
@@ -98,18 +102,16 @@
                 }
                 
                 mouseUp = e => {
+                    if (e.button === 0) {
                         this.drag = false
                          
                         // store rects to redraw them on mousemove
                         if (!this.move) {
                             this.rects.push(this.rect)
                         }
-                        
-                        if (e.button === 2) {
-                            console.log('adding rect to sampler')
-                         }
-                        
+
                         //console.log(this.rects)
+                    }
                 }
 
                 drawRect(rect) {
