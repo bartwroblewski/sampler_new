@@ -20,6 +20,7 @@
                     this.canvas.width = this.canvas.parentNode.offsetWidth
                     this.canvas.height = 150
                     this.canvas.style.border = '1px solid black'
+                    this.canvas.oncontextmenu = () => false
                     this.ctx = this.canvas.getContext('2d')
                     
                     // rect color
@@ -42,8 +43,7 @@
                 
                 mouseDown = e => {
                     this.drag = true
-                    this.resize = !this.move
-                    if (this.drag && this.resize) {
+                    if (this.drag && !this.move) {
                         this.rect = new Rect()
                         this.rect.x = e.clientX - this.canvas.offsetLeft
                         this.rect.y = 0
@@ -68,7 +68,7 @@
                             }      
                     }
                     
-                    if (this.drag && this.resize) {
+                    if (this.drag && !this.move) {
                         // clear entire canvas
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                         
