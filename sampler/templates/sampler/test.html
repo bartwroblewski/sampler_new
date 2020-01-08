@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
     <html>
         <head>
-            <style>               
+            <style>        
             </style>
         </head>
         <body>
             <canvas id="waveform"></canvas>
+            <input id="file_input" type="file"></input>
         </body>
         <script>
             class Waveform {
@@ -21,6 +22,8 @@
                     this.canvas.height = 150
                     this.canvas.style.border = '1px solid black'
                     this.canvas.oncontextmenu = () => false
+                    
+                    this.box = this.canvas.getBoundingClientRect()
                     this.ctx = this.canvas.getContext('2d')
                     
                     // rect color
@@ -34,31 +37,39 @@
                 
                 renderAudio() {
                     this.audio = document.createElement('audio')
+                    this.audio.preload = 'metadata'
                     this.audio.controls = true
+                    //~ this.audio.volume = 0
                     document.body.appendChild(this.audio)
                 }
                 
-                loadAudio(audio_url) {
-                    this.audio.src = audio_url
+                loadAudio(src) {
+                    this.audio.src = src
+                }
+                
+                cursor_x(e) {
+                    // real canvas cursor position
+                    return e.clientX - this.box.left 
                 }
                 
                 mouseDown = e => {
                     if (e.button === 2) {
                             console.log('removing rect')
-                            this.rects = this.rects.filter(rect => !rect.contains_x(e.clientX))
+                            this.rects = this.rects.filter(rect => !rect.contains_x(this.cursor_x(e)))
                             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                             this.drawAllRects()
-                            
-                            sampler = sampler.filter(rect => this.rects.includes(rect))
-                            console.log('sampler:', sampler)
                     }  
                     
                     if (e.button === 0) {
+                        
+                        this.audio.currentTime = this.xToSec(this.cursor_x(e))
+                        this.audio.play()
+                        
                         console.log('creating new rect')
                         this.drag = true
                         if (this.drag && !this.move) {
                             this.rect = new Rect()
-                            this.rect.x = e.clientX - this.canvas.offsetLeft
+                            this.rect.x = this.cursor_x(e)
                             this.rect.y = 0
                             this.rect.w = 1 // marker-like
                             this.rect.h = this.canvas.height
@@ -66,14 +77,14 @@
                         }
                         
                         if (this.drag && this.move) {
-                            this.rect = this.rects.find(rect => rect.contains_x(e.clientX))
+                            this.rect = this.rects.find(rect => rect.contains_x(this.cursor_x(e)))
                         }
                     }
                 }
                 
                 mouseMove = e => {
                     if (!this.drag) {
-                        if (this.rects.some(rect => rect.contains_x(e.clientX))) {
+                        if (this.rects.some(rect => rect.contains_x(this.cursor_x(e)))) {
                                 document.body.style.cursor = 'move'
                                 this.move = true
                             } else {
@@ -85,7 +96,7 @@
                     if (this.drag && !this.move) {
                         console.log('resizing rect')
                         // clear entire canvas
-                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                        this.ctx.clearRect(0, 0, this.box.width, this.box.height)
                         
                         // // redraw background image (waveform)
                         // let image = new Image(800, 150)
@@ -96,41 +107,57 @@
                         this.drawAllRects()
                         
                         // resize current rect
-                        this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
+                        this.rect.w = this.cursor_x(e) - this.rect.x;
                         this.drawRect(this.rect)
                     }
                     
                     if (this.drag && this.move) {
                         console.log('moving rect')
-                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)  
+                        this.ctx.clearRect(0, 0, this.box.width, this.box.height)  
                         
                         // avoid drawing same rect again
                         this.drawAllRects(this.rect)
                         
-                        this.rect.x = this.rect.x + (e.clientX - this.rect.x) 
+                        this.rect.x = this.rect.x + (this.cursor_x(e) - this.rect.x) 
                         this.drawRect(this.rect)
                     }
                 }
                 
                 mouseUp = e => {
                     if (e.button === 0) {
+                        
+                        this.audio.pause()
+                        
                         this.drag = false
                          
                         // store rects to redraw them on mousemove
                         if (!this.move) {
                             this.rects.push(this.rect)
                         }
-
-                        //console.log(this.rects)
                     }
                 }
                 
                 dblClick = e => {
-                    console.log('adding rect/rects to sampler')
-                    let rect_or_rects = this.rects.filter(rect => rect.contains_x(e.clientX))
-                    sampler.push(rect_or_rects)
-                    console.log('sampler:', sampler)
+                    // if more than one region contains clicked x, the one on top (last created)
+                    // will be exported
+                    let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))
+                    let event = new CustomEvent(
+                        'region_export',
+                        {detail: this.rectToAudio(clicked_rect)}
+                    )
+                    this.canvas.dispatchEvent(event)
                 }
+                
+                rectToAudio(rect) {
+                    return {
+                        'start_sec': this.xToSec(rect.x),
+                        'end_sec': this.xToSec(rect.x + rect.w),
+                    }
+                }
+                
+                xToSec(x) {
+                    return  (x / this.box.width) * this.audio.duration
+                }  
 
                 drawRect(rect) {
                     this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
@@ -140,20 +167,7 @@
                     this.rects.forEach(rect => {
                         if (rect !== exclude_rect) this.drawRect(rect)
                     })
-                }
-                
-                rectToRegion = rect => {
-                    let el = document.createElement('div')
-                    el.style.display = 'absolute'
-                    el.style.left = rect.x
-                    el.style.top = rect.y
-                    el.style.width = rect.w + 'px'
-                    el.style.height = rect.h + 'px'
-                    el.style.backgroundColor = 'yellow'
-                    document.body.appendChild(el)
-                    return el
-                }
-                
+                }    
             }                  
             
             class Rect {
@@ -170,9 +184,30 @@
                     ? true : false  
             }
             
-            let waveform = new Waveform('#waveform')        
+            function audio_bounds(e) {
+                console.log('EXPORTING AUDIO BOUNDS', e.detail)
+            }
             
-            let sampler = []
+            let waveform = new Waveform('#waveform')        
+            waveform.loadAudio('bensound-summer.mp3')
+            waveform.canvas.addEventListener('region_export', audio_bounds)
+            
+            
+            /////////////////////////////////////
+            let ac = new AudioContext()
+            async function buffer() {
+                let file = document.getElementById('file_input').files[0]
+                let arr_buff = await file.arrayBuffer()
+                let decoded = await ac.decodeAudioData(arr_buff)
+                return decoded
+            }
+            
+            async function channel() {
+                let decoded = await buffer()
+                console.log(decoded.getChannelData(0))
+            }
+            
+            
             
             
             

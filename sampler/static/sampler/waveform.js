@@ -1,74 +1,4 @@
-export {Waveform, WaveformRegion}
-
-class WaveformRegion {
-	constructor(waveform, start_x) {
-		this.waveform = waveform
-		this.start_x = start_x	
-		this.render()
-		this.registerListeners()   
-		
-		this.waveform.regions.push(this) 
-		
-		this.created = new CustomEvent('region_created', {detail: this})
-		this.waveform.el.dispatchEvent(this.created)
-	}
-	
-	render() {
-		this.el = document.createElement('div')
-		this.el.className = 'waveform_region'
-		this.el.style.height = this.waveform.el.offsetHeight + 'px'
-		this.el.style.width = '1px'
-		this.el.style.position = 'absolute'
-		this.el.style.left = this.start_x +'px'
-		this.el.style.backgroundColor = getRandomRGB()
-		this.waveform.el.appendChild(this.el)
-	}
-	
-	x_to_sec(x) {
-		// convert region start and end to seconds in parent waveform's audio
-		return ((x - this.waveform.el.offsetLeft) / this.waveform.el.offsetWidth) * this.waveform.audio.duration
-	}
-	
-	audio_bounds() {                    
-		return {
-			'start_milisec': this.x_to_sec(this.start_x) * 1000,
-			'end_milisec': this.x_to_sec(this.end_x) * 1000,
-		}
-	}
-	
-	resize(end_x) {		
-		// if region is generated randomly, its ending point may be
-		// past waveform's ending point - in such case, try again 
-		let waveform_end_x = this.waveform.el.offsetLeft + this.waveform.el.offsetWidth
-		if (end_x > this.waveform_end_x) {
-			this.resize(end_x - 1)
-		}
-			
-			
-		let width = (end_x - this.start_x) 
-		if (width < 0) {
-			console.log('width below 0, cannot resize')
-		}
-		this.el.style.width = width + 'px'
-		this.end_x = end_x
-	}    
-	
-	remove() {
-		this.waveform.regions = this.waveform.regions.filter(region => this.el !== region.el)
-		this.waveform.el.removeChild(this.el)
-	}
-	
-	registerListeners() {
-		this.el.addEventListener('click', e => {
-			this.handleRegionClick(e)
-		})
-	}
-	
-	handleRegionClick(e) {
-		//~ console.log('exporting region. The bounds are', this.audio_bounds())
-	}
-	
-}
+export {Waveform}
 
 class Waveform {
     constructor(container_selector) {
@@ -82,6 +12,9 @@ class Waveform {
         this.canvas.width = this.canvas.parentNode.offsetWidth
         this.canvas.height = 150
         this.canvas.style.border = '1px solid black'
+        this.canvas.oncontextmenu = () => false
+        
+        this.box = this.canvas.getBoundingClientRect()
         this.ctx = this.canvas.getContext('2d')
         
         // rect color
@@ -90,58 +23,156 @@ class Waveform {
         this.canvas.addEventListener('mousedown', this.mouseDown)
         this.canvas.addEventListener('mousemove', this.mouseMove)
         this.canvas.addEventListener('mouseup', this.mouseUp)
+        this.canvas.addEventListener('dblclick', this.dblClick)
     }
     
     renderAudio() {
         this.audio = document.createElement('audio')
+        this.audio.preload = 'metadata'
         this.audio.controls = true
+        //~ this.audio.volume = 0
         document.body.appendChild(this.audio)
     }
     
-    loadAudio(audio_url) {
-        this.audio.src = audio_url
+    loadAudio(src) {
+        this.audio.src = src
+    }
+    
+    cursor_x(e) {
+        // real canvas cursor position
+        return e.clientX - this.box.left 
     }
     
     mouseDown = e => {
-        this.drag = true
-        this.rect = {}
-        this.rect.x = e.clientX - this.canvas.offsetLeft
-        this.rect.y = 0
-        this.rect.w = 1 // marker-like
-        this.rect.h = this.canvas.height
-        this.drawRect(this.rect)
+        if (e.button === 2) {
+                console.log('removing rect')
+                this.rects = this.rects.filter(rect => !rect.contains_x(this.cursor_x(e)))
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                this.drawAllRects()
+        }  
+        
+        if (e.button === 0) {
+            
+            this.audio.currentTime = this.xToSec(this.cursor_x(e))
+            this.audio.play()
+            
+            console.log('creating new rect')
+            this.drag = true
+            if (this.drag && !this.move) {
+                this.rect = new Rect()
+                this.rect.x = this.cursor_x(e)
+                this.rect.y = 0
+                this.rect.w = 1 // marker-like
+                this.rect.h = this.canvas.height
+                this.drawRect(this.rect)
+            }
+            
+            if (this.drag && this.move) {
+                this.rect = this.rects.find(rect => rect.contains_x(this.cursor_x(e)))
+            }
+        }
     }
     
     mouseMove = e => {
-        if (this.drag) {
+        if (!this.drag) {
+            if (this.rects.some(rect => rect.contains_x(this.cursor_x(e)))) {
+                    document.body.style.cursor = 'move'
+                    this.move = true
+                } else {
+                    document.body.style.cursor = 'default'
+                    this.move = false
+                }      
+        }
+        
+        if (this.drag && !this.move) {
+            console.log('resizing rect')
             // clear entire canvas
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+            this.ctx.clearRect(0, 0, this.box.width, this.box.height)
+            
+            // // redraw background image (waveform)
+            // let image = new Image(800, 150)
+            // image.src = 'Sticky.PNG'
+            // this.ctx.drawImage(image, 0, 0)
             
             //redraw all stored rects
             this.drawAllRects()
             
             // resize current rect
-            this.rect.w = (e.clientX - this.canvas.offsetLeft) - this.rect.x;
+            this.rect.w = this.cursor_x(e) - this.rect.x;
+            this.drawRect(this.rect)
+        }
+        
+        if (this.drag && this.move) {
+            console.log('moving rect')
+            this.ctx.clearRect(0, 0, this.box.width, this.box.height)  
+            
+            // avoid drawing same rect again
+            this.drawAllRects(this.rect)
+            
+            this.rect.x = this.rect.x + (this.cursor_x(e) - this.rect.x) 
             this.drawRect(this.rect)
         }
     }
     
     mouseUp = e => {
-        this.drag = false
-        
-        // store rects to redraw them on mousemove
-        this.rects.push(this.rect)
+        if (e.button === 0) {
+            
+            this.audio.pause()
+            
+            this.drag = false
+             
+            // store rects to redraw them on mousemove
+            if (!this.move) {
+                this.rects.push(this.rect)
+            }
+        }
     }
+    
+    dblClick = e => {
+        // if more than one region contains clicked x, the one on top (last created)
+        // will be exported
+        let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))
+        let event = new CustomEvent(
+            'region_export',
+            {detail: this.rectToAudio(clicked_rect)}
+        )
+        this.canvas.dispatchEvent(event)
+    }
+    
+    rectToAudio(rect) {
+        return {
+            'start_sec': this.xToSec(rect.x),
+            'end_sec': this.xToSec(rect.x + rect.w),
+        }
+    }
+    
+    xToSec(x) {
+        return  (x / this.box.width) * this.audio.duration
+    }  
 
     drawRect(rect) {
         this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
     }
     
-    drawAllRects() {
+    drawAllRects(exclude_rect) {
         this.rects.forEach(rect => {
-            this.drawRect(rect)
+            if (rect !== exclude_rect) this.drawRect(rect)
         })
+    }    
+}                  
+
+class Rect {
+    constructor() {
+        this.x = 0
+        this.y = 0
+        this.w = 0
+        this.h = 0
     }
+    
+    contains_x = x => 
+        (x >= this.x && x <= this.x + this.w) || // rect drawn left to right (has positive width)
+        (x <= this.x && x >= this.x + this.w)    // rect drawn right to left (has negative width)
+        ? true : false  
 }
 
 function getRandomInt(min, max) {

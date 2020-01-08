@@ -1,4 +1,4 @@
-import {Waveform, WaveformRegion} from './waveform.js'
+import {Waveform} from './waveform.js'
 
 class Model {
     constructor() {}
@@ -174,24 +174,12 @@ class View {
         this.cart_remove = handler
     }
     
-    createWaveform(sample_url) {
+    createWaveform(sample_url, region_export_handler) {
 		this.waveform = new Waveform('#waveform')
 		this.waveform.loadAudio(sample_url)
-		//~ waveform.render('#waveform')
-		//~ this.waveform = waveform
-		//~ this.waveform.el.addEventListener('region_created', e => {
-			//~ let region = e.detail
-			//~ let audio_bounds = setTimeout(function() {
-				//~ region.audio_bounds()
-			//~ }, 0)
-			//~ console.log(audio_bounds)
-			//~ region.el.addEventListener('click', e => {
-				//~ this.onRegionClicked(audio_bounds)
-			//~ })
-		//~ })
-		return waveform
+        this.waveform.canvas.addEventListener('region_export', region_export_handler)
 	}
-	
+    	
 	bindOnRegionClicked(callback) {
 		this.onRegionClicked = callback
 	}
@@ -238,11 +226,11 @@ class Controller {
     }
     
     onDownloaded = sample_url=> {
-		this.view.createWaveform(sample_url)
+		this.view.createWaveform(sample_url, this.exportRegion)
 	}
     
-    exportRegion = audio_bounds => {
-		console.log('exporting bounds:', audio_bounds)
+    exportRegion = e => {
+		console.log('exporting bounds:', e.detail)
 	}
 	
     slc = async sample_id => {
