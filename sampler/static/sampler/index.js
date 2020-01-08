@@ -174,14 +174,14 @@ class View {
         this.cart_remove = handler
     }
     
-    createWaveform(sample_url, region_export_handler) {
+    createWaveform(sample_url) {
 		this.waveform = new Waveform('#waveform')
 		this.waveform.loadAudio(sample_url)
-        this.waveform.canvas.addEventListener('region_export', region_export_handler)
+        this.waveform.canvas.addEventListener('region_export', this.exportRegion)
 	}
     	
-	bindOnRegionClicked(callback) {
-		this.onRegionClicked = callback
+	bindExportRegion(handler) {
+		this.exportRegion = handler
 	}
 }
 
@@ -193,7 +193,7 @@ class Controller {
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
         this.model.bindOnDownloaded(this.onDownloaded)
-        this.view.bindOnRegionClicked(this.exportRegion)
+        this.view.bindExportRegion(this.exportRegion)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         //~ this.fake(128)
