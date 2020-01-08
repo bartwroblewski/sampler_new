@@ -47,7 +47,10 @@
                             this.rects = this.rects.filter(rect => !rect.contains_x(e.clientX))
                             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                             this.drawAllRects()
-                    }  else {
+                    }  
+                    
+                    if (e.button === 0) {
+                        console.log('creating new rect')
                         this.drag = true
                         if (this.drag && !this.move) {
                             this.rect = new Rect()
@@ -76,6 +79,7 @@
                     }
                     
                     if (this.drag && !this.move) {
+                        console.log('resizing rect')
                         // clear entire canvas
                         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                         
