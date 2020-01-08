@@ -46,20 +46,20 @@ def download(request):
     sample.download(watch_url)
     response = {
         'downloaded_sample_url': sample.audio.url,
+        'downloaded_sample_id': sample.id,
     }
     return JsonResponse(response)
     
 def slc(request):
     sample_id = request.GET.get('sample_id')
-    num_of_slices = int(request.GET.get('num_of_slices'))
-    slice_duration = int(request.GET.get('slice_duration'))
-    
+    start_sec = float(request.GET.get('start_sec'))
+    end_sec = float(request.GET.get('end_sec'))
+    print('SAMPLE ID', sample_id)
     sample = Sample.objects.get(id=sample_id)
-    slices = sample.slc(num_of_slices, slice_duration)
+    slice_url = sample.slc(start_sec, end_sec)
     response = {
-        'slices': [s.to_dict() for s in slices],
+        'slice_url': slice_url,
     }
-    print(response)
     return JsonResponse(response)
     
 def test(request):

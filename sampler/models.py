@@ -1,6 +1,5 @@
 import os
 import math
-from random import uniform
 
 import pytube
 import pydub
@@ -21,37 +20,30 @@ class Sample(models.Model):
             self.audio.save(filename, f)
         os.remove(filepath)
         
-    def slc(self, num_of_slices, slice_duration):
-    
-        slices = []
-        
+    def slc(self, start_sec, end_sec):
         pydub.AudioSegment.converter = settings.CONVERTER_PATH
         song = pydub.AudioSegment.from_file(self.audio.path, "mp4")
-        container_duration = len(song) / num_of_slices
         
-        marker = 0
-        for i in range(num_of_slices):
-            slice_name = '{}_slice_{}.mp3'.format(
-                os.path.basename(self.audio.name),
-                i,
-            )
-            slice_path = os.path.join(settings.MEDIA_ROOT, slice_name)
-            slice_start = uniform(marker, (marker + container_duration) - slice_duration)
-            slice_end = slice_start + slice_duration 
-            slice_mp3 = song[slice_start:slice_end].export(
-                slice_path,
-                format='mp3',
-                codec='mp3',
-            )
-            
-            slc = Sample()
-            with open(slice_path, 'rb') as f:
-                slc.audio.save(slice_name, f)
-            os.remove(slice_path)
-            slices.append(slc)
-            
-            marker += container_duration  
-        return slices  
+        start_milisec = round(start_sec * 1000)
+        end_milisec = round(end_sec * 1000)
+        
+        slice_name = '{}_slice_{}_to_{}.mp3'.format(
+            os.path.basename(self.audio.name),
+            str(round(start_milisec)),
+            str(round(end_milisec)),
+        )
+        slice_path = os.path.join(settings.MEDIA_ROOT, slice_name)
+        slice_mp3 = song[start_milisec:end_milisec].export(
+            slice_path,
+            format='mp3',
+            codec='mp3',
+        )
+        
+        slice_obj = Sample()
+        with open(slice_path, 'rb') as f:
+            slice_obj.audio.save(slice_name, f)
+        os.remove(slice_path)  
+        return slice_obj.audio.url  
          
     #~ def slc(self, num_of_slices, slice_duration):
         #~ slices = []

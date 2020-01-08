@@ -10,7 +10,7 @@ class Waveform {
     render(container_selector) {
         this.canvas = document.querySelector(container_selector)
         this.canvas.width = this.canvas.parentNode.offsetWidth
-        this.canvas.height = 150
+        this.canvas.height = 50
         this.canvas.style.border = '1px solid black'
         this.canvas.oncontextmenu = () => false
         
@@ -31,7 +31,7 @@ class Waveform {
         this.audio.preload = 'metadata'
         this.audio.controls = true
         //~ this.audio.volume = 0
-        document.body.appendChild(this.audio)
+        //document.body.appendChild(this.audio)
     }
     
     loadAudio(src) {

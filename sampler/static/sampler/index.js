@@ -1,7 +1,9 @@
 import {Waveform} from './waveform.js'
 
 class Model {
-    constructor() {}
+    constructor() {
+        this.current_sample_id = 274 //null
+    }
     
     async getVideos(keyword) {
         const url = new URL(get_videos_url)
@@ -18,20 +20,21 @@ class Model {
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
+        this.current_sample_id = json.downloaded_sample_id
         this.onDownloaded(json.downloaded_sample_url)
     }
     
-    async slc(sample_id, num_of_slices, slice_duration) {
+    async slc(start_sec, end_sec) {
         let url = new URL(slice_url)
         let params = new URLSearchParams({
-            'sample_id': sample_id,
-            'num_of_slices': num_of_slices,
-            'slice_duration': slice_duration,
+            'sample_id': this.current_sample_id,
+            'start_sec': start_sec,
+            'end_sec': end_sec,
         })
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
-        return json.slices
+        return json.slice_url
     }
     
     async cartAdd(sample_id) {
@@ -175,9 +178,12 @@ class View {
     }
     
     createWaveform(sample_url) {
+
 		this.waveform = new Waveform('#waveform')
 		this.waveform.loadAudio(sample_url)
-        this.waveform.canvas.addEventListener('region_export', this.exportRegion)
+        this.waveform.canvas.addEventListener('region_export', (e) => {
+            this.exportRegion(e, sample_url)
+        })
 	}
     	
 	bindExportRegion(handler) {
@@ -229,9 +235,14 @@ class Controller {
 		this.view.createWaveform(sample_url, this.exportRegion)
 	}
     
-    exportRegion = e => {
+    exportRegion = async e => {
 		console.log('exporting bounds:', e.detail)
-	}
+        let slice_url = await this.model.slc(
+            e.detail.start_sec,
+            e.detail.end_sec,
+        )
+        console.log('slice url:', slice_url)
+    }
 	
     slc = async sample_id => {
         console.log('slicing sample with ID', sample_id)
