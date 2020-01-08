@@ -189,6 +189,19 @@ class View {
 	bindExportRegion(handler) {
 		this.exportRegion = handler
 	}
+    
+    loadFreePad(slice_url) {
+        Array.from(this.pads.children).forEach(pad => {
+            if (pad.classList.contains('empty')) {
+                let audio = document.createElement('audio')
+                audio.src = slice_url
+                pad.addEventListener('click', e => {
+                    audio.play()
+                })
+                pad.appendChild(audio)
+            }
+        })
+    }
 }
 
 class Controller {
@@ -241,7 +254,7 @@ class Controller {
             e.detail.start_sec,
             e.detail.end_sec,
         )
-        console.log('slice url:', slice_url)
+        this.view.loadFreePad(slice_url)
     }
 	
     slc = async sample_id => {
