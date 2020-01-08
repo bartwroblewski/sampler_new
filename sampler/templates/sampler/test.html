@@ -29,6 +29,7 @@
                     this.canvas.addEventListener('mousedown', this.mouseDown)
                     this.canvas.addEventListener('mousemove', this.mouseMove)
                     this.canvas.addEventListener('mouseup', this.mouseUp)
+                    this.canvas.addEventListener('dblclick', this.dblClick)
                 }
                 
                 renderAudio() {
@@ -47,6 +48,9 @@
                             this.rects = this.rects.filter(rect => !rect.contains_x(e.clientX))
                             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                             this.drawAllRects()
+                            
+                            sampler = sampler.filter(rect => this.rects.includes(rect))
+                            console.log('sampler:', sampler)
                     }  
                     
                     if (e.button === 0) {
@@ -120,6 +124,13 @@
                         //console.log(this.rects)
                     }
                 }
+                
+                dblClick = e => {
+                    console.log('adding rect/rects to sampler')
+                    let rect_or_rects = this.rects.filter(rect => rect.contains_x(e.clientX))
+                    sampler.push(rect_or_rects)
+                    console.log('sampler:', sampler)
+                }
 
                 drawRect(rect) {
                     this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
@@ -160,6 +171,8 @@
             }
             
             let waveform = new Waveform('#waveform')        
+            
+            let sampler = []
             
             
             
