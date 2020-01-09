@@ -1,4 +1,4 @@
-import {Waveform} from './waveform.js'
+import {Waveform, Pads} from './sampler.js'
 
 class Model {
     constructor() {
@@ -34,7 +34,7 @@ class Model {
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
-        return json.slice_url
+        return json
     }
     
     async cartAdd(sample_id) {
@@ -64,7 +64,7 @@ class View {
     constructor() {
         this.search_form = this.getEl('#search_form')
         this.thumbnails = this.getEl('#thumbnails')
-        this.pads = this.getEl('#pads')
+        //~ this.pads = this.getEl('#pads')
         
         let self = this
 
@@ -190,6 +190,10 @@ class View {
 		this.exportRegion = handler
 	}
     
+    createPads() {
+        this.pads = new Pads('#pads', 16)
+    }
+    
     loadFreePad(slice_url) {
         Array.from(this.pads.children).forEach(pad => {
             if (pad.classList.contains('empty')) {
@@ -215,23 +219,6 @@ class Controller {
         this.view.bindExportRegion(this.exportRegion)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
-        //~ this.fake(128)
-        
-       // this.createWaveform('http://127.0.0.1:8000/media/nemesis.mp3')
-        
-    }
-    fake(num_of_slices) {
-        let slices = []
-        for (let i=0; i < num_of_slices; i++) {
-            let slice = {
-                id: i, 
-                url: 'some_url',
-            }
-            slices.push(slice)
-        }
-        this.view.pads.innerHTML = ''
-        this.view.createThumbnails(slices)
-        this.view.createPads(slices)
     }
     
     handleGetVideos = async keyword => {
@@ -246,15 +233,19 @@ class Controller {
     
     onDownloaded = sample_url=> {
 		this.view.createWaveform(sample_url, this.exportRegion)
+        this.view.createPads()
 	}
     
     exportRegion = async e => {
 		console.log('exporting bounds:', e.detail)
-        let slice_url = await this.model.slc(
+        let slice = await this.model.slc(
             e.detail.start_sec,
             e.detail.end_sec,
         )
-        this.view.loadFreePad(slice_url)
+        console.log('received slice', slice.slice_id)
+        
+        this.view.pads.firstEmpty().audio.id = slice.slice_id
+        this.view.pads.firstEmpty().loadAudio(slice.slice_url)
     }
 	
     slc = async sample_id => {

@@ -4,7 +4,7 @@
     <html>
         <head>
             <link href="{% static 'sampler/index.css' %}" rel="stylesheet"></link>
-            <link href="{% static 'sampler/waveform.css' %}" rel="stylesheet"></link>
+            <link href="{% static 'sampler/sampler.css' %}" rel="stylesheet"></link>
         </head>
         <body>
             <nav>
@@ -20,24 +20,11 @@
                     <button type="submit">Search</button>
                 </form>
             </div>
-            <canvas id="waveform"></canvas>
-            <div id="pads">
-                <div class="pad empty">1</div>
-                <div class="pad">2</div>
-                <div class="pad">3</div>
-                <div class="pad">4</div>
-                <div class="pad">5</div>
-                <div class="pad">6</div>
-                <div class="pad">7</div>
-                <div class="pad">8</div>
-                <div class="pad">9</div>
-                <div class="pad">10</div>
-                <div class="pad">11</div>
-                <div class="pad">12</div>
-                <div class="pad">13</div>
-                <div class="pad">14</div>
-                <div class="pad">15</div>
-                <div class="pad">16</div>
+            <div id="thumbnails"></div>
+            <div id="sampler">
+                <canvas id="waveform"></canvas>
+                <div id="pads">
+            </div>
             </div>
             </div>
             <div id="video_modal">
@@ -58,5 +45,5 @@
             const cart_remove_url = "{% absurl 'sampler:cart_remove' %}"
         </script>
         <script src="{% static 'sampler/index.js' %}" type="module"></script>
-        <script src="{% static 'sampler/waveform.js' %}" type="module"></script>
+        <script src="{% static 'sampler/sampler.js' %}" type="module"></script>
     </html>

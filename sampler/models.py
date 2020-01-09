@@ -43,7 +43,7 @@ class Sample(models.Model):
         with open(slice_path, 'rb') as f:
             slice_obj.audio.save(slice_name, f)
         os.remove(slice_path)  
-        return slice_obj.audio.url  
+        return slice_obj
          
     #~ def slc(self, num_of_slices, slice_duration):
         #~ slices = []

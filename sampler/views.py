@@ -56,9 +56,10 @@ def slc(request):
     end_sec = float(request.GET.get('end_sec'))
     print('SAMPLE ID', sample_id)
     sample = Sample.objects.get(id=sample_id)
-    slice_url = sample.slc(start_sec, end_sec)
+    slice_obj = sample.slc(start_sec, end_sec)
     response = {
-        'slice_url': slice_url,
+        'slice_url': slice_obj.audio.url,
+        'slice_id': slice_obj.id,
     }
     return JsonResponse(response)
     

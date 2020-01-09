@@ -1,4 +1,4 @@
-export {Waveform}
+export {Waveform, Pads}
 
 class Waveform {
     constructor(container_selector) {
@@ -174,6 +174,133 @@ class Rect {
         (x <= this.x && x >= this.x + this.w)    // rect drawn right to left (has negative width)
         ? true : false  
 }
+
+class Pads {
+    constructor (container_selector, n_pads) {
+        this.list = [] // array of Pad objects
+        this.render(container_selector, n_pads)          
+    }
+    
+    render(container_selector, n_pads) {
+        this.el = document.querySelector(container_selector)
+        for (let i = 1; i < n_pads + 1; i++) {
+            let pad = new Pad(i)
+            this.list.push(pad)
+            this.el.appendChild(pad.el)
+       }
+    }   
+    
+    empty() {
+        return this.list.filter(pad => pad.empty)
+    }
+    
+    firstEmpty() {
+        if (!this.empty()[0]) {
+            alert('No free pads left!')
+            return
+        }
+        return this.empty()[0]
+    }
+}
+
+class Pad {
+    constructor(container_selector) {
+        
+        this.STYLE = {
+            on_color: 'red',
+            off_color: 'powderblue',
+        }
+        
+        this.render(container_selector)
+        
+        this.empty = true
+        let color = () => this.empty ? this.STYLE.off_color : this.STYLE.on_color
+        this.el.style.backgroundColor = color()
+        this.el.draggable = !this.empty
+    }
+    
+    render(element_id) {
+        this.el = document.createElement('div')
+        this.el.id = element_id
+        this.el.textContent = this.el.id
+        
+        this.audio = new Audio()                    
+        //~ this.audio.volume = 0 // MUTE
+        
+        this.el.appendChild(this.audio)
+        
+        this.el.classList.add('pad')
+        
+        this.el.oncontextmenu = () => false
+        this.el.addEventListener('mouseup', this.mouseUp)
+        this.el.addEventListener('dragstart', this.dragStart)
+        this.el.addEventListener('dragover', this.dragOver)
+        this.el.addEventListener('drop', this.drop)
+    }
+    
+    mouseUp = e => {
+        if (e.button === 0) {
+            this.audio.play() //loadAudio('bensound-summer.mp3')
+        }
+        if (e.button === 2) {
+            this.audio.pause()
+            this.removeAudio()
+        }
+    }
+    
+    dragStart = e => {
+        e.dataTransfer.dropEffect = 'move'
+        e.dataTransfer.setData('text/plain', e.target.id)
+    }
+    
+    dragOver = e => {
+        e.preventDefault()
+        //e.dataTransfer.dropEffect = 'move'
+    }
+    
+    drop = e => {
+        e.preventDefault()
+        let id = e.dataTransfer.getData('text/plain')
+        let src_el = document.getElementById(id)
+        console.log('src', src_el)
+        console.log('target', e.target)
+        this.swap(src_el, e.target)
+        
+    }
+    
+    swap(obj1, obj2) {
+        // create marker element and insert it where obj1 is
+        let temp = document.createElement("div");
+        obj1.parentNode.insertBefore(temp, obj1);
+
+        // move obj1 to right before obj2
+        obj2.parentNode.insertBefore(obj1, obj2);
+
+        // move obj2 to right before where obj1 used to be
+        temp.parentNode.insertBefore(obj2, temp);
+
+        // remove temporary marker node
+        temp.parentNode.removeChild(temp);
+    }
+    
+    loadAudio(src) {
+        this.audio.src = src
+        this.empty = false
+        let color = () => this.empty ? this.STYLE.off_color : this.STYLE.on_color
+        this.el.style.backgroundColor = color()
+        this.el.draggable = !this.empty
+    }
+    
+    removeAudio() {
+        this.audio.src = ''
+        this.audio.load()
+        this.empty = true
+        let color = () => this.empty ? this.STYLE.off_color : this.STYLE.on_color
+        this.el.style.backgroundColor = color()
+        this.el.draggable = !this.empty  
+    }
+                    
+}         
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
