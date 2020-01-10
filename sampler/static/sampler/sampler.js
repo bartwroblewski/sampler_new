@@ -243,7 +243,6 @@ class Pad {
             this.audio.play() //loadAudio('bensound-summer.mp3')
         }
         if (e.button === 2) {
-            this.audio.pause()
             this.removeAudio()
         }
     }
@@ -292,6 +291,7 @@ class Pad {
     }
     
     removeAudio() {
+        this.audio.pause()
         this.audio.src = ''
         this.audio.load()
         this.empty = true
