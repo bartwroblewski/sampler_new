@@ -14,4 +14,5 @@ urlpatterns = [
     path('download', views.download, name='download'),
     path('slc', views.slc, name='slc'),
     path('test', views.test, name='test'),
+    path('generate', views.generate, name='generate'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

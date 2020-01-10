@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+    <html>
+        <head>
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <style>
+                canvas {
+                    border: 1px solid black;
+                }
+            </style>
+        </head>
+        <body>
+            
+            <canvas></canvas>
+            <div id="plot"></div>
+        </body>
+        <script>
+            
+            let canvas = document.getElementsByTagName('canvas')[0]
+            canvas.width = 1200
+            canvas.height = 250
+            let ctx = canvas.getContext("2d");
+            ctx.translate(0, canvas.height / 2)
+            
+            get_data()
+                .then(response => response.json())
+                .then(json => {
+                    draw(json)
+                    plot(json.samples)
+                })
+            
+            async function get_data() {
+                let data = await fetch('http://127.0.0.1:8000/test')
+                return data
+            }
+            
+            async function draw(json) {   
+                ctx.moveTo(0, 0)
+                ctx.beginPath()
+                json.samples.forEach((sample, index) => {
+                    ctx.lineTo(index / 2, sample / 100)
+                })
+                ctx.stroke()
+            }
+            
+            function plot(data) {
+                console.log(data)
+                var trace1 = {
+                      //x: data,
+                      y: data,
+                      mode: 'lines'
+                    };
+
+                    var data = [ trace1];
+                    var layout = {
+                        width: 1000,
+                        height: 300,
+                    }
+
+
+
+                Plotly.newPlot('plot', data, layout);
+            }
+            
+            //~ get_data()
+                //~ .then(response => response.json())
+                //~ .then(json => plot(json.samples))
+        </script>
+    </html>

@@ -64,4 +64,13 @@ def slc(request):
     return JsonResponse(response)
     
 def test(request):
-	return render(request, 'sampler/test.html')
+    sample = Sample.objects.last()
+    samples = sample.raw().tolist()[::1000]
+    norm_samples = [float(i)/sum(samples) for i in samples]
+    response = {
+        'samples': samples,
+    }
+    return JsonResponse(response)
+    
+def generate(request):
+    return render(request, 'sampler/generate.html')

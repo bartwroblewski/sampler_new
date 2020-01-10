@@ -44,7 +44,12 @@ class Sample(models.Model):
             slice_obj.audio.save(slice_name, f)
         os.remove(slice_path)  
         return slice_obj
-         
+    
+    def raw(self):
+        pydub.AudioSegment.converter = settings.CONVERTER_PATH
+        song = pydub.AudioSegment.from_file(self.audio.path, "mp3")
+        samples = song.get_array_of_samples()
+        return samples
     #~ def slc(self, num_of_slices, slice_duration):
         #~ slices = []
         #~ def get_samples(song):
