@@ -40,8 +40,8 @@
                 ctx.translate(0, canvas.height / 2) // display waveform in the middle Y of canvas
                 
                 let x_scale = canvas.width / num_of_samples
-                let y_scale = canvas.height * 20
-                
+                let y_scale = canvas.height / json.abs_max
+                                
                 // start drawing the waveform
                 ctx.moveTo(0, 0)
                 ctx.beginPath()
@@ -50,7 +50,7 @@
                 })
                 ctx.stroke()
             }
-            
+             
             function plot(data) {
                 console.log(data)
                 var trace1 = {

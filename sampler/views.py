@@ -65,13 +65,19 @@ def slc(request):
     
 def test(request):
     sample = Sample.objects.first()
-    print(sample.id)
     samples = sample.raw().tolist()[::1000]
-    norm_samples = [float(i)/sum(samples) for i in samples]
     response = {
-        'samples': norm_samples,
+        'samples': samples,
+        'abs_max': max([abs(s) for s in samples])
     }
     return JsonResponse(response)
     
 def generate(request):
     return render(request, 'sampler/generate.html')
+    
+def normalize(value, mn, mx):
+
+    if value != 0:
+        return (value - mn) / (mx - mn)
+    else:
+        return 0
