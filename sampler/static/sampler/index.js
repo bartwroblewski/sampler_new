@@ -2,7 +2,7 @@ import {Waveform, Pads} from './sampler.js'
 
 class Model {
     constructor() {
-        this.current_sample_id = 274 //null
+        this.current_sample_id = 609 //null
     }
     
     async getVideos(keyword) {

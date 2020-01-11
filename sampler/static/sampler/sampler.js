@@ -177,46 +177,44 @@ class Rect {
 
 class Pads {
     constructor (container_selector, n_pads) {
-        this.list = [] // array of Pad objects
+        this.pads = [] // array of Pad objects
         this.render(container_selector, n_pads)          
     }
     
     render(container_selector, n_pads) {
         this.el = document.querySelector(container_selector)
         for (let i = 1; i < n_pads + 1; i++) {
-            let pad = new Pad(i)
-            this.list.push(pad)
+            let pad = new Pad(i, this)
+            this.pads.push(pad)
             this.el.appendChild(pad.el)
        }
     }   
     
-    empty() {
-        return this.list.filter(pad => pad.empty)
+    update() {
+        // update objects list order to match DOM order
+        let ids = Array.from(this.el.children).map(el => el.id)
+        let sorted = this.pads.map(pad => this.pads[ids.indexOf(pad.el.id)])
+        this.pads = sorted
+    }
+    
+    empty () {
+        return this.pads.filter(pad => pad.empty())
     }
     
     firstEmpty() {
-        if (!this.empty()[0]) {
-            alert('No free pads left!')
-            return
-        }
+        // get first pad without audio loaded
         return this.empty()[0]
     }
 }
 
 class Pad {
-    constructor(container_selector) {
-        
+    constructor(element_id, parent) {
+        this.parent = parent
         this.STYLE = {
             on_color: 'red',
             off_color: 'powderblue',
-        }
-        
-        this.render(container_selector)
-        
-        this.empty = true
-        let color = () => this.empty ? this.STYLE.off_color : this.STYLE.on_color
-        this.el.style.backgroundColor = color()
-        this.el.draggable = !this.empty
+        }               
+        this.render(element_id)                  
     }
     
     render(element_id) {
@@ -229,13 +227,38 @@ class Pad {
         
         this.el.appendChild(this.audio)
         
-        this.el.classList.add('pad')
+        this.el.classList.add('pad', 'empty')
+                      
+        this.refresh()
         
         this.el.oncontextmenu = () => false
         this.el.addEventListener('mouseup', this.mouseUp)
         this.el.addEventListener('dragstart', this.dragStart)
         this.el.addEventListener('dragover', this.dragOver)
         this.el.addEventListener('drop', this.drop)
+    }
+    
+    empty = () => this.el.classList.contains('empty') ? true : false
+    
+    color = () => this.empty() ? this.STYLE.off_color : this.STYLE.on_color
+    
+    refresh() {
+        this.el.style.backgroundColor = this.color()
+        this.el.draggable = !this.empty()
+    }
+                    
+    loadAudio(src) {
+        this.audio.src = src
+        this.el.classList.remove('empty')
+        this.refresh()
+    }
+    
+    removeAudio() {
+        this.audio.pause()
+        this.audio.src = ''
+        this.audio.load()
+        this.el.classList.add('empty')
+        this.refresh()
     }
     
     mouseUp = e => {
@@ -257,50 +280,35 @@ class Pad {
         //e.dataTransfer.dropEffect = 'move'
     }
     
+                  
     drop = e => {
         e.preventDefault()
         let id = e.dataTransfer.getData('text/plain')
         let src_el = document.getElementById(id)
         console.log('src', src_el)
         console.log('target', e.target)
-        this.swap(src_el, e.target)
-        
+        this.swap(src_el, e.target)                    
     }
     
     swap(obj1, obj2) {
-        // create marker element and insert it where obj1 is
+        // update DOM
+            // create marker element and insert it where obj1 is
         let temp = document.createElement("div");
         obj1.parentNode.insertBefore(temp, obj1);
 
-        // move obj1 to right before obj2
+            // move obj1 to right before obj2
         obj2.parentNode.insertBefore(obj1, obj2);
 
-        // move obj2 to right before where obj1 used to be
+            // move obj2 to right before where obj1 used to be
         temp.parentNode.insertBefore(obj2, temp);
 
-        // remove temporary marker node
+            // remove temporary marker node
         temp.parentNode.removeChild(temp);
-    }
-    
-    loadAudio(src) {
-        this.audio.src = src
-        this.empty = false
-        let color = () => this.empty ? this.STYLE.off_color : this.STYLE.on_color
-        this.el.style.backgroundColor = color()
-        this.el.draggable = !this.empty
-    }
-    
-    removeAudio() {
-        this.audio.pause()
-        this.audio.src = ''
-        this.audio.load()
-        this.empty = true
-        let color = () => this.empty ? this.STYLE.off_color : this.STYLE.on_color
-        this.el.style.backgroundColor = color()
-        this.el.draggable = !this.empty  
-    }
-                    
-}         
+        
+        // update objects list
+        this.parent.update()
+    }                                
+}                
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
