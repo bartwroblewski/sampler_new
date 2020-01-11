@@ -69,7 +69,7 @@ def test(request):
     samples = sample.raw().tolist()[::1000]
     norm_samples = [float(i)/sum(samples) for i in samples]
     response = {
-        'samples': samples,
+        'samples': norm_samples,
     }
     return JsonResponse(response)
     

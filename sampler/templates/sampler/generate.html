@@ -30,18 +30,23 @@
             }
             
             async function draw(json) { 
+                let num_of_samples = json.samples.length
+                
+                // set up canvas
                 let canvas = document.getElementsByTagName('canvas')[0]
-                
-                canvas.width = 1200
-                canvas.height = 250
-                
+                canvas.width = 800
+                canvas.height = 100
                 let ctx = canvas.getContext("2d");
                 ctx.translate(0, canvas.height / 2) // display waveform in the middle Y of canvas
                 
+                let x_scale = canvas.width / num_of_samples
+                let y_scale = canvas.height * 20
+                
+                // start drawing the waveform
                 ctx.moveTo(0, 0)
                 ctx.beginPath()
                 json.samples.forEach((sample, index) => {
-                    ctx.lineTo(index * (canvas.width / json.samples.length), sample / 300)
+                    ctx.lineTo(index * x_scale, sample * y_scale)
                 })
                 ctx.stroke()
             }
