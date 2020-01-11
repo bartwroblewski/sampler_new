@@ -39,9 +39,11 @@
                 let ctx = canvas.getContext("2d");
                 ctx.translate(0, canvas.height / 2) // display waveform in the middle Y of canvas
                 
-                let x_scale = canvas.width / num_of_samples
-                let y_scale = canvas.height / json.abs_max
-                                
+                // set up scaling
+                let y_zoom = (canvas.height / 100) * 55
+                let x_scale = canvas.width / num_of_samples 
+                let y_scale = (canvas.height - y_zoom) / json.abs_max
+                   
                 // start drawing the waveform
                 ctx.moveTo(0, 0)
                 ctx.beginPath()
