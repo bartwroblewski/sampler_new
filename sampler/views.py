@@ -64,7 +64,8 @@ def slc(request):
     return JsonResponse(response)
     
 def test(request):
-    sample = Sample.objects.last()
+    sample = Sample.objects.first()
+    print(sample.id)
     samples = sample.raw().tolist()[::1000]
     norm_samples = [float(i)/sum(samples) for i in samples]
     response = {

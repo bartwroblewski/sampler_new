@@ -15,11 +15,7 @@
         </body>
         <script>
             
-            let canvas = document.getElementsByTagName('canvas')[0]
-            canvas.width = 1200
-            canvas.height = 250
-            let ctx = canvas.getContext("2d");
-            ctx.translate(0, canvas.height / 2)
+            
             
             get_data()
                 .then(response => response.json())
@@ -33,11 +29,19 @@
                 return data
             }
             
-            async function draw(json) {   
+            async function draw(json) { 
+                let canvas = document.getElementsByTagName('canvas')[0]
+                
+                canvas.width = 1200
+                canvas.height = 250
+                
+                let ctx = canvas.getContext("2d");
+                ctx.translate(0, canvas.height / 2) // display waveform in the middle Y of canvas
+                
                 ctx.moveTo(0, 0)
                 ctx.beginPath()
                 json.samples.forEach((sample, index) => {
-                    ctx.lineTo(index / 2, sample / 100)
+                    ctx.lineTo(index * (canvas.width / json.samples.length), sample / 300)
                 })
                 ctx.stroke()
             }
