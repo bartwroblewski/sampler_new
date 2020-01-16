@@ -15,16 +15,13 @@ class Sampler {
         
         
         let waveform_el = document.createElement('canvas')
-        //~ let pads_el = document.createElement('div')
+        let pads_el = document.createElement('div')
         
         this.el.appendChild(waveform_el)
-        //~ this.el.appendChild(pads_el)
+        this.el.appendChild(pads_el)
 
         this.waveform = new Waveform(waveform_el)
-        //~ this.pads = new Pads(pads_el, 16)
-        
-        //~ this.el.style.display = 'flex'
-        
+        this.pads = new Pads(pads_el, 16)        
     }
 }
 
