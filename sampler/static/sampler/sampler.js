@@ -107,6 +107,7 @@ class Waveform {
                 console.log('removing rect')
                 this.rects = this.rects.filter(rect => !rect.contains_x(this.cursor_x(e)))
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                this.draw()
                 this.drawAllRects()
         }  
         
@@ -127,7 +128,7 @@ class Waveform {
             
             if (this.drag && this.move) {
                 this.rect = this.rects.find(rect => rect.contains_x(this.cursor_x(e)))
-            }
+            } 
         }
     }
     
