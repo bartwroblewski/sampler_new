@@ -64,7 +64,11 @@ class View {
     constructor() {
         this.search_form = this.getEl('#search_form')
         this.thumbnails = this.getEl('#thumbnails')
-        //~ this.pads = this.getEl('#pads')
+        
+        this.samplers_container = this.getEl('#samplers')
+        this.samplers = [] // array of Sampler objects
+        this.add_sampler_btn = this.getEl('#add_sampler_btn')
+        this.add_sampler_btn.addEventListener('click', this.addSampler.bind(this))
         
         let self = this
 
@@ -206,6 +210,16 @@ class View {
             }
         })
     }
+    
+    addSampler(e) {
+        let el_id = `sampler_${this.samplers.length}`
+        let sampler_el = this.createEl('div')
+        sampler_el.id = el_id 
+        let sampler = new Sampler(sampler_el)
+        
+        this.samplers_container.appendChild(sampler_el)
+        this.samplers.push(sampler)
+    }
 }
 
 class Controller {
@@ -272,4 +286,4 @@ class Controller {
 
 window.app = new Controller(new Model(), new View())
 
-let sampler = new Sampler('#sampler')
+//~ let sampler = new Sampler('#sampler')

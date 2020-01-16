@@ -1,19 +1,16 @@
 export {Sampler}
 
 class Sampler {
-    constructor(selector) {
-        this.render(selector)
+    constructor(el) {
+        this.render(el)
     }
     
-    render(selector) {
-        this.el = document.querySelector(selector)
+    render(el) {
+        this.el = el
         this.el.className = 'sampler'
         
         let waveform_el = document.createElement('canvas')
         let pads_el = document.createElement('div')
-        
-        waveform_el.className = 'waveform'
-        pads_el.className = 'pads'
         
         this.el.appendChild(waveform_el)
         this.el.appendChild(pads_el)
@@ -35,6 +32,7 @@ class Waveform {
     
     render(el) {
         this.canvas = el
+        this.canvas.className = 'waveform'
         this.canvas.width = this.canvas.parentNode.offsetWidth
         this.canvas.height = 50
         this.canvas.style.border = '1px solid black'
@@ -209,6 +207,7 @@ class Pads {
     
     render(el, n_pads) {
         this.el = el
+        this.el.className = 'pads'
         for (let i = 1; i < n_pads + 1; i++) {
             let pad = new Pad(i, this)
             this.pads.push(pad)
