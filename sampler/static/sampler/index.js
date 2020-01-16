@@ -222,7 +222,9 @@ class View {
         
         sampler.waveform.loadAudio('http://127.0.0.1:8000/media/samples/95023ba5-1bab-462f-9ddd-d8a8df452826Idiot_Test_-_90_fail.mp4')
         sampler.waveform.canvas.addEventListener('region_export', e => {
-            this.exportRegion(e)
+            let start_sec = e.detail.start_sec
+            let end_sec = e.detail.end_sec
+            this.exportRegion(start_sec, end_sec, sampler)
         })
     
     }
@@ -256,16 +258,13 @@ class Controller {
         this.view.createPads()
 	}
     
-    exportRegion = async e => {
-		console.log('exporting bounds:', e.detail)
-        let slice = await this.model.slc(
-            e.detail.start_sec,
-            e.detail.end_sec,
-        )
+    exportRegion = async (start_sec, end_sec, sampler) => {
+		console.log('exporting bounds:', start_sec, end_sec)
+        let slice = await this.model.slc(start_sec, end_sec)
         console.log('received slice', slice.slice_id)
         
-        this.view.samplers[0].pads.firstEmpty().audio.id = slice.slice_id
-        this.view.samplers[0].pads.firstEmpty().loadAudio(slice.slice_url)
+        sampler.pads.firstEmpty().audio.id = slice.slice_id
+        sampler.pads.firstEmpty().loadAudio(slice.slice_url)
     }
 	
     slc = async sample_id => {

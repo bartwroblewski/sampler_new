@@ -11,7 +11,7 @@ class Sampler {
         this.el.style.width = '800px'
         this.el.style.height = '400px'
         this.el.style.backgroundColor = 'yellow'    
-        this.el.style.display = 'block'
+        this.el.style.display = 'flex'
         
         
         let waveform_el = document.createElement('canvas')
