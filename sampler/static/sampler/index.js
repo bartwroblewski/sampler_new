@@ -55,6 +55,16 @@ class Model {
         return text
     }
     
+    async getSamples(sample_id) {
+        let url = new URL(get_samples_url)
+        let params = new URLSearchParams({'sample_id': sample_id})
+        url.search = params
+        const response = await fetch(url)
+        const json = await response.json()
+        return json
+    }
+    
+    
     bindOnDownloaded(callback) {
 		this.onDownloaded = callback
 	}
@@ -241,6 +251,16 @@ class Controller {
         this.view.bindExportRegion(this.exportRegion)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
+        
+        this.testDraw()
+        
+    }
+    
+    testDraw = async() => {
+        this.view.addSampler()
+        let json = await this.model.getSamples(609)
+        this.view.samplers[0].waveform.json = json
+        this.view.samplers[0].waveform.draw()
     }
     
     handleGetVideos = async keyword => {

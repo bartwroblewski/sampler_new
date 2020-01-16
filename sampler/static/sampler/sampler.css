@@ -3,7 +3,7 @@
     height: 25em;
     display: none;
     flex-direction: column;
-    background: orange;
+    background: rgb(240, 240, 240);
 }
 /*
 .waveform {

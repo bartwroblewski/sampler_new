@@ -63,8 +63,10 @@ def slc(request):
     }
     return JsonResponse(response)
     
-def test(request):
-    sample = Sample.objects.first()
+def get_samples(request):
+    sample_id = request.GET.get('sample_id')
+    print(sample_id)
+    sample = Sample.objects.get(id=sample_id)
     samples = sample.raw().tolist()[::1000]
     response = {
         'samples': samples,

@@ -10,7 +10,7 @@ class Sampler {
         this.el.className = 'sampler'
         this.el.style.width = '800px'
         this.el.style.height = '400px'
-        this.el.style.backgroundColor = 'yellow'    
+        //~ this.el.style.backgroundColor = 'yellow'    
         this.el.style.display = 'flex'
         
         
@@ -30,6 +30,7 @@ class Waveform {
         this.render(el)
         this.renderAudio()
         this.rects = []
+        this.json = null
     }
     
     render(el) {
@@ -67,6 +68,29 @@ class Waveform {
     
     loadAudio(src) {
         this.audio.src = src
+    }
+    
+    draw() {
+        let json = this.json
+        let num_of_samples = json.samples.length
+
+        this.ctx.save()
+        this.ctx.translate(0, this.canvas.height / 2) // display waveform in the middle Y of canvas
+        
+        // set up scaling
+        let y_zoom = (this.canvas.height / 100) * 55
+        let x_scale = this.canvas.width / num_of_samples 
+        let y_scale = (this.canvas.height - y_zoom) / json.abs_max
+           
+        // start drawing the waveform
+        this.ctx.moveTo(0, 0)
+        this.ctx.beginPath()
+        json.samples.forEach((sample, index) => {
+            this.ctx.lineTo(index * x_scale, sample * y_scale)
+        })
+        this.ctx.stroke()
+        
+        this.ctx.restore()
     }
     
     cursor_x(e) {
@@ -121,12 +145,15 @@ class Waveform {
         if (this.drag && !this.move) {
             console.log('resizing rect')
             // clear entire canvas
+
             this.ctx.clearRect(0, 0, this.box.width, this.box.height)
             
-            // // redraw background image (waveform)
+            //~ // // redraw background image (waveform)
             // let image = new Image(800, 150)
             // image.src = 'Sticky.PNG'
             // this.ctx.drawImage(image, 0, 0)
+            this.draw()
+            
             
             //redraw all stored rects
             this.drawAllRects()
@@ -139,6 +166,8 @@ class Waveform {
         if (this.drag && this.move) {
             console.log('moving rect')
             this.ctx.clearRect(0, 0, this.box.width, this.box.height)  
+            
+            this.draw()
             
             // avoid drawing same rect again
             this.drawAllRects(this.rect)
@@ -187,7 +216,7 @@ class Waveform {
     drawAllRects(exclude_rect) {
         this.rects.forEach(rect => {
             if (rect !== exclude_rect) this.drawRect(rect)
-        })
+        }) 
     }    
 }                  
 
