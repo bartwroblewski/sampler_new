@@ -81,3 +81,6 @@ def normalize(value, mn, mx):
         return (value - mn) / (mx - mn)
     else:
         return 0
+        
+def export_test(request):
+    return render(request, 'sampler/export_test.html')

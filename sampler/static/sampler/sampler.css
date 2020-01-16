@@ -1,16 +1,16 @@
-#sampler {
+.sampler {
     width: 50%;
     height: 25em;
-    display: flex;
+    display: none;
     flex-direction: column;
     background: orange;
 }
-#waveform {
+.waveform {
     width: 100%;
     height: 20%;
     background: pink;
 }
-#pads {
+.pads {
     width: 100%;
     height: 100%;
     display: flex;

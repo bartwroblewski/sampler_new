@@ -1,4 +1,4 @@
-import {Waveform, Pads} from './sampler.js'
+import {Sampler} from './sampler.js'
 
 class Model {
     constructor() {
@@ -271,3 +271,5 @@ class Controller {
 }
 
 window.app = new Controller(new Model(), new View())
+
+let sampler = new Sampler('#sampler')
