@@ -8,15 +8,20 @@ class Sampler {
     render(el) {
         this.el = el
         this.el.className = 'sampler'
+        this.el.style.width = '800px'
+        this.el.style.height = '400px'
+        this.el.style.backgroundColor = 'yellow'    
+        this.el.style.display = 'block'
+        
         
         let waveform_el = document.createElement('canvas')
-        let pads_el = document.createElement('div')
+        //~ let pads_el = document.createElement('div')
         
         this.el.appendChild(waveform_el)
-        this.el.appendChild(pads_el)
+        //~ this.el.appendChild(pads_el)
 
         this.waveform = new Waveform(waveform_el)
-        this.pads = new Pads(pads_el, 16)
+        //~ this.pads = new Pads(pads_el, 16)
         
         //~ this.el.style.display = 'flex'
         
@@ -33,8 +38,13 @@ class Waveform {
     render(el) {
         this.canvas = el
         this.canvas.className = 'waveform'
-        this.canvas.width = this.canvas.parentNode.offsetWidth
-        this.canvas.height = 25
+        
+        // fit to container (sampler)
+        this.canvas.style.width = '100%'
+        this.canvas.style.height = '25%'
+        this.canvas.width = this.canvas.offsetWidth
+        this.canvas.height = this.canvas.offsetHeight
+      
         this.canvas.style.border = '1px solid black'
         this.canvas.oncontextmenu = () => false
         
@@ -54,7 +64,7 @@ class Waveform {
         this.audio = document.createElement('audio')
         this.audio.preload = 'metadata'
         this.audio.controls = false
-        this.audio.volume = 0
+        //~ this.audio.volume = 0
         this.canvas.appendChild(this.audio)
     }
     

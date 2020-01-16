@@ -212,12 +212,12 @@ class View {
     }
     
     addSampler(e) {
+        console.log('adding sampler')
         let el_id = `sampler_${this.samplers.length}`
         let sampler_el = this.createEl('div')
         sampler_el.id = el_id 
-        let sampler = new Sampler(sampler_el)
-        
         this.samplers_container.appendChild(sampler_el)
+        let sampler = new Sampler(sampler_el)
         this.samplers.push(sampler)
         
         sampler.waveform.loadAudio('http://127.0.0.1:8000/media/samples/95023ba5-1bab-462f-9ddd-d8a8df452826Idiot_Test_-_90_fail.mp4')
