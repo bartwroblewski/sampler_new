@@ -162,7 +162,7 @@ class Waveform {
         }
     }
     
-    dblClick = e => {
+    dblClick = async e => {
         // if more than one region contains clicked x, the one on top (last created)
         // will be exported
         let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))

@@ -221,6 +221,10 @@ class View {
         this.samplers.push(sampler)
         
         sampler.waveform.loadAudio('http://127.0.0.1:8000/media/samples/95023ba5-1bab-462f-9ddd-d8a8df452826Idiot_Test_-_90_fail.mp4')
+        sampler.waveform.canvas.addEventListener('region_export', e => {
+            this.exportRegion(e)
+        })
+    
     }
 }
 
@@ -260,8 +264,8 @@ class Controller {
         )
         console.log('received slice', slice.slice_id)
         
-        this.view.pads.firstEmpty().audio.id = slice.slice_id
-        this.view.pads.firstEmpty().loadAudio(slice.slice_url)
+        this.view.samplers[0].pads.firstEmpty().audio.id = slice.slice_id
+        this.view.samplers[0].pads.firstEmpty().loadAudio(slice.slice_url)
     }
 	
     slc = async sample_id => {
