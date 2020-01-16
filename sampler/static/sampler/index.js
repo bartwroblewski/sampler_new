@@ -219,6 +219,8 @@ class View {
         
         this.samplers_container.appendChild(sampler_el)
         this.samplers.push(sampler)
+        
+        sampler.waveform.loadAudio('http://127.0.0.1:8000/media/samples/95023ba5-1bab-462f-9ddd-d8a8df452826Idiot_Test_-_90_fail.mp4')
     }
 }
 

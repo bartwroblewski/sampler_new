@@ -16,9 +16,9 @@ class Sampler {
         this.el.appendChild(pads_el)
 
         this.waveform = new Waveform(waveform_el)
-        this.pads = new Pads(pads_el)
+        this.pads = new Pads(pads_el, 16)
         
-        this.el.style.display = 'flex'
+        //~ this.el.style.display = 'flex'
         
     }
 }
@@ -34,7 +34,7 @@ class Waveform {
         this.canvas = el
         this.canvas.className = 'waveform'
         this.canvas.width = this.canvas.parentNode.offsetWidth
-        this.canvas.height = 50
+        this.canvas.height = 25
         this.canvas.style.border = '1px solid black'
         this.canvas.oncontextmenu = () => false
         
@@ -53,9 +53,9 @@ class Waveform {
     renderAudio() {
         this.audio = document.createElement('audio')
         this.audio.preload = 'metadata'
-        this.audio.controls = true
-        //~ this.audio.volume = 0
-        //document.body.appendChild(this.audio)
+        this.audio.controls = false
+        this.audio.volume = 0
+        this.canvas.appendChild(this.audio)
     }
     
     loadAudio(src) {
@@ -67,6 +67,10 @@ class Waveform {
         return e.clientX - this.box.left 
     }
     
+    xToSec(x) {
+        return  (x / this.box.width) * this.audio.duration
+    }
+      
     mouseDown = e => {
         if (e.button === 2) {
                 console.log('removing rect')
@@ -75,8 +79,7 @@ class Waveform {
                 this.drawAllRects()
         }  
         
-        if (e.button === 0) {
-            
+        if (e.button === 0) {            
             this.audio.currentTime = this.xToSec(this.cursor_x(e))
             this.audio.play()
             
@@ -169,10 +172,6 @@ class Waveform {
             'end_sec': this.xToSec(rect.x + rect.w),
         }
     }
-    
-    xToSec(x) {
-        return  (x / this.box.width) * this.audio.duration
-    }  
 
     drawRect(rect) {
         this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h)

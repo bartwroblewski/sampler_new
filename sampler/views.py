@@ -84,3 +84,6 @@ def normalize(value, mn, mx):
         
 def export_test(request):
     return render(request, 'sampler/export_test.html')
+    
+def sampler_test(request):
+    return render(request, 'sampler/sampler_test.html')
