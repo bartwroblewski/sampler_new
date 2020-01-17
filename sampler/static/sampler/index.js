@@ -21,7 +21,7 @@ class Model {
         const response = await fetch(url)
         const json = await response.json()
         this.current_sample_id = json.downloaded_sample_id
-        this.onDownloaded(json.downloaded_sample_url)
+        return json
     }
     
     async slc(start_sec, end_sec) {
@@ -63,11 +63,6 @@ class Model {
         const json = await response.json()
         return json
     }
-    
-    
-    bindOnDownloaded(callback) {
-		this.onDownloaded = callback
-	}
 }
 
 class View {
@@ -150,6 +145,11 @@ class View {
             this.video_modal.watch_url = video['watch_url']
             this.video_modal.open()
         })
+        
+        thumbnail.draggable = true
+        thumbnail.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', video['watch_url'])
+        })
     }
     
     createPads(slices) {
@@ -231,12 +231,17 @@ class View {
         this.samplers.push(sampler)
         
         sampler.waveform.loadAudio('http://127.0.0.1:8000/media/samples/95023ba5-1bab-462f-9ddd-d8a8df452826Idiot_Test_-_90_fail.mp4')
-        sampler.waveform.canvas.addEventListener('region_export', e => {
+        
+        sampler.waveform.canvas.addEventListener('region_dblclick', e => {
             let start_sec = e.detail.start_sec
             let end_sec = e.detail.end_sec
             this.exportRegion(start_sec, end_sec, sampler)
         })
-    
+        
+        sampler.waveform.canvas.addEventListener('waveform_drop', e => {
+            let watch_url = e.detail
+            this.download(watch_url, sampler)
+        })
     }
 }
 
@@ -247,12 +252,11 @@ class Controller {
         
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
-        this.model.bindOnDownloaded(this.onDownloaded)
         this.view.bindExportRegion(this.exportRegion)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         
-        this.testDraw()
+       // this.testDraw()
         
     }
     
@@ -268,9 +272,12 @@ class Controller {
         this.view.createThumbnails(videos)
     }
     
-    handleDownload = async watch_url => {
+    handleDownload = async (watch_url, sampler) => {
         console.log('downloading', watch_url)
-        await this.model.download(watch_url)
+        let json = await this.model.download(watch_url)
+        sampler.waveform.loadAudio(json.downloaded_sample_url)
+        sampler.waveform.sample_data = json
+        sampler.waveform.draw()
     }
     
     onDownloaded = sample_url=> {

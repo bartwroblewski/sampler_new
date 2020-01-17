@@ -19,14 +19,13 @@ def get_videos(keyword):
     params = {
         'key': key,
         'part': 'snippet',
-        'maxResults': 50,
+        'maxResults': 5,
         'q': keyword,
         'type': 'video',
         'videoDuration': 'short',
     }
         
     response = requests.get(url, params)
-    print(response.json())
     items = response.json()['items']
     
     videos = []

@@ -30,7 +30,7 @@ class Waveform {
         this.render(el)
         this.renderAudio()
         this.rects = []
-        this.json = null
+        this.sample_data = null
     }
     
     render(el) {
@@ -56,6 +56,24 @@ class Waveform {
         this.canvas.addEventListener('mousemove', this.mouseMove)
         this.canvas.addEventListener('mouseup', this.mouseUp)
         this.canvas.addEventListener('dblclick', this.dblClick)
+        this.canvas.addEventListener('dragover', this.dragOver)
+        this.canvas.addEventListener('drop', this.drop)
+        
+    }
+    
+    dragOver(e) {
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'move'
+    }
+    
+    drop = e => {
+        e.preventDefault()
+        let watch_url = e.dataTransfer.getData('text/plain')
+        let event = new CustomEvent(
+            'waveform_drop',
+            {detail: watch_url},
+        )
+        this.canvas.dispatchEvent(event)
     }
     
     renderAudio() {
@@ -71,21 +89,21 @@ class Waveform {
     }
     
     draw() {
-        let json = this.json
-        let num_of_samples = json.samples.length
-
+        let samples = this.sample_data.downloaded_sample_samples
+        let abs_max = this.sample_data.downloaded_sample_abs_max
+    
         this.ctx.save()
         this.ctx.translate(0, this.canvas.height / 2) // display waveform in the middle Y of canvas
         
         // set up scaling
         let y_zoom = (this.canvas.height / 100) * 55
-        let x_scale = this.canvas.width / num_of_samples 
-        let y_scale = (this.canvas.height - y_zoom) / json.abs_max
+        let x_scale = this.canvas.width / samples.length 
+        let y_scale = (this.canvas.height - y_zoom) / abs_max
            
         // start drawing the waveform
         this.ctx.moveTo(0, 0)
         this.ctx.beginPath()
-        json.samples.forEach((sample, index) => {
+        samples.forEach((sample, index) => {
             this.ctx.lineTo(index * x_scale, sample * y_scale)
         })
         this.ctx.stroke()
@@ -197,7 +215,7 @@ class Waveform {
         // will be exported
         let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))
         let event = new CustomEvent(
-            'region_export',
+            'region_dblclick',
             {detail: this.rectToAudio(clicked_rect)}
         )
         this.canvas.dispatchEvent(event)

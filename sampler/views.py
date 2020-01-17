@@ -44,9 +44,15 @@ def download(request):
     watch_url = request.GET.get('watch_url')
     sample = Sample()
     sample.download(watch_url)
+    
+    samples = sample.raw()
+    abs_max = max([abs(s) for s in samples])
+    
     response = {
         'downloaded_sample_url': sample.audio.url,
         'downloaded_sample_id': sample.id,
+        'downloaded_sample_samples': samples,
+        'downloaded_sample_abs_max': abs_max,
     }
     return JsonResponse(response)
     
@@ -67,7 +73,7 @@ def get_samples(request):
     sample_id = request.GET.get('sample_id')
     print(sample_id)
     sample = Sample.objects.get(id=sample_id)
-    samples = sample.raw().tolist()[::1000]
+    samples = sample.raw
     response = {
         'samples': samples,
         'abs_max': max([abs(s) for s in samples])
