@@ -207,6 +207,12 @@ class Waveform {
             if (!this.move) {
                 this.rects.push(this.rect)
             }
+            
+            // remove marker-like rect
+            //~ if (this.rect.w === 1) {
+                //~ this.rects = this.rects.filter(rect => rect !== this.rect)
+                //~ this.drawAllRects()
+            //~ }
         }
     }
     
