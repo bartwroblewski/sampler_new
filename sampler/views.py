@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 
 from .models import Sample
@@ -7,6 +8,7 @@ from sampler import (
     client,
     #~ audio,
 )
+from .utils import zip_files
 
 def index(request):
     return render(request, 'sampler/index.html')
@@ -72,12 +74,16 @@ def slc(request):
     
 def serve(request):
     '''Returns a zip file containing the requested samples'''
-    sample_ids = request.GET.get('sample_ids')
-    print(sample_ids)
+    sample_ids = request.GET.get('sample_ids').split(',')
+    sample_paths = [
+        s.audio.path
+        for s in Sample.objects.filter(id__in=sample_ids)
+    ]
+    zip_archive = zip_files(sample_paths, settings.MEDIA_ROOT)
     #~ zipfile = zipper.create_and_get_zipfile(request.session.session_key)
     #~ response = HttpResponse(zipfile, content_type='application/zip')
     #~ response['Content-Disposition'] = 'attachment; filename="samples.zip"'
-    return JsonResponse({'status': sample_ids})
+    return JsonResponse({'zip_archive': zip_archive})
     
 def get_samples(request):
     sample_id = request.GET.get('sample_id')
