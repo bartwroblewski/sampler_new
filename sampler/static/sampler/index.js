@@ -62,13 +62,11 @@ class Model {
         return json
     }
     
-    async serve(sample_ids) {
+    serve(sample_ids) {
         let url = new URL(serve_url)
         let params = new URLSearchParams({'sample_ids': sample_ids})
         url.search = params
-        const response = await fetch(url)
-        const text = await response.text()
-        return text
+        window.location = url
     }
 }
 
@@ -281,7 +279,7 @@ class Controller {
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
         this.view.bindExportRegion(this.exportRegion)
-        this.view.bindServe(this.serve)
+        this.view.bindServe(this.handleServe)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         
@@ -328,10 +326,8 @@ class Controller {
         target_pad.loadAudio(slice.slice_url)
     }
     
-    serve = async sample_ids => {
-        let zip = await this.model.serve(sample_ids)
-        console.log(zip)
-        //document.location = 'http://127.0.0.1:8000/serve'
+    handleServe = async sample_ids => {
+        this.model.serve(sample_ids)
     }
 	
     slc = async sample_id => {

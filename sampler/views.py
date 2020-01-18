@@ -79,10 +79,10 @@ def serve(request):
         s.audio.path
         for s in Sample.objects.filter(id__in=sample_ids)
     ]
-    zipfile = zip_files(sample_paths, settings.MEDIA_ROOT)
-    print(zipfile)
     
-    response = HttpResponse(zipfile, content_type='application/zip')
+    z = zip_files(sample_paths, settings.MEDIA_ROOT)
+
+    response = HttpResponse(z, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
     
     return response

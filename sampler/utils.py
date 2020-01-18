@@ -20,4 +20,6 @@ def zip_files(filepaths, folder):
     with ZipFile(mem_file, 'w') as z:
         for f in filepaths:
             z.write(f)
+        print(z)
+    print(z)
     return z
