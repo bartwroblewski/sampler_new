@@ -299,11 +299,15 @@ class Controller {
     exportRegion = async (start_sec, end_sec, sampler) => {
 		console.log('exporting bounds:', start_sec, end_sec)
         let sample_id = sampler.waveform.sample_data.downloaded_sample_id
+        let target_pad = sampler.pads.firstEmpty()
+        
+        target_pad.loading()
         let slice = await this.model.slc(start_sec, end_sec, sample_id)
+        
         console.log('received slice', slice.slice_id)
         
-        sampler.pads.firstEmpty().audio.id = slice.slice_id
-        sampler.pads.firstEmpty().loadAudio(slice.slice_url)
+        target_pad.audio.id = slice.slice_id
+        target_pad.loadAudio(slice.slice_url)
     }
 	
     slc = async sample_id => {

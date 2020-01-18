@@ -57,7 +57,7 @@ class Waveform {
         this.canvas.addEventListener('mouseup', this.mouseUp)
         this.canvas.addEventListener('dblclick', this.dblClick)
         this.canvas.addEventListener('dragover', this.dragOver)
-        this.canvas.addEventListener('drop', this.drop)
+        this.canvas.addEventListener('drop', this.drop)            
         
     }
     
@@ -67,10 +67,7 @@ class Waveform {
     }
     
     drop = e => {
-        
-        // clear previous and show wait message
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-        
+        this.reset()
         e.preventDefault()
         let watch_url = e.dataTransfer.getData('text/plain')
         let event = new CustomEvent(
@@ -90,6 +87,12 @@ class Waveform {
     
     loadAudio(src) {
         this.audio.src = src
+    }
+    
+    reset() {
+        // clear previous and show wait message
+        this.rects = []
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
     
     draw() {
@@ -325,6 +328,7 @@ class Pad {
         this.el.addEventListener('dragstart', this.dragStart)
         this.el.addEventListener('dragover', this.dragOver)
         this.el.addEventListener('drop', this.drop)
+        
     }
     
     empty = () => this.el.classList.contains('empty') ? true : false
@@ -396,7 +400,17 @@ class Pad {
         
         // update objects list
         this.parent.update()
-    }                                
+    }           
+    
+    loading() {
+        let interval = setInterval(() => {
+            if (this.audio.src === '') {
+                this.el.textContent = 'Loading...'
+            } else {
+                this.el.textContent = ''
+            }
+        }, 100)
+    }
 }                
 
 function getRandomInt(min, max) {
