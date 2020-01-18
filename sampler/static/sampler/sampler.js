@@ -15,12 +15,15 @@ class Sampler {
         
         
         let waveform_el = document.createElement('canvas')
+        let settings_el = document.createElement('div')
         let pads_el = document.createElement('div')
         
         this.el.appendChild(waveform_el)
+        this.el.appendChild(settings_el)
         this.el.appendChild(pads_el)
 
         this.waveform = new Waveform(waveform_el)
+        this.settings = new Settings(settings_el)
         this.pads = new Pads(pads_el, 16)        
     }
 }
@@ -263,7 +266,6 @@ class Waveform {
     }
     
     drawInitialScreen() {
-        console.log('gfgfg')
         this.ctx.fillRect(0, 0, 100, 100)
     }
 }                  
@@ -429,6 +431,36 @@ class Pad {
         }, 0)   
     }
 }                
+
+class Settings {
+    constructor(el) {
+        this.render(el)
+    }
+        
+    render(el) {
+        this.el = el
+        
+        this.el.style.width = '100%'
+        this.el.style.height = '10%'
+        this.el.style.display = 'flex'
+        this.el.style.justifyContent = 'space-between'
+        
+        this.download_btn = document.createElement('button')
+        this.download_btn.textContent = 'Download pads'
+        this.el.appendChild(this.download_btn)
+        
+        this.custom_url_form = document.createElement('form')
+        let form_input = document.createElement('input')
+        form_input.type = 'text'
+        form_input.placeholder = 'Paste YouTube video url here...'
+        let submit_btn = document.createElement('button')
+        submit_btn.type  = 'submit'
+        submit_btn.textContent = 'Load'
+        this.custom_url_form.appendChild(form_input)
+        this.custom_url_form.appendChild(submit_btn)
+        this.el.appendChild(this.custom_url_form) 
+    }
+}
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
