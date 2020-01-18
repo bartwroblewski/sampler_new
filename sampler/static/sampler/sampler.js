@@ -67,6 +67,10 @@ class Waveform {
     }
     
     drop = e => {
+        
+        // clear previous and show wait message
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        
         e.preventDefault()
         let watch_url = e.dataTransfer.getData('text/plain')
         let event = new CustomEvent(

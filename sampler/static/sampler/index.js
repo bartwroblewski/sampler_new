@@ -1,9 +1,7 @@
 import {Sampler} from './sampler.js'
 
 class Model {
-    constructor() {
-        this.current_sample_id = 609 //null
-    }
+    constructor() {}
     
     async getVideos(keyword) {
         const url = new URL(get_videos_url)
@@ -20,16 +18,16 @@ class Model {
         url.search = params
         const response = await fetch(url)
         const json = await response.json()
-        this.current_sample_id = json.downloaded_sample_id
         return json
     }
     
-    async slc(start_sec, end_sec) {
+    async slc(start_sec, end_sec, sample_id) {
         let url = new URL(slice_url)
+        console.log(this.current_sample_id)
         let params = new URLSearchParams({
-            'sample_id': this.current_sample_id,
             'start_sec': start_sec,
             'end_sec': end_sec,
+            'sample_id': sample_id,
         })
         url.search = params
         const response = await fetch(url)
@@ -300,7 +298,8 @@ class Controller {
     
     exportRegion = async (start_sec, end_sec, sampler) => {
 		console.log('exporting bounds:', start_sec, end_sec)
-        let slice = await this.model.slc(start_sec, end_sec)
+        let sample_id = sampler.waveform.sample_data.downloaded_sample_id
+        let slice = await this.model.slc(start_sec, end_sec, sample_id)
         console.log('received slice', slice.slice_id)
         
         sampler.pads.firstEmpty().audio.id = slice.slice_id
