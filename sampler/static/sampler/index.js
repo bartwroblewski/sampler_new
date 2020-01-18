@@ -67,8 +67,8 @@ class Model {
         let params = new URLSearchParams({'sample_ids': sample_ids})
         url.search = params
         const response = await fetch(url)
-        const json = await response.json()
-        return json
+        const text = await response.text()
+        return text
     }
 }
 
@@ -267,6 +267,7 @@ class View {
         
         sampler.settings.el.addEventListener('serve_btn_click', e => {
             let sample_ids = e.detail
+            console.log(sample_ids)
             this.serve(sample_ids)
         })
     }
@@ -330,6 +331,7 @@ class Controller {
     serve = async sample_ids => {
         let zip = await this.model.serve(sample_ids)
         console.log(zip)
+        //document.location = 'http://127.0.0.1:8000/serve'
     }
 	
     slc = async sample_id => {
