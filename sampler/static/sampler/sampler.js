@@ -57,8 +57,9 @@ class Waveform {
         this.canvas.addEventListener('mouseup', this.mouseUp)
         this.canvas.addEventListener('dblclick', this.dblClick)
         this.canvas.addEventListener('dragover', this.dragOver)
-        this.canvas.addEventListener('drop', this.drop)            
+        this.canvas.addEventListener('drop', this.drop)       
         
+        this.drawInitialScreen()    
     }
     
     dragOver(e) {
@@ -75,6 +76,10 @@ class Waveform {
             {detail: watch_url},
         )
         this.canvas.dispatchEvent(event)
+        
+        // waiting screen here
+        this.drawWaitScreen()
+
     }
     
     renderAudio() {
@@ -87,10 +92,12 @@ class Waveform {
     
     loadAudio(src) {
         this.audio.src = src
+        this.reset()
     }
     
     reset() {
         // clear previous and show wait message
+        //this.audio.src = ''
         this.rects = []
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
@@ -250,6 +257,15 @@ class Waveform {
             if (rect !== exclude_rect) this.drawRect(rect)
         }) 
     }    
+    
+    drawWaitScreen() {
+        this.ctx.fillRect(0, 0, 50, 50)
+    }
+    
+    drawInitialScreen() {
+        console.log('gfgfg')
+        this.ctx.fillRect(0, 0, 100, 100)
+    }
 }                  
 
 class Rect {
@@ -404,12 +420,13 @@ class Pad {
     
     loading() {
         let interval = setInterval(() => {
-            if (this.audio.src === '') {
+            if (!this.audio.src) {
                 this.el.textContent = 'Loading...'
             } else {
                 this.el.textContent = ''
+                clearInterval(interval)
             }
-        }, 100)
+        }, 0)   
     }
 }                
 

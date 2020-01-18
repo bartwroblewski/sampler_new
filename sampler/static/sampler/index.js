@@ -241,8 +241,6 @@ class View {
         let sampler = new Sampler(sampler_el)
         this.samplers.push(sampler)
         
-        sampler.waveform.loadAudio('http://127.0.0.1:8000/media/samples/95023ba5-1bab-462f-9ddd-d8a8df452826Idiot_Test_-_90_fail.mp4')
-        
         sampler.waveform.canvas.addEventListener('region_dblclick', e => {
             let start_sec = e.detail.start_sec
             let end_sec = e.detail.end_sec
