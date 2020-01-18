@@ -75,6 +75,19 @@ class View {
         this.add_sampler_btn = this.getEl('#add_sampler_btn')
         this.add_sampler_btn.addEventListener('click', this.addSampler.bind(this))
         
+        let fake_thumbnail1 = document.getElementById('fake_thumbnail1')
+        fake_thumbnail1.draggable = true
+        fake_thumbnail1.addEventListener('dragstart', e => {
+            //~ e.preventDefault()
+            e.dataTransfer.setData('text/plain', "https://www.youtube.com/watch?v=AI4AnytejgQ")
+        })
+        let fake_thumbnail2 = document.getElementById('fake_thumbnail2')
+        fake_thumbnail2.draggable = true
+        fake_thumbnail2.addEventListener('dragstart', e => {
+            //~ e.preventDefault()
+            e.dataTransfer.setData('text/plain', "https://www.youtube.com/watch?v=OqLkJHBrwmA")
+        })
+        
         let self = this
 
         this.video_modal = {
