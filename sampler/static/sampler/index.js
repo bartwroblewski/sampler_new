@@ -61,6 +61,15 @@ class Model {
         const json = await response.json()
         return json
     }
+    
+    async serve(sample_ids) {
+        let url = new URL(serve_url)
+        let params = new URLSearchParams({'sample_ids': sample_ids})
+        url.search = params
+        const response = await fetch(url)
+        const json = await response.json()
+        return json
+    }
 }
 
 class View {
@@ -215,6 +224,10 @@ class View {
 		this.exportRegion = handler
 	}
     
+    bindServe(handler) {
+        this.serve = handler
+    }
+    
     createPads() {
         this.pads = new Pads('#pads', 16)
     }
@@ -251,6 +264,11 @@ class View {
             let watch_url = e.detail
             this.download(watch_url, sampler)
         })
+        
+        sampler.settings.el.addEventListener('serve_btn_click', e => {
+            let sample_ids = e.detail
+            this.serve(sample_ids)
+        })
     }
 }
 
@@ -262,6 +280,7 @@ class Controller {
         this.view.bindGetVideos(this.handleGetVideos)
         this.view.bindDownload(this.handleDownload)
         this.view.bindExportRegion(this.exportRegion)
+        this.view.bindServe(this.serve)
         this.view.bindCartAdd(this.cartAdd)
         this.view.bindCartRemove(this.cartRemove)
         
@@ -306,6 +325,11 @@ class Controller {
         
         target_pad.audio.id = slice.slice_id
         target_pad.loadAudio(slice.slice_url)
+    }
+    
+    serve = async sample_ids => {
+        let zip = await this.model.serve(sample_ids)
+        console.log(zip)
     }
 	
     slc = async sample_id => {

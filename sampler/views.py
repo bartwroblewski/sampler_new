@@ -69,6 +69,16 @@ def slc(request):
     }
     return JsonResponse(response)
     
+    
+def serve(request):
+    '''Returns a zip file containing the requested samples'''
+    sample_ids = request.GET.get('sample_ids')
+    print(sample_ids)
+    #~ zipfile = zipper.create_and_get_zipfile(request.session.session_key)
+    #~ response = HttpResponse(zipfile, content_type='application/zip')
+    #~ response['Content-Disposition'] = 'attachment; filename="samples.zip"'
+    return JsonResponse({'status': sample_ids})
+    
 def get_samples(request):
     sample_id = request.GET.get('sample_id')
     print(sample_id)

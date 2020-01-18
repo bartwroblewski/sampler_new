@@ -13,6 +13,7 @@ urlpatterns = [
     path('get_videos', views.get_videos, name='get_videos'),
     path('download', views.download, name='download'),
     path('slc', views.slc, name='slc'),
+    path('serve', views.serve, name='serve'),
     path('get_samples', views.get_samples, name='get_samples'),
     path('generate', views.generate, name='generate'),
     path('export_test', views.export_test, name='export_test'),

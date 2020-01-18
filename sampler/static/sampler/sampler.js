@@ -25,6 +25,12 @@ class Sampler {
         this.waveform = new Waveform(waveform_el)
         this.settings = new Settings(settings_el)
         this.pads = new Pads(pads_el, 16)        
+        
+        this.settings.sampleIds = this.getSampleIds
+    }
+    
+    getSampleIds = () => {
+        return this.pads.nonEmpty().map(pad => pad.audio.id)
     }
 }
 
@@ -307,6 +313,10 @@ class Pads {
         this.pads = sorted
     }
     
+    nonEmpty() {
+        return this.pads.filter(pad => !pad.empty())
+    }
+    
     empty () {
         return this.pads.filter(pad => pad.empty())
     }
@@ -445,20 +455,38 @@ class Settings {
         this.el.style.display = 'flex'
         this.el.style.justifyContent = 'space-between'
         
-        this.download_btn = document.createElement('button')
-        this.download_btn.textContent = 'Download pads'
-        this.el.appendChild(this.download_btn)
+        let serve_btn = document.createElement('button')
+        serve_btn.textContent = 'Download pads'
+        this.el.appendChild(serve_btn)
         
-        this.custom_url_form = document.createElement('form')
         let form_input = document.createElement('input')
         form_input.type = 'text'
-        form_input.placeholder = 'Paste YouTube video url here...'
+        form_input.placeholder = 'Paste YouTube video URL here...'
+        
         let submit_btn = document.createElement('button')
         submit_btn.type  = 'submit'
         submit_btn.textContent = 'Load'
+        
+        this.custom_url_form = document.createElement('form')
         this.custom_url_form.appendChild(form_input)
         this.custom_url_form.appendChild(submit_btn)
         this.el.appendChild(this.custom_url_form) 
+        
+        serve_btn.addEventListener('click', e => {
+            let event = new CustomEvent(
+                'serve_btn_click',
+                {detail: this.sampleIds},
+            )
+            this.el.dispatchEvent(event)
+        })
+    }
+    
+    set sampleIds(f) {
+        this._sample_ids = f
+    }
+    
+    get sampleIds() {
+        return this._sample_ids()
     }
 }
 
