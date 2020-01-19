@@ -27,7 +27,7 @@ class Sample(models.Model):
         start_milisec = round(start_sec * 1000)
         end_milisec = round(end_sec * 1000)
         
-        slice_name = '{}_slice_{}_to_{}.mp3'.format(
+        slice_name = '{}_slice_{}_to_{}.wav'.format(
             os.path.basename(self.audio.name),
             str(round(start_milisec)),
             str(round(end_milisec)),
@@ -35,8 +35,8 @@ class Sample(models.Model):
         slice_path = os.path.join(settings.MEDIA_ROOT, slice_name)
         slice_mp3 = song[start_milisec:end_milisec].export(
             slice_path,
-            format='mp3',
-            codec='mp3',
+            format='wav',
+            #~ codec='mp3',
         )
         
         slice_obj = Sample()

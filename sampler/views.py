@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 
 from .models import Sample
 from .cart import Cart
-from .utils import zip_files
+from .utils import in_memory_zip
 from sampler import client
 
 def index(request):
@@ -58,7 +58,7 @@ def serve(request):
         for s in Sample.objects.filter(id__in=sample_ids)
     ]
     
-    z = zip_files(sample_paths).getvalue()
+    z = in_memory_zip(sample_paths).getvalue()
     
     response = HttpResponse(z, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
