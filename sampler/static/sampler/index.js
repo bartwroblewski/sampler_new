@@ -265,7 +265,6 @@ class View {
         
         sampler.settings.el.addEventListener('serve_btn_click', e => {
             let sample_ids = e.detail
-            console.log(sample_ids)
             this.serve(sample_ids)
         })
     }
@@ -327,7 +326,11 @@ class Controller {
     }
     
     handleServe = async sample_ids => {
-        this.model.serve(sample_ids)
+        if (sample_ids.length > 0) {
+            this.model.serve(sample_ids)
+        } else {
+            alert('Load samples to pads first!')
+        }
     }
 	
     slc = async sample_id => {

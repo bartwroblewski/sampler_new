@@ -80,11 +80,10 @@ def serve(request):
         for s in Sample.objects.filter(id__in=sample_ids)
     ]
     
-    z = zip_files(sample_paths, settings.MEDIA_ROOT)
+    z = zip_files(sample_paths).getvalue()
     
-    response = HttpResponse(z.getvalue(), content_type='application/zip')
+    response = HttpResponse(z, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
-    
     return response
     
 def get_samples(request):
