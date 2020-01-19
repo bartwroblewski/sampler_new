@@ -459,18 +459,18 @@ class Settings {
         serve_btn.textContent = 'Download pads'
         this.el.appendChild(serve_btn)
         
-        let form_input = document.createElement('input')
-        form_input.type = 'text'
-        form_input.placeholder = 'Paste YouTube video URL here...'
+        let url_input = document.createElement('input')
+        url_input.type = 'text'
+        url_input.placeholder = 'Paste YouTube video URL here...'
         
-        let submit_btn = document.createElement('button')
-        submit_btn.type  = 'submit'
-        submit_btn.textContent = 'Load'
+        let load_btn = document.createElement('button')
+        load_btn.type  = 'submit'
+        load_btn.textContent = 'Load'
         
-        this.custom_url_form = document.createElement('form')
-        this.custom_url_form.appendChild(form_input)
-        this.custom_url_form.appendChild(submit_btn)
-        this.el.appendChild(this.custom_url_form) 
+        this.url_form = document.createElement('form')
+        this.url_form.appendChild(url_input)
+        this.url_form.appendChild(load_btn)
+        this.el.appendChild(this.url_form) 
         
         serve_btn.addEventListener('click', e => {
             let event = new CustomEvent(
@@ -479,6 +479,17 @@ class Settings {
             )
             this.el.dispatchEvent(event)
         })
+        
+        this.url_form.addEventListener('submit', e => {
+            e.preventDefault()
+            let watch_url = url_input.value
+            let event = new CustomEvent(
+                'url_form_submit',
+                {detail: watch_url},
+            )
+            this.url_form.dispatchEvent(event)
+        })
+        
     }
     
     set sampleIds(f) {

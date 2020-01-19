@@ -267,6 +267,12 @@ class View {
             let sample_ids = e.detail
             this.serve(sample_ids)
         })
+        
+        sampler.settings.url_form.addEventListener('url_form_submit', e => {
+            //sampler.waveform.canvas.dispatchEvent('waveform_drop')
+            let watch_url = e.detail
+            this.download(watch_url, sampler)
+        })
     }
 }
 
