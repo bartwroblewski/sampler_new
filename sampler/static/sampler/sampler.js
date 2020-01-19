@@ -437,6 +437,19 @@ class Pad {
     }
 }                
 
+class SamplersManager {
+    // Coordinates sample exchange between samplers
+    constructor() {
+        this.samplers = [] // array of Sampler objects
+    }
+    
+    register(sampler) {
+        this.samplers.push(sampler)
+    }
+    
+    unregister() {}
+}
+
 class Settings {
     constructor(el) {
         this.render(el)
