@@ -81,8 +81,8 @@ def serve(request):
     ]
     
     z = zip_files(sample_paths, settings.MEDIA_ROOT)
-
-    response = HttpResponse(z, content_type='application/zip')
+    
+    response = HttpResponse(z.getvalue(), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
     
     return response
