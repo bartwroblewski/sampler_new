@@ -4,36 +4,12 @@ from django.http import HttpResponse, JsonResponse
 
 from .models import Sample
 from .cart import Cart
-from sampler import (
-    client,
-    #~ audio,
-)
 from .utils import zip_files
+from sampler import client
 
 def index(request):
     return render(request, 'sampler/index.html')
 
-def cart_add(request):
-    sample_id = request.GET.get('sample_id')
-    sample = Sample.objects.get(id=sample_id)
-    cart = Cart(request)
-    confirmation = cart.add_sample(sample)
-    return HttpResponse(confirmation)
-    
-def cart_remove(request):
-    sample_id = request.GET.get('sample_id')
-    sample = Sample.objects.get(id=sample_id)
-    cart = Cart(request)
-    confirmation = cart.remove_sample(sample)
-    return HttpResponse(confirmation)
-    
-def cart_show(request):
-    cart = Cart(request)
-    response = {
-        'cart': cart.cart,
-    }
-    return JsonResponse(response)
-    
 def get_videos(request):
     keyword = request.GET.get('keyword')
     videos = client.get_videos(keyword)
@@ -60,11 +36,13 @@ def download(request):
     
 def slc(request):
     sample_id = request.GET.get('sample_id')
+    
     start_sec = float(request.GET.get('start_sec'))
     end_sec = float(request.GET.get('end_sec'))
-    print('SAMPLE ID', sample_id)
+
     sample = Sample.objects.get(id=sample_id)
     slice_obj = sample.slc(start_sec, end_sec)
+    
     response = {
         'slice_url': slice_obj.audio.url,
         'slice_id': slice_obj.id,
@@ -86,29 +64,3 @@ def serve(request):
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
     return response
     
-def get_samples(request):
-    sample_id = request.GET.get('sample_id')
-    print(sample_id)
-    sample = Sample.objects.get(id=sample_id)
-    samples = sample.raw
-    response = {
-        'samples': samples,
-        'abs_max': max([abs(s) for s in samples])
-    }
-    return JsonResponse(response)
-    
-def generate(request):
-    return render(request, 'sampler/generate.html')
-    
-def normalize(value, mn, mx):
-
-    if value != 0:
-        return (value - mn) / (mx - mn)
-    else:
-        return 0
-        
-def export_test(request):
-    return render(request, 'sampler/export_test.html')
-    
-def sampler_test(request):
-    return render(request, 'sampler/sampler_test.html')
