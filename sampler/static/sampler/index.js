@@ -23,7 +23,6 @@ class Model {
     
     async slc(start_sec, end_sec, sample_id) {
         let url = new URL(slice_url)
-        console.log(this.current_sample_id)
         let params = new URLSearchParams({
             'start_sec': start_sec,
             'end_sec': end_sec,
@@ -33,24 +32,6 @@ class Model {
         const response = await fetch(url)
         const json = await response.json()
         return json
-    }
-    
-    async cartAdd(sample_id) {
-        let url = new URL(cart_add_url)
-        let params = new URLSearchParams({'sample_id': sample_id})
-        url.search = params
-        const response = await fetch(url)
-        const text = await response.text()
-        return text
-    }
-    
-    async cartRemove(sample_id) {
-        let url = new URL(cart_remove_url)
-        let params = new URLSearchParams({'sample_id': sample_id})
-        url.search = params
-        const response = await fetch(url)
-        const text = await response.text()
-        return text
     }
     
     async getSamples(sample_id) {
@@ -170,77 +151,12 @@ class View {
         })
     }
     
-    createPads(slices) {
-        slices.forEach(slice => {
-            this.createPad(slice)
-        })      
-    }
-    
-    createPad(slice) {
-        console.log('creating pad for slice', slice)
-        let pad = this.createEl('div', 'pad')
-        let audio = this.createEl('audio')
-        
-        pad.id = slice.id
-        pad.textContent = slice.id
-        audio.src = slice.url
-        audio.controls = false
-        
-        pad.addEventListener('click', e => {
-            audio.play()
-        })
-        pad.addEventListener('dblclick', e => {
-            this.cart_add(e.target.id)
-        })
-        pad.addEventListener('contextmenu', e => {
-            e.preventDefault()
-            this.cart_remove(e.target.id)
-        })
-        
-        pad.appendChild(audio)
-        this.pads.appendChild(pad)
-    }
-    
-    bindCartAdd(handler) {
-        this.cart_add = handler
-    }
-    
-    bindCartRemove(handler) {
-        this.cart_remove = handler
-    }
-    
-    createWaveform(sample_url) {
-
-		this.waveform = new Waveform('#waveform')
-		this.waveform.loadAudio(sample_url)
-        this.waveform.canvas.addEventListener('region_export', (e) => {
-            this.exportRegion(e, sample_url)
-        })
-	}
-    	
 	bindExportRegion(handler) {
 		this.exportRegion = handler
 	}
     
     bindServe(handler) {
         this.serve = handler
-    }
-    
-    createPads() {
-        this.pads = new Pads('#pads', 16)
-    }
-    
-    loadFreePad(slice_url) {
-        Array.from(this.pads.children).forEach(pad => {
-            if (pad.classList.contains('empty')) {
-                let audio = document.createElement('audio')
-                audio.src = slice_url
-                pad.addEventListener('click', e => {
-                    audio.play()
-                })
-                pad.appendChild(audio)
-            }
-        })
     }
     
     addSampler(e) {
@@ -284,18 +200,6 @@ class Controller {
         this.view.bindDownload(this.handleDownload)
         this.view.bindExportRegion(this.exportRegion)
         this.view.bindServe(this.handleServe)
-        this.view.bindCartAdd(this.cartAdd)
-        this.view.bindCartRemove(this.cartRemove)
-        
-       // this.testDraw()
-        
-    }
-    
-    testDraw = async() => {
-        this.view.addSampler()
-        let json = await this.model.getSamples(609)
-        this.view.samplers[0].waveform.json = json
-        this.view.samplers[0].waveform.draw()
     }
     
     handleGetVideos = async keyword => {
@@ -314,11 +218,6 @@ class Controller {
         
         sampler.waveform.draw()
     }
-    
-    onDownloaded = sample_url=> {
-		this.view.createWaveform(sample_url, this.exportRegion)
-        this.view.createPads()
-	}
     
     exportRegion = async (start_sec, end_sec, sampler) => {
 		console.log('exporting bounds:', start_sec, end_sec)
@@ -341,29 +240,6 @@ class Controller {
             alert('Load samples to pads first!')
         }
     }
-	
-    slc = async sample_id => {
-        console.log('slicing sample with ID', sample_id)
-        let slices = await this.model.slc(
-            sample_id,
-            16,
-            1000,
-        )
-        console.log('got the following slices:', slices)
-        this.view.createPads(slices)
-    }
-    
-    cartAdd = async sample_id => {
-        let confirmation = await this.model.cartAdd(sample_id)
-        console.log(confirmation)
-    }
-    
-    cartRemove = async sample_id => {
-        let confirmation = await this.model.cartRemove(sample_id)
-        console.log(confirmation)
-    }
 }
 
 window.app = new Controller(new Model(), new View())
-
-//~ let sampler = new Sampler('#sampler')
