@@ -269,7 +269,6 @@ class View {
         })
         
         sampler.settings.url_form.addEventListener('url_form_submit', e => {
-            //sampler.waveform.canvas.dispatchEvent('waveform_drop')
             let watch_url = e.detail
             this.download(watch_url, sampler)
         })
@@ -306,9 +305,13 @@ class Controller {
     
     handleDownload = async (watch_url, sampler) => {
         console.log('downloading', watch_url)
+        sampler.waveform.reset()
+        sampler.waveform.drawWaitScreen()
+        
         let json = await this.model.download(watch_url)
         sampler.waveform.loadAudio(json.downloaded_sample_url)
         sampler.waveform.sample_data = json
+        
         sampler.waveform.draw()
     }
     

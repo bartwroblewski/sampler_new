@@ -77,7 +77,6 @@ class Waveform {
     }
     
     drop = e => {
-        this.reset()
         e.preventDefault()
         let watch_url = e.dataTransfer.getData('text/plain')
         let event = new CustomEvent(
@@ -85,10 +84,6 @@ class Waveform {
             {detail: watch_url},
         )
         this.canvas.dispatchEvent(event)
-        
-        // waiting screen here
-        this.drawWaitScreen()
-
     }
     
     renderAudio() {
