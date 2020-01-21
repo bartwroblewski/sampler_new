@@ -403,8 +403,19 @@ class Pad {
         let src_el = document.getElementById(id)
         console.log('src', src_el)
         console.log('target', e.target)
-        SWAPPER.swap(src_el, e.target)                    
+        this._swap(src_el, e.target)                    
     }
+    
+    
+    get swap() {
+        return this._swap
+    }
+    
+    set swap(value) {
+        // set by SWAPPER
+        this._swap = value
+    }
+    
     
     loading() {
         let interval = setInterval(() => {
@@ -497,6 +508,11 @@ class Swapper {
         
         register(sampler) {
             this.samplers.push(sampler)
+            
+            // set swap for each pad object
+            sampler.pads.pads.forEach(pad => {
+                pad.swap = this.swap.bind(this)
+            })   
         }
                 
         findObjectForEl(el) {
