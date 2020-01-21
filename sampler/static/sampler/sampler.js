@@ -127,6 +127,8 @@ class Waveform {
         })
         this.ctx.stroke()
         
+        // translate back to original height so that
+        // rects can be drawn properly
         this.ctx.restore()
     }
     
@@ -210,7 +212,15 @@ class Waveform {
             // avoid drawing same rect again
             this.drawAllRects(this.rect)
             
+            // move
             this.rect.x = this.rect.x + (this.cursor_x(e) - this.rect.x) 
+            
+            // prevent dragging the rect past waveform end
+            let past = (this.rect.x + this.rect.w) - this.canvas.width
+            if (past > 0) {
+                this.rect.x -= past
+            }
+            
             this.drawRect(this.rect)
         }
     }
@@ -392,7 +402,6 @@ class Pad {
         //e.dataTransfer.dropEffect = 'move'
     }
     
-                  
     drop = e => {
         e.preventDefault()
         let id = e.dataTransfer.getData('text/plain')
@@ -402,16 +411,14 @@ class Pad {
         this._swap(src_el, e.target)                    
     }
     
-    
     get swap() {
         return this._swap
     }
     
-    set swap(value) {
+    set swap(f) {
         // set by SWAPPER
-        this._swap = value
+        this._swap = f
     }
-    
     
     loading() {
         let interval = setInterval(() => {
@@ -424,19 +431,6 @@ class Pad {
         }, 0)   
     }
 }                
-
-class SamplersManager {
-    // Coordinates sample exchange between samplers
-    constructor() {
-        this.samplers = [] // array of Sampler objects
-    }
-    
-    register(sampler) {
-        this.samplers.push(sampler)
-    }
-    
-    unregister() {}
-}
 
 class Settings {
     constructor(el) {
