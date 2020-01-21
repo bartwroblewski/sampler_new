@@ -325,10 +325,6 @@ class Pads {
 
 class Pad {
     constructor(element_id) {
-        this.STYLE = {
-            on_color: 'red',
-            off_color: 'powderblue',
-        }               
         this.render(element_id)                  
     }
     
@@ -356,7 +352,7 @@ class Pad {
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
-    color = () => this.empty() ? this.STYLE.off_color : this.STYLE.on_color
+    color = () => this.empty() ? 'powderblue' : 'red'
     
     refresh() {
         this.el.style.backgroundColor = this.color()
