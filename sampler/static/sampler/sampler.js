@@ -3,6 +3,7 @@ export {Sampler}
 class Sampler {
     constructor(el) {
         this.render(el)
+        SWAPPER.register(this)
     }
     
     render(el) {
@@ -295,7 +296,7 @@ class Pads {
         this.el = el
         this.el.className = 'pads'
         for (let i = 1; i < n_pads + 1; i++) {
-            let pad = new Pad(i, this)
+            let pad = new Pad(create_UUID())
             this.pads.push(pad)
             this.el.appendChild(pad.el)
        }
@@ -323,8 +324,7 @@ class Pads {
 }
 
 class Pad {
-    constructor(element_id, parent) {
-        this.parent = parent
+    constructor(element_id) {
         this.STYLE = {
             on_color: 'red',
             off_color: 'powderblue',
@@ -403,27 +403,8 @@ class Pad {
         let src_el = document.getElementById(id)
         console.log('src', src_el)
         console.log('target', e.target)
-        this.swap(src_el, e.target)                    
+        SWAPPER.swap(src_el, e.target)                    
     }
-    
-    swap(obj1, obj2) {
-        // update DOM
-            // create marker element and insert it where obj1 is
-        let temp = document.createElement("div");
-        obj1.parentNode.insertBefore(temp, obj1);
-
-            // move obj1 to right before obj2
-        obj2.parentNode.insertBefore(obj1, obj2);
-
-            // move obj2 to right before where obj1 used to be
-        temp.parentNode.insertBefore(obj2, temp);
-
-            // remove temporary marker node
-        temp.parentNode.removeChild(temp);
-        
-        // update objects list
-        this.parent.update()
-    }           
     
     loading() {
         let interval = setInterval(() => {
@@ -507,6 +488,68 @@ class Settings {
     get sampleIds() {
         return this._sample_ids()
     }
+}
+
+class Swapper {
+        constructor() {
+            this.samplers = []
+        }
+        
+        register(sampler) {
+            this.samplers.push(sampler)
+        }
+                
+        findObjectForEl(el) {
+            let els = sampler => Array.from(sampler.pads.el.children)
+            let parent_sampler = this.samplers.filter(sampler => els(sampler).includes(el))[0]
+            let el_index = els(parent_sampler).indexOf(el)
+            let pad_obj = parent_sampler.pads.pads[el_index]
+            return { 
+                'sampler': parent_sampler,
+                'pad_obj': pad_obj,
+            }
+        }
+        
+        swap(src_el, target_el) {
+            console.log('swapper is swapping elements:', src_el, target_el)
+            let src_obj = this.findObjectForEl(src_el)
+            let target_obj = this.findObjectForEl(target_el)
+                
+            // swap objects
+            let src_idx = src_obj.sampler.pads.pads.indexOf(src_obj.pad_obj)
+            let target_idx = target_obj.sampler.pads.pads.indexOf(target_obj.pad_obj)
+            
+            src_obj.sampler.pads.pads[src_idx] = target_obj.pad_obj   
+            target_obj.sampler.pads.pads[target_idx] = src_obj.pad_obj              
+            
+            // swap DOM 
+            let temp = document.createElement("div");
+            src_el.parentNode.insertBefore(temp, src_el);
+
+                // move src_el to right before obj2
+            target_el.parentNode.insertBefore(src_el, target_el);
+
+                // move obj2 to right before where src_el used to be
+            temp.parentNode.insertBefore(target_el, temp);
+
+                // remove temporary marker node
+            temp.parentNode.removeChild(temp);
+        }
+        
+        
+    }
+    
+    
+let SWAPPER = new Swapper()
+    
+function create_UUID() {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
 }
 
 function getRandomInt(min, max) {
