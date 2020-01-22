@@ -1,7 +1,7 @@
 .sampler {
     display: grid;
-    grid-template-columns: repeat(4, 120px);
-    grid-template-rows: 100px 40px 500px;
+    grid-template-columns: repeat(4, 200px);
+    grid-template-rows: 120px 40px 500px;
     background: rgb(220, 220, 220);
 }
 
