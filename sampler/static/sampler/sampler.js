@@ -9,13 +9,13 @@ class Sampler {
     render(el) {
         this.el = el
         this.el.className = 'sampler'
-        this.el.style.width = '800px'
-        this.el.style.height = '400px'
+        //~ this.el.style.width = '800px'
+        //~ this.el.style.height = '400px'
         //~ this.el.style.backgroundColor = 'yellow'    
-        this.el.style.display = 'flex'
+        //~ this.el.style.display = 'flex'
         
         
-        let waveform_el = document.createElement('canvas')
+        let waveform_el = document.createElement('div')
         let settings_el = document.createElement('div')
         let pads_el = document.createElement('div')
         
@@ -44,16 +44,19 @@ class Waveform {
     }
     
     render(el) {
-        this.canvas = el
-        this.canvas.className = 'waveform'
+        this.el = el
+        this.el.className = 'waveform'
+        
+        this.canvas = document.createElement('canvas')
+        this.el.appendChild(this.canvas)
         
         // fit to container (sampler)
-        this.canvas.style.width = '100%'
-        this.canvas.style.height = '25%'
-        this.canvas.width = this.canvas.offsetWidth
-        this.canvas.height = this.canvas.offsetHeight
+        //~ this.canvas.style.width = '100%'
+        //~ this.canvas.style.height = '25%'
+        this.canvas.width = this.el.offsetWidth
+        this.canvas.height = this.el.offsetHeight
       
-        this.canvas.style.border = '1px solid black'
+        //~ this.canvas.style.border = '1px solid black'
         this.canvas.oncontextmenu = () => false
         
         this.box = this.canvas.getBoundingClientRect()
@@ -341,7 +344,7 @@ class Pad {
     render(element_id) {
         this.el = document.createElement('div')
         this.el.id = element_id
-        this.el.textContent = this.el.id
+        //~ this.el.textContent = this.el.id
         
         this.audio = new Audio()                    
         //~ this.audio.volume = 0 // MUTE
@@ -439,11 +442,12 @@ class Settings {
         
     render(el) {
         this.el = el
+        this.el.className = 'settings'
         
-        this.el.style.width = '100%'
-        this.el.style.height = '10%'
-        this.el.style.display = 'flex'
-        this.el.style.justifyContent = 'space-between'
+        //~ this.el.style.width = '100%'
+        //~ this.el.style.height = '10%'
+        //~ this.el.style.display = 'flex'
+        //~ this.el.style.justifyContent = 'space-between'
         
         let serve_btn = document.createElement('button')
         serve_btn.textContent = 'Download pads'
