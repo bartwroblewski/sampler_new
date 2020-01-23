@@ -1,19 +1,28 @@
 <!DOCTYPE HTML>
     <html>
         <head>
+            <style>
+
+            </style>
         </head>
         <body>
+            <canvas id="canvas"></canvas>
         </body>
         <script>
-        
-        let el = document.createElement('div')
-        let audio = document.createElement('audio')
-        
-        el.appendChild(audio)
-        document.body.appendChild(el)
 
-
-        audio.id = '1232'
-        audio.src = 'dfdf'
+        function draw() {
+            var ctx = document.getElementById('canvas').getContext('2d');
+            ctx.strokeStyle = 'red'
+            ctx.moveTo(0, 0)
+            ctx.beginPath();
+            ctx.lineWidth = 10
+            for (var i = 0; i < 1000; i++) {
+                ctx.lineTo(i, 20)
+                
+                
+            }
+            ctx.stroke()
+        }
+        draw()
         </script>
     </htmL>

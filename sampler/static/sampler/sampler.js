@@ -66,10 +66,11 @@ class Waveform {
         this.font_size = this.canvas.height * 15/100
         this.rect_color = random_rgba(0.3)
         this.message_color = random_rgba()
+        this.wave_color = random_rgba()
         
         this.ctx.font = `${this.font_size}px Georgia`
         this.ctx.fillStyle = this.rect_color
-        this.ctx.fillStyle = 'rgb(255, 255, 255)' 
+        this.ctx.strokeStyle = this.wave_color
         
         // display messages in the center of the canvas
         this.ctx.textAlign = 'center'
