@@ -1,7 +1,7 @@
 .sampler {
     display: inline-grid;
     grid-template-columns: repeat(4, 200px);
-    grid-template-rows: 120px 40px 500px;    
+    grid-template-rows: 120px 60px 500px;    
     margin: 10px;
 }
 
@@ -35,3 +35,7 @@
 .pad {
     border: 1px solid;
 }  
+
+.pad:hover {
+    cursor: pointer;
+}
