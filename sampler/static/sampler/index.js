@@ -164,7 +164,10 @@ class View {
         let el_id = `sampler_${this.samplers.length}`
         let sampler_el = this.createEl('div')
         sampler_el.id = el_id 
-        this.samplers_container.appendChild(sampler_el)
+        this.samplers_container.insertBefore(
+            sampler_el, 
+            this.samplers_container.firstChild
+        )
         let sampler = new Sampler(sampler_el)
         this.samplers.push(sampler)
         
