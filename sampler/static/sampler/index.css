@@ -20,6 +20,10 @@ nav ul li {
     height: 50px;
 }
 
+#app_name_initial {
+    color: red;
+}
+
 #app_name {
     letter-spacing: 5px;
 }
