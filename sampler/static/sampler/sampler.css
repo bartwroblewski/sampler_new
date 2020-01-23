@@ -1,10 +1,26 @@
 .sampler {
     display: inline-grid;
     grid-template-columns: repeat(4, 200px);
-    grid-template-rows: 120px 60px 500px;    
+    grid-template-rows: 30px 120px 60px 500px;    
     margin: 10px;
     opacity: 0;
     transition: opacity .5s;
+}
+
+.sampler_close {
+    grid-column: 1 / 5;
+    text-align: right;
+}
+
+.sampler_close_cross {
+    display: inline;
+    color: silver;
+    transition: color .5s;
+}
+
+.sampler_close_cross:hover {
+    color: red;
+    cursor: pointer;
 }
 
 .waveform {

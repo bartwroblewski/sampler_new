@@ -11,19 +11,26 @@ class Sampler {
         this.el = el
         this.el.className = 'sampler'
         
+        let close_el = document.createElement('div')
         let waveform_el = document.createElement('div')
         let settings_el = document.createElement('div')
         let pads_el = document.createElement('div')
         
+        this.el.appendChild(close_el)
         this.el.appendChild(waveform_el)
         this.el.appendChild(settings_el)
         this.el.appendChild(pads_el)
-
+        
+        this.close = new Close(close_el)
         this.waveform = new Waveform(waveform_el)
         this.settings = new Settings(settings_el)
         this.pads = new Pads(pads_el, 16)        
         
         this.settings.sampleIds = this.getSampleIds
+    
+        this.close.cross.addEventListener('click', e => {
+            this.fade_out()
+        })
     
         this.fade_in()
     }
@@ -36,6 +43,31 @@ class Sampler {
         setTimeout(() => {
             this.el.style.opacity = 1
         }, 0)
+    }
+    
+    fade_out() {
+        setTimeout(() => {
+            console.log(this.el.style.opacity)
+            this.el.style.opacity = 0
+        }, 0)
+        this.el.parentNode.removeChild(this.el)
+    }
+}
+
+class Close {
+    constructor(el) {
+        this.render(el)
+    }
+    
+    render(el) {
+        this.el = el
+        this.el.className = 'sampler_close'
+        
+        this.cross = document.createElement('div')
+        this.cross.textContent = 'x'
+        this.cross.className = 'sampler_close_cross'
+        
+        this.el.appendChild(this.cross)
     }
 }
 
