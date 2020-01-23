@@ -9,6 +9,8 @@
     grid-column: 1 / 5;
     border: 1px solid black;
     color: black;
+    background: black;
+    border: 1px solid silver;
 }
 
 .settings {
