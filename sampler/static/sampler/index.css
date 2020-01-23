@@ -11,6 +11,15 @@ nav ul {
     justify-content: flex-end;
 }
 
+nav ul li {
+    margin: 5px;
+}
+
+#app_logo {
+    width: 50px;
+    height: 50px;
+}
+
 #app_name {
     letter-spacing: 5px;
 }
