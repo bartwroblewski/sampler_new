@@ -62,8 +62,13 @@ class Waveform {
         this.box = this.canvas.getBoundingClientRect()
         this.ctx = this.canvas.getContext('2d')
         
-        // rect color
-        this.ctx.fillStyle = 'rgba(200, 0, 0, 0.3)'
+        this.rect_color = 'rgba(200, 0, 0, 0.3)'
+        this.message_color = 'rgb(0, 0, 0)'
+        
+        this.ctx.fillStyle = this.rect_color
+        
+        // display messages in the center of the canvas
+        this.ctx.textAlign = 'center'
         
         this.canvas.addEventListener('mousedown', this.mouseDown)
         this.canvas.addEventListener('mousemove', this.mouseMove)
@@ -72,7 +77,7 @@ class Waveform {
         this.canvas.addEventListener('dragover', this.dragOver)
         this.canvas.addEventListener('drop', this.drop)       
         
-        this.drawInitialScreen()    
+        this.displayMessage('Drag thumbnails here or use the custom URL input')    
     }
     
     dragOver(e) {
@@ -110,7 +115,7 @@ class Waveform {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
     
-    draw() {
+    drawWave() {
         let samples = this.sample_data.downloaded_sample_samples
         let abs_max = this.sample_data.downloaded_sample_abs_max
     
@@ -133,6 +138,8 @@ class Waveform {
         // translate back to original height so that
         // rects can be drawn properly
         this.ctx.restore()
+        
+        this.ctx.fillStyle = this.rect_color
     }
     
     cursor_x(e) {
@@ -149,7 +156,7 @@ class Waveform {
                 console.log('removing rect')
                 this.rects = this.rects.filter(rect => !rect.contains_x(this.cursor_x(e)))
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-                this.draw()
+                this.drawWave()
                 this.drawAllRects()
         }  
         
@@ -195,7 +202,7 @@ class Waveform {
             // let image = new Image(800, 150)
             // image.src = 'Sticky.PNG'
             // this.ctx.drawImage(image, 0, 0)
-            this.draw()
+            this.drawWave()
             
             
             //redraw all stored rects
@@ -210,7 +217,7 @@ class Waveform {
             console.log('moving rect')
             this.ctx.clearRect(0, 0, this.box.width, this.box.height)  
             
-            this.draw()
+            this.drawWave()
             
             // avoid drawing same rect again
             this.drawAllRects(this.rect)
@@ -275,15 +282,14 @@ class Waveform {
             if (rect !== exclude_rect) this.drawRect(rect)
         }) 
     }    
-    
-    drawWaitScreen() {
-        this.ctx.fillRect(0, 0, 50, 50)
-    }
-    
-    drawInitialScreen() {
-        this.ctx.fillRect(0, 0, 100, 100)
-    }
-}                  
+        
+    displayMessage(message) {
+        let x = this.canvas.width / 2
+        let y = this.canvas.height / 2
+        this.ctx.fillStyle = this.message_color
+        this.ctx.fillText(message, x, y)
+    }  
+}
 
 class Rect {
     constructor() {
@@ -450,16 +456,16 @@ class Settings {
         //~ this.el.style.justifyContent = 'space-between'
         
         let serve_btn = document.createElement('button')
-        serve_btn.textContent = 'Download pads'
+        serve_btn.textContent = 'Download current pads'
         this.el.appendChild(serve_btn)
         
         let url_input = document.createElement('input')
         url_input.type = 'text'
-        url_input.placeholder = 'Paste YouTube video URL here...'
+        url_input.placeholder = 'URL?'
         
         let load_btn = document.createElement('button')
         load_btn.type  = 'submit'
-        load_btn.textContent = 'Load'
+        load_btn.textContent = 'Load custom URL'
         
         this.url_form = document.createElement('form')
         this.url_form.appendChild(url_input)

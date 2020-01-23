@@ -210,13 +210,14 @@ class Controller {
     handleDownload = async (watch_url, sampler) => {
         console.log('downloading', watch_url)
         sampler.waveform.reset()
-        sampler.waveform.drawWaitScreen()
+        let message = `Downloading ${watch_url}...`
+        sampler.waveform.displayMessage(message)
         
         let json = await this.model.download(watch_url)
         sampler.waveform.loadAudio(json.downloaded_sample_url)
         sampler.waveform.sample_data = json
         
-        sampler.waveform.draw()
+        sampler.waveform.drawWave()
     }
     
     exportRegion = async (start_sec, end_sec, sampler) => {

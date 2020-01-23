@@ -1,18 +1,18 @@
 .sampler {
-    display: grid;
+    display: inline-grid;
     grid-template-columns: repeat(4, 200px);
-    grid-template-rows: 120px 40px 500px;
-    background: rgb(220, 220, 220);
+    grid-template-rows: 120px 40px 500px;    
+    margin: 10px;
 }
 
 .waveform {
     grid-column: 1 / 5;
-    background: green;
+    border: 1px solid black;
+    color: black;
 }
 
 .settings {
     grid-column: 1 / 5;
-    background: orange;
     display: flex;
     justify-content: space-between;
     align-items: center;
