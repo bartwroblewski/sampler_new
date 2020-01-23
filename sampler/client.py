@@ -19,7 +19,7 @@ def get_videos(keyword):
     params = {
         'key': key,
         'part': 'snippet',
-        'maxResults': 5,
+        'maxResults': 20,
         'q': keyword,
         'type': 'video',
         'videoDuration': 'short',

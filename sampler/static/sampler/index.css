@@ -25,6 +25,7 @@ form button {
     display: flex;
     overflow-x: auto;
     scrollbar-color: rgb(225, 100, 100) rgb(220, 220, 220);
+    margin: 10px;
 }
 .thumbnail {
     width: 100%;
