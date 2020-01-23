@@ -10,11 +10,6 @@ class Sampler {
     render(el) {
         this.el = el
         this.el.className = 'sampler'
-        //~ this.el.style.width = '800px'
-        //~ this.el.style.height = '400px'
-        //~ this.el.style.backgroundColor = 'yellow'    
-        //~ this.el.style.display = 'flex'
-        
         
         let waveform_el = document.createElement('div')
         let settings_el = document.createElement('div')
@@ -29,10 +24,18 @@ class Sampler {
         this.pads = new Pads(pads_el, 16)        
         
         this.settings.sampleIds = this.getSampleIds
+    
+        this.fade_in()
     }
     
     getSampleIds = () => {
         return this.pads.nonEmpty().map(pad => pad.audio.id)
+    }
+    
+    fade_in() {
+        setTimeout(() => {
+            this.el.style.opacity = 1
+        }, 0)
     }
 }
 

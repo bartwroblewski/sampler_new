@@ -2,27 +2,25 @@
     <html>
         <head>
             <style>
-
+                #test {
+                    width: 100px;
+                    height: 100px;
+                    background: black;
+                    opacity: 0;
+                    transition: opacity 1s;
+                }
             </style>
         </head>
         <body>
-            <canvas id="canvas"></canvas>
+            <div id="test"></div>
         </body>
         <script>
 
-        function draw() {
-            var ctx = document.getElementById('canvas').getContext('2d');
-            ctx.strokeStyle = 'red'
-            ctx.moveTo(0, 0)
-            ctx.beginPath();
-            ctx.lineWidth = 10
-            for (var i = 0; i < 1000; i++) {
-                ctx.lineTo(i, 20)
-                
-                
-            }
-            ctx.stroke()
-        }
-        draw()
+        let test = document.getElementById('test')
+        setTimeout(function() {
+            test.style.opacity = 1
+        }, 0)
+        
+        
         </script>
     </htmL>

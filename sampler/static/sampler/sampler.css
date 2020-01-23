@@ -3,6 +3,8 @@
     grid-template-columns: repeat(4, 200px);
     grid-template-rows: 120px 60px 500px;    
     margin: 10px;
+    opacity: 0;
+    transition: opacity .5s;
 }
 
 .waveform {
