@@ -1,5 +1,5 @@
 export {Sampler}
-import {random_shade_of_red_green_or_blue} from './colors.js'
+import {random_rgba} from './colors.js'
 
 class Sampler {
     constructor(el) {
@@ -64,11 +64,12 @@ class Waveform {
         this.ctx = this.canvas.getContext('2d')
         
         this.font_size = this.canvas.height * 15/100
-        this.rect_color = 'rgba(200, 0, 0, 0.3)'
-        this.message_color = 'rgba(0, 0, 0, 0.5)'
+        this.rect_color = random_rgba(0.3)
+        this.message_color = random_rgba()
         
         this.ctx.font = `${this.font_size}px Georgia`
         this.ctx.fillStyle = this.rect_color
+        this.ctx.fillStyle = 'rgb(255, 255, 255)' 
         
         // display messages in the center of the canvas
         this.ctx.textAlign = 'center'
@@ -80,7 +81,8 @@ class Waveform {
         this.canvas.addEventListener('dragover', this.dragOver)
         this.canvas.addEventListener('drop', this.drop)       
         
-        this.displayMessage('Drag thumbnails here or use the custom URL input')    
+        this.displayMessage('Drag thumbnails here or use the custom URL input')   
+
     }
     
     dragOver(e) {
@@ -118,7 +120,7 @@ class Waveform {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
     
-    drawWave() {
+    drawWave() {             
         let samples = this.sample_data.downloaded_sample_samples
         let abs_max = this.sample_data.downloaded_sample_abs_max
     
@@ -141,7 +143,7 @@ class Waveform {
         // translate back to original height so that
         // rects can be drawn properly
         this.ctx.restore()
-        
+    
         this.ctx.fillStyle = this.rect_color
     }
     
@@ -363,7 +365,7 @@ class Pad {
         this.el.classList.add('pad', 'empty')
                       
         this.refresh()
-        this.el.style.borderColor = random_shade_of_red_green_or_blue()
+        this.el.style.borderColor = random_rgba()
         
         this.el.oncontextmenu = () => false
         this.el.addEventListener('mouseup', this.mouseUp)
