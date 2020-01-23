@@ -363,6 +363,7 @@ class Pad {
         this.el.classList.add('pad', 'empty')
                       
         this.refresh()
+        this.el.style.borderColor = random_shade_of_red_green_or_blue()
         
         this.el.oncontextmenu = () => false
         this.el.addEventListener('mouseup', this.mouseUp)
@@ -374,7 +375,7 @@ class Pad {
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
-    color = () => this.empty() ? '' : random_shade_of_red_green_or_blue()
+    color = () => this.empty() ? 'black' : ''
     
     refresh() {
         this.el.style.backgroundColor = this.color()
