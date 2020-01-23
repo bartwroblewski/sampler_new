@@ -5,6 +5,7 @@
         <head>
             <link href="{% static 'sampler/index.css' %}" rel="stylesheet"></link>
             <link href="{% static 'sampler/sampler.css' %}" rel="stylesheet"></link>
+            <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
         </head>
         <body>
             <nav>
@@ -41,6 +42,7 @@
             const slice_url = "{% absurl 'sampler:slc' %}"
             const serve_url = "{% absurl 'sampler:serve' %}"
         </script>
+        <script src="{% static 'sampler/colors.js' %}" type="module"></script>
         <script src="{% static 'sampler/index.js' %}" type="module"></script>
         <script src="{% static 'sampler/sampler.js' %}" type="module"></script>
     </html>

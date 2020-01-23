@@ -1,4 +1,5 @@
 export {Sampler}
+import {random_shade_of_red_green_or_blue} from './colors.js'
 
 class Sampler {
     constructor(el) {
@@ -62,9 +63,11 @@ class Waveform {
         this.box = this.canvas.getBoundingClientRect()
         this.ctx = this.canvas.getContext('2d')
         
+        this.font_size = this.canvas.height * 15/100
         this.rect_color = 'rgba(200, 0, 0, 0.3)'
-        this.message_color = 'rgb(0, 0, 0)'
+        this.message_color = 'rgba(0, 0, 0, 0.5)'
         
+        this.ctx.font = `${this.font_size}px Georgia`
         this.ctx.fillStyle = this.rect_color
         
         // display messages in the center of the canvas
@@ -99,7 +102,7 @@ class Waveform {
         this.audio = document.createElement('audio')
         this.audio.preload = 'metadata'
         this.audio.controls = false
-        //~ this.audio.volume = 0
+        this.audio.volume = 0 // MUTE
         this.canvas.appendChild(this.audio)
     }
     
@@ -352,8 +355,8 @@ class Pad {
         this.el.id = element_id
         //~ this.el.textContent = this.el.id
         
-        this.audio = new Audio()                    
-        //~ this.audio.volume = 0 // MUTE
+        this.audio = document.createElement('audio')               
+        this.audio.volume = 0 // MUTE
         
         this.el.appendChild(this.audio)
         
@@ -371,7 +374,7 @@ class Pad {
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
-    color = () => this.empty() ? 'powderblue' : 'red'
+    color = () => this.empty() ? '' : random_shade_of_red_green_or_blue()
     
     refresh() {
         this.el.style.backgroundColor = this.color()
