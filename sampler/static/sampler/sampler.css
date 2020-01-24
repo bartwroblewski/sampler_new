@@ -53,8 +53,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: .9;
+    transition: opacity margin;
 }  
 
 .pad:hover {
     cursor: pointer;
+    opacity: 1;
+    
+}
+
+.pad:active {
+    margin: 1%;
+}
+
+.pad_icon {
+    width: 20%;
+    height: 25%;
 }

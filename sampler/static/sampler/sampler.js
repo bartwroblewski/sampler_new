@@ -397,11 +397,8 @@ class Pad {
         this.audio = document.createElement('audio')               
         //~ this.audio.volume = 0 // MUTE
         
-        this.icon = document.createElement('canvas')
-        this.icon.width = 20//this.el.offsetWidth
-        this.icon.height = 20//this.el.offsetHeight
-        this.icon_ctx = this.icon.getContext('2d')
-        this.icon_color = () => this.empty() ? 'grey' : 'rgb(57 ,255, 20)'
+        this.icon = document.createElement('div')
+        this.icon.className = 'pad_icon'
         
         this.el.classList.add('pad', 'empty')
                       
@@ -425,8 +422,10 @@ class Pad {
         this.el.draggable = !this.empty()
         
         // adjust pad icon color to audio state
-        this.icon_ctx.fillStyle = this.icon_color()
-        this.icon_ctx.fillRect(0, 0, this.icon.width, this.icon.height)
+        this.icon.style.backgroundColor = this.empty() ?
+            'grey' 
+        : 
+            'rgb(57 ,255, 20)'
     }
                     
     loadAudio(src) {
