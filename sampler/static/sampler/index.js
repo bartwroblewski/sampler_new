@@ -104,8 +104,12 @@ class View {
         })
         window.addEventListener('click', e => {
             if (e.target === this.info_modal) {
-                this.info_modal.style.display = 'none'
-                this.info_modal.style.opacity = 0
+                e.target.style.display = 'none'
+                e.target.style.opacity = 0
+            }
+            
+            if (e.target === this.video_modal.el) {
+                this.video_modal.close()
             }
         })
 
@@ -143,20 +147,19 @@ class View {
     }
     
     createThumbnails(videos) {
-        console.log(videos)
         videos.forEach(video => {
             this.createThumbnail(video)
         })
     }
     
-    createThumbnail(video) {
+    createThumbnail(video, container) {
         let thumbnail = this.createEl('a', 'thumbnail')
         let thumbnail_img = this.createEl('img')
         
         thumbnail_img.src = video['thumbnail_url']
         thumbnail.href = video['embed_url']
         thumbnail.innerHTML = thumbnail_img.outerHTML
-        this.thumbnails.appendChild(thumbnail)
+        this.thumbnails.insertBefore(thumbnail, this.thumbnails.firstChild)
         
         thumbnail.addEventListener('click', e => {
             e.preventDefault() // prevents following the href link when a thumbnail is clicked
@@ -227,6 +230,7 @@ class Controller {
     
     handleGetVideos = async keyword => {
         let videos = await this.model.getVideos(keyword)
+            .catch(e => alert('Error!'))
         this.view.createThumbnails(videos)
     }
     
@@ -237,6 +241,8 @@ class Controller {
         sampler.waveform.displayMessage(message)
         
         let json = await this.model.download(watch_url)
+            .catch(e => alert('Error!'))
+        
         sampler.waveform.loadAudio(json.downloaded_sample_url)
         sampler.waveform.sample_data = json
         
@@ -250,6 +256,7 @@ class Controller {
         
         //~ target_pad.loading = true
         let slice = await this.model.slc(start_sec, end_sec, sample_id)
+            .catch(e => alert('Error!'))
         
         console.log('received slice', slice.slice_id)
         

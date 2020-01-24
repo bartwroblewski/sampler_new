@@ -103,7 +103,7 @@ class Waveform {
         this.message_color = random_rgba()
         this.wave_color = random_rgba()
         
-        this.ctx.font = `${this.font_size}px Georgia`
+        this.ctx.font = `${this.font_size}px sans serif`
         this.ctx.fillStyle = this.rect_color
         this.ctx.strokeStyle = this.wave_color
         
@@ -290,10 +290,11 @@ class Waveform {
             }
             
             // remove marker-like rect
-            //~ if (this.rect.w === 1) {
-                //~ this.rects = this.rects.filter(rect => rect !== this.rect)
+            if (this.rect.w === 1) {
+                console.log('marker')
+                this.rects = this.rects.filter(rect => rect !== this.rect)
                 //~ this.drawAllRects()
-            //~ }
+            }
         }
     }
     

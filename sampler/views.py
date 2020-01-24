@@ -22,7 +22,7 @@ def download(request):
     watch_url = request.GET.get('watch_url')
     sample = Sample()
     sample.download(watch_url)
-    
+
     samples = sample.raw()
     abs_max = max([abs(s) for s in samples])
     
