@@ -414,11 +414,18 @@ class Pad {
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
-    color = () => this.empty() ? 'black' : ''
+    //~ color = () => this.empty() ? '' : 'grey'
     
     refresh() {
-        this.el.style.backgroundColor = this.color()
+        //~ this.el.style.backgroundColor = this.color()
         this.el.draggable = !this.empty()
+        
+        // show play or stop icon
+        this.empty() ?
+            this.el.textContent = 'stop' :
+            this.el.textContent = 'play'
+            
+        
     }
                     
     loadAudio(src) {
@@ -474,12 +481,11 @@ class Pad {
     
     loading() {
         let interval = setInterval(() => {
-            if (!this.audio.src) {
+            !this.audio.src ?
                 this.el.textContent = 'Loading...'
-            } else {
-                this.el.textContent = ''
+            :
+                this.el.textContent = 'play'
                 clearInterval(interval)
-            }
         }, 0)   
     }
 }                

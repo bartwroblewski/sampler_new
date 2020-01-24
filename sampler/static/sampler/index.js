@@ -238,11 +238,10 @@ class Controller {
     }
     
     handleServe = async sample_ids => {
-        if (sample_ids.length > 0) {
-            this.model.serve(sample_ids)
-        } else {
-            alert('Load samples to pads first!')
-        }
+        sample_ids.length > 0 ? 
+            this.model.serve(sample_ids) 
+        :
+            alert('Load samples to pads first!')  
     }
 }
 
