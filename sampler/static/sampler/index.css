@@ -31,7 +31,7 @@ nav ul li {
 #thumbnails { 
     display: flex;
     overflow-x: auto;
-    scrollbar-color: rgb(225, 100, 100) rgb(220, 220, 220);
+    scrollbar-color: pink rgb(100, 100, 100);
     margin: 10px;
 }
 .thumbnail {
