@@ -95,7 +95,7 @@ class Waveform {
         //~ this.canvas.style.border = '1px solid black'
         this.canvas.oncontextmenu = () => false
         
-        this.box = this.canvas.getBoundingClientRect()
+        //~ this.box = this.box.getBoundingClientRect()
         this.ctx = this.canvas.getContext('2d')
         
         this.font_size = this.canvas.height * 15/100
@@ -186,11 +186,11 @@ class Waveform {
     
     cursor_x(e) {
         // real canvas cursor position
-        return e.clientX - this.canvas.offsetLeft//this.box.left 
+        return e.clientX - this.canvas.offsetLeft//this.canvas.left 
     }
     
     xToSec(x) {
-        return  (x / this.box.width) * this.audio.duration
+        return  (x / this.canvas.width) * this.audio.duration
     }
       
     mouseDown = e => {
@@ -238,7 +238,7 @@ class Waveform {
             console.log('resizing rect')
             // clear entire canvas
 
-            this.ctx.clearRect(0, 0, this.box.width, this.box.height)
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
             
             //~ // // redraw background image (waveform)
             // let image = new Image(800, 150)
@@ -257,7 +257,7 @@ class Waveform {
         
         if (this.drag && this.move) {
             console.log('moving rect')
-            this.ctx.clearRect(0, 0, this.box.width, this.box.height)  
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)  
             
             this.drawWave()
             
