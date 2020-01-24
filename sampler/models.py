@@ -22,7 +22,7 @@ class Sample(models.Model):
         
     def slc(self, start_sec, end_sec):
         pydub.AudioSegment.converter = settings.CONVERTER_PATH
-        song = pydub.AudioSegment.from_file(self.audio.path, "mp4")
+        song = pydub.AudioSegment.from_file(self.audio.path)
         
         start_milisec = round(start_sec * 1000)
         end_milisec = round(end_sec * 1000)
@@ -47,7 +47,7 @@ class Sample(models.Model):
     
     def raw(self):
         pydub.AudioSegment.converter = settings.CONVERTER_PATH
-        song = pydub.AudioSegment.from_mp3(self.audio.path)#from_file(self.audio.path, "mp3") 
+        song = pydub.AudioSegment.from_file(self.audio.path)
         samples = song.get_array_of_samples().tolist()[::1000]
         return samples
     #~ def slc(self, num_of_slices, slice_duration):
