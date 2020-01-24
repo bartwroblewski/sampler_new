@@ -422,10 +422,10 @@ class Pad {
         this.el.draggable = !this.empty()
         
         // adjust pad icon color to audio state
-        this.icon.style.backgroundColor = this.empty() ?
-            'grey' 
+        this.icon.style.borderLeft = this.empty() ?
+            '35px solid grey' 
         : 
-            'rgb(57 ,255, 20)'
+            '35px solid rgb(57 ,255, 20)'
     }
                     
     loadAudio(src) {
