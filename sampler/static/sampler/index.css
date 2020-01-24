@@ -73,6 +73,7 @@ nav ul li {
 #video_modal_close {
     color: white;
     font-weight: bold;
+    transition: color .5s;
 }
 #video_modal_close:hover {
     color: red;

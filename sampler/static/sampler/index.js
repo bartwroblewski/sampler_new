@@ -110,7 +110,10 @@ class View {
         })
 
         this.video_modal.sample_btn.addEventListener('click', e => {
-            self.download(this.video_modal.watch_url)
+            this.video_modal.close()
+            this.addSampler()
+            let sampler = this.samplers[this.samplers.length - 1]
+            self.download(this.video_modal.watch_url, sampler)
         })
         this.video_modal.close_btn.addEventListener('click', e => {
             this.video_modal.close()
