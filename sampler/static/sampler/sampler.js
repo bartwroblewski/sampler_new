@@ -186,7 +186,7 @@ class Waveform {
     
     cursor_x(e) {
         // real canvas cursor position
-        return e.clientX - this.box.left 
+        return e.clientX - this.canvas.offsetLeft//this.box.left 
     }
     
     xToSec(x) {
