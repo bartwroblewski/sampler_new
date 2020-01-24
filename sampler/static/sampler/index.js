@@ -241,7 +241,9 @@ class Controller {
         sampler.waveform.displayMessage(message)
         
         let json = await this.model.download(watch_url)
-            .catch(e => alert('Error!'))
+            .catch(e => 
+                sampler.waveform.displayMessage('Error!')
+            )
         
         sampler.waveform.loadAudio(json.downloaded_sample_url)
         sampler.waveform.sample_data = json

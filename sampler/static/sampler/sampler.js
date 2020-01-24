@@ -330,6 +330,7 @@ class Waveform {
         let x = this.canvas.width / 2
         let y = this.canvas.height / 2
         this.ctx.fillStyle = this.message_color
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
         this.ctx.fillText(message, x, y)
     }  
 }
