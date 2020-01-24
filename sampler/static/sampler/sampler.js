@@ -481,11 +481,10 @@ class Pad {
     
     loading() {
         let interval = setInterval(() => {
-            !this.audio.src ?
-                this.el.textContent = 'Loading...'
-            :
-                this.el.textContent = 'play'
+            this.audio.src ?
                 clearInterval(interval)
+            :
+                this.el.textContent = 'Loading...'
         }, 0)   
     }
 }                
