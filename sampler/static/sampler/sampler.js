@@ -401,13 +401,6 @@ class Pad {
         this.icon.width = 20//this.el.offsetWidth
         this.icon.height = 20//this.el.offsetHeight
         this.icon_ctx = this.icon.getContext('2d')
-        this.icon_ctx.fillStyle = 'silver'
-        this.icon_ctx.fillRect(
-            this.icon.width / 2,
-            this.icon.height / 2,
-            10,
-            10,
-        )
 
         this.el.classList.add('pad', 'empty')
                       
@@ -422,21 +415,19 @@ class Pad {
         
         this.el.appendChild(this.audio)
         this.el.appendChild(this.icon)
+        
     }
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
-    //~ color = () => this.empty() ? '' : 'grey'
-    
     refresh() {
-        //~ this.el.style.backgroundColor = this.color()
         this.el.draggable = !this.empty()
         
         // show play or stop icon
-        this.empty() ?
-            this.el.textContent = 'stop'
-        :
-            this.el.textContent = 'play'
+        let color = () => this.empty() ? 'silver' : 'green'
+
+        this.icon_ctx.fillStyle = color()
+        this.icon_ctx.fillRect(0, 0, this.icon.width, this.icon.height)
     }
                     
     loadAudio(src) {

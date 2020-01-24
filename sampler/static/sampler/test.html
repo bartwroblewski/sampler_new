@@ -3,24 +3,33 @@
         <head>
         </head>
         <body>
+            <canvas></canvas>
         </body>
         <script>
         
-        let container = document.createElement('div')
-        document.body.appendChild(container)
+        let canvas = document.getElementsByTagName('canvas')[0]
+        let ctx = canvas.getContext('2d')
         
-        container.style.width = '800px'
-        container.style.height = '400px'
-        container.style.backgroundColor = 'yellow'
-        
-        let canvas_el = document.createElement('canvas')
-        container.appendChild(canvas_el)
-        
-        canvas_el.style.width = '80%'
-        canvas_el.style.height = '25%'
-        canvas_el.style.backgroundColor = 'pink'
-        
-        console.log(canvas_el.offsetWidth)
+        ctx.fillStyle = 'blue'
+        ctx.fillRect(0, 0, 100, 100)
+        //~ ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(0, 0, 100, 100)
+         ctx.fillStyle = 'blue'
+        ctx.fillRect(0, 0, 100, 100)
+        //~ ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(0, 0, 100, 100)
+         ctx.fillStyle = 'blue'
+        ctx.fillRect(0, 0, 100, 100)
+        //~ ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(0, 0, 100, 100)
+         ctx.fillStyle = 'blue'
+        ctx.fillRect(0, 0, 100, 100)
+        //~ ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(0, 0, 100, 100)
         
         
         
