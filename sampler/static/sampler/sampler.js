@@ -401,7 +401,8 @@ class Pad {
         this.icon.width = 20//this.el.offsetWidth
         this.icon.height = 20//this.el.offsetHeight
         this.icon_ctx = this.icon.getContext('2d')
-
+        this.icon_color = () => this.empty() ? 'grey' : 'rgb(57 ,255, 20)'
+        
         this.el.classList.add('pad', 'empty')
                       
         this.refresh()
@@ -423,16 +424,15 @@ class Pad {
     refresh() {
         this.el.draggable = !this.empty()
         
-        // show play or stop icon
-        let color = () => this.empty() ? 'silver' : 'green'
-
-        this.icon_ctx.fillStyle = color()
+        // adjust pad icon color to audio state
+        this.icon_ctx.fillStyle = this.icon_color()
         this.icon_ctx.fillRect(0, 0, this.icon.width, this.icon.height)
     }
                     
     loadAudio(src) {
         this.audio.src = src
         this.el.classList.remove('empty')
+        this.loading = false
         this.refresh()
     }
     
@@ -481,14 +481,14 @@ class Pad {
         this._swap = f
     }
     
-    loading() {
-        let interval = setInterval(() => {
-            this.audio.src ?
-                clearInterval(interval)
-            :
-                this.el.textContent = 'Loading...'
-        }, 0)   
-    }
+    //~ loading() {
+        //~ let interval = setInterval(() => {
+            //~ this.audio.src ?
+                //~ clearInterval(interval)
+            //~ :
+                //~ this.refresh()
+        //~ }, 0)   
+    //~ }
 }                
 
 class Settings {

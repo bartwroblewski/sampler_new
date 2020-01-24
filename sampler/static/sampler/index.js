@@ -228,7 +228,7 @@ class Controller {
         let sample_id = sampler.waveform.sample_data.downloaded_sample_id
         let target_pad = sampler.pads.firstEmpty()
         
-        //target_pad.loading()
+        //~ target_pad.loading = true
         let slice = await this.model.slc(start_sec, end_sec, sample_id)
         
         console.log('received slice', slice.slice_id)
