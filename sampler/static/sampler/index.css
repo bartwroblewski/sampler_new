@@ -111,6 +111,9 @@ input {
 }
 
 #info {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
     width: 3rem;
     height: 3rem;
     font-size: 2rem;
