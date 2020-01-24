@@ -395,10 +395,20 @@ class Pad {
         //~ this.el.textContent = this.el.id
         
         this.audio = document.createElement('audio')               
-        this.audio.volume = 0 // MUTE
+        //~ this.audio.volume = 0 // MUTE
         
-        this.el.appendChild(this.audio)
-        
+        this.icon = document.createElement('canvas')
+        this.icon.width = 20//this.el.offsetWidth
+        this.icon.height = 20//this.el.offsetHeight
+        this.icon_ctx = this.icon.getContext('2d')
+        this.icon_ctx.fillStyle = 'silver'
+        this.icon_ctx.fillRect(
+            this.icon.width / 2,
+            this.icon.height / 2,
+            10,
+            10,
+        )
+
         this.el.classList.add('pad', 'empty')
                       
         this.refresh()
@@ -410,6 +420,8 @@ class Pad {
         this.el.addEventListener('dragover', this.dragOver)
         this.el.addEventListener('drop', this.drop)
         
+        this.el.appendChild(this.audio)
+        this.el.appendChild(this.icon)
     }
     
     empty = () => this.el.classList.contains('empty') ? true : false
@@ -422,10 +434,9 @@ class Pad {
         
         // show play or stop icon
         this.empty() ?
-            this.el.textContent = 'stop' :
+            this.el.textContent = 'stop'
+        :
             this.el.textContent = 'play'
-            
-        
     }
                     
     loadAudio(src) {
