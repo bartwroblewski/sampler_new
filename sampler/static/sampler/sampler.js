@@ -173,6 +173,7 @@ class Waveform {
         this.ctx.beginPath()
         samples.forEach((sample, index) => {
             this.ctx.lineTo(index * x_scale, sample * y_scale)
+            
         })
         this.ctx.stroke()
         
