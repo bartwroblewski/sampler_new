@@ -109,3 +109,19 @@ input {
     font-family: Oswald;
     font-size: 15px;
 }
+
+#info {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+    border-radius: 50px;
+    background: pink;
+    color: black;
+    text-align: center;
+    transition: background .5s;
+}
+
+#info:hover {
+    background: white;
+    cursor: pointer;
+}

@@ -140,7 +140,7 @@ class Waveform {
         this.audio = document.createElement('audio')
         this.audio.preload = 'metadata'
         this.audio.controls = false
-        this.audio.volume = 0 // MUTE
+        //~ this.audio.volume = 0 // MUTE
         this.canvas.appendChild(this.audio)
     }
     
