@@ -36,7 +36,35 @@
                     <iframe id="video_modal_iframe"></iframe>
                 </div>
             </div>
-            <div id="info">?</div>
+            <div id="info_icon">?</div>
+            <div id="info_modal">
+                <div="info_modal_contents">
+                    <ul>
+                        <li>
+                            In the waveform hold 
+                                <span class="blue_text">left</span> 
+                            mouse button to 
+                                <span class="blue_text">draw / move</span>
+                             a sample.
+                                <span class="red_text">Right</span>
+                             click to 
+                                <span class="red_text">erase</span>
+                            it.
+                        </li> 
+                        <li>
+                            In the pads click the
+                                <span class="blue_text">left</span>
+                            /
+                                <span class="red_text">right</span>
+                            mouse button to
+                                <span class="blue_text">play</span>
+                            /
+                                <span class="red_text">remove</span>
+                            a sample. Drag to swap samples.
+                        </li>   
+                    </ul>
+                </div>
+            </div>
         </body>
         <script>
             const get_videos_url = "{% absurl 'sampler:get_videos' %}"

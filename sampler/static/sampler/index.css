@@ -49,7 +49,7 @@ nav ul li {
     top: 0;
     width: 100%; 
     height: 100%; 
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.4); 
 }
 #video_modal_contents {
     display: flex;
@@ -110,7 +110,7 @@ input {
     font-size: 15px;
 }
 
-#info {
+#info_icon {
     position: fixed;
     bottom: 1rem;
     right: 1rem;
@@ -124,7 +124,32 @@ input {
     transition: background .5s;
 }
 
-#info:hover {
+#info_icon:hover {
     background: white;
     cursor: pointer;
+}
+
+#info_modal {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.6); 
+    opacity: 0;
+    transition: opacity .3s;
+}
+
+
+
+.blue_text {
+    color: rgb(0, 150, 240);
+}
+
+.red_text {
+    color: rgb(255, 50, 0);
 }

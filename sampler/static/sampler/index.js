@@ -75,7 +75,10 @@ class View {
         })
         
         let self = this
-
+        
+        this.info_icon = this.getEl('#info_icon')
+        this.info_modal = this.getEl('#info_modal')
+        
         this.video_modal = {
             el: self.getEl('#video_modal'),
             embed_url: 'https://www.youtube.com/embed/2a4Uxdy9TQY', //assigned upon thumbnail click
@@ -92,6 +95,20 @@ class View {
                 this.el.style.display = 'none'
             },
         }
+        
+        this.info_icon.addEventListener('click', e => {
+            this.info_modal.style.display = 'flex'
+            setTimeout(function() {
+                this.info_modal.style.opacity = 1
+            }, 50)
+        })
+        window.addEventListener('click', e => {
+            if (e.target === this.info_modal) {
+                this.info_modal.style.display = 'none'
+                this.info_modal.style.opacity = 0
+            }
+        })
+
         this.video_modal.sample_btn.addEventListener('click', e => {
             self.download(this.video_modal.watch_url)
         })
