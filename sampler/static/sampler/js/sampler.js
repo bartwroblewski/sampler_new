@@ -1,5 +1,6 @@
 export {Sampler}
 import {random_rgba} from './colors.js'
+import {create_UUID} from './utils.js'
 
 class Sampler {
     constructor(el) {
@@ -606,26 +607,4 @@ class Swapper {
         
     }
     
-    
 let SWAPPER = new Swapper()
-    
-function create_UUID() {
-    var dt = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (dt + Math.random()*16)%16 | 0;
-        dt = Math.floor(dt/16);
-        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-    });
-    return uuid;
-}
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function getRandomRGB() {
-	let randint = getRandomInt(10, 255)
-	return `rgba(${randint}, 0, 0, 0.5)`
-}
