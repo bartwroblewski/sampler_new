@@ -19,8 +19,8 @@ def get_videos(request):
     
 def download(request):
     watch_url = request.GET.get('watch_url')
-    sample = Sample.objects.get(id=1706)
-    #~ sample.download(watch_url)
+    sample = Sample()#.objects.get(id=1706)
+    sample.download(watch_url)
 
     samples = sample.raw()
     abs_max = max([abs(s) for s in samples])

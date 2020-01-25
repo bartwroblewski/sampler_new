@@ -1,45 +1,47 @@
 import {Sampler} from './sampler.js'
 
+class Request {
+    constructor(url, params) {
+        this.url = new URL(url)
+        this.params = new URLSearchParams(params)
+        this.url.search = this.params
+    }
+    
+    async make() {
+        const response = await fetch(this.url)
+        const json = await response.json()
+        return json
+    }
+}
+
 class Model {
     constructor() {}
     
     async getVideos(keyword) {
-        const url = new URL(get_videos_url)
-        const params = new URLSearchParams({'keyword': keyword})
-        url.search = params
-        const response = await fetch(url)
-        const json = await response.json()
-        return json.videos
+        const request = new Request(get_videos_url, {'keyword': keyword})
+        const json = await request.make()
+        return json.videos    
     }
     
     async download(watch_url) {
-        let url = new URL(download_url)
-        let params = new URLSearchParams({'watch_url': watch_url})
-        url.search = params
-        const response = await fetch(url)
-        const json = await response.json()
+        const request = new Request(download_url , {'watch_url': watch_url})
+        const json = await request.make()
         return json
     }
     
     async slc(start_sec, end_sec, sample_id) {
-        let url = new URL(slice_url)
-        let params = new URLSearchParams({
+        const request = new Request(slice_url, {
             'start_sec': start_sec,
             'end_sec': end_sec,
             'sample_id': sample_id,
         })
-        url.search = params
-        const response = await fetch(url)
-        const json = await response.json()
+        const json = await request.make()
         return json
     }
     
     async getSamples(sample_id) {
-        let url = new URL(get_samples_url)
-        let params = new URLSearchParams({'sample_id': sample_id})
-        url.search = params
-        const response = await fetch(url)
-        const json = await response.json()
+        const request = new Request(get_samples_url , {'sample_id': sample_id})
+        const json = await request.make()
         return json
     }
     
@@ -232,7 +234,11 @@ class Controller {
     handleGetVideos = async keyword => {
         let videos = await this.model.getVideos(keyword)
             .catch(e => alert('Error getting the videos list. Please try again in a sec.'))
-        this.view.createThumbnails(videos)
+
+        videos ?
+            this.view.createThumbnails(videos)
+        :
+            alert('Seems like no videos could be found for this keyword.')
     }
     
     handleDownload = async (watch_url, sampler) => {
