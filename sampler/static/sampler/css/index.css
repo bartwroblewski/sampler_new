@@ -145,7 +145,10 @@ input {
     transition: opacity .3s;
 }
 
-
+#info_modal_contents {
+    border: 1px solid white;
+    padding: 2rem;
+}
 
 .blue_text {
     color: rgb(0, 150, 240);
