@@ -260,7 +260,7 @@ class Controller {
         let slice = await this.model.slc(start_sec, end_sec, sample_id)
             .catch(e => {
                 target_pad.errored()
-                alert('Error slicing the sample! Try again or choose another.')
+                alert('Error slicing the sample! Try again or choose another one.')
             })
             
         console.log('received slice', slice.slice_id)

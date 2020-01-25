@@ -3,7 +3,6 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 
 from .models import Sample
-from .cart import Cart
 from .utils import in_memory_zip
 from sampler import client
 
@@ -20,7 +19,7 @@ def get_videos(request):
     
 def download(request):
     watch_url = request.GET.get('watch_url')
-    sample = Sample.objects.get(id=1675)
+    sample = Sample.objects.get(id=1706)
     #~ sample.download(watch_url)
 
     samples = sample.raw()
