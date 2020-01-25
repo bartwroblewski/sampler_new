@@ -1,4 +1,4 @@
-#YouTube Chop Chop
+# YouTube Chop Chop
 
 An app to sample audio off YouTube videos.
 
@@ -7,4 +7,4 @@ the slices to your software/hardware sampler of choice for further refinement.
 
 Made in Django/vanilla JavaScript.
 
-##Screenshots:
+## Screenshots:
