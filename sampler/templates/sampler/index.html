@@ -3,15 +3,15 @@
     {% load customtags %}
     <html>
         <head>
-            <link href="{% static 'sampler/index.css' %}" rel="stylesheet"></link>
-            <link href="{% static 'sampler/sampler.css' %}" rel="stylesheet"></link>
+            <link href="{% static 'sampler/css/index.css' %}" rel="stylesheet"></link>
+            <link href="{% static 'sampler/css/sampler.css' %}" rel="stylesheet"></link>
             <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
         </head>
         <body>
             <nav>
                 <ul>
                     <li>
-                        <img id="app_logo" src="{% static 'sampler/cleaver_white_red.png' %}"></img>
+                        <img id="app_logo" src="{% static 'sampler/img/cleaver_white_red.png' %}"></img>
                     </li>
                     <li id="app_name"><span id="app_name_initial">y</span>outube chop chop</li>
                 </ul>
@@ -89,7 +89,7 @@
             const slice_url = "{% absurl 'sampler:slc' %}"
             const serve_url = "{% absurl 'sampler:serve' %}"
         </script>
-        <script src="{% static 'sampler/colors.js' %}" type="module"></script>
-        <script src="{% static 'sampler/index.js' %}" type="module"></script>
-        <script src="{% static 'sampler/sampler.js' %}" type="module"></script>
+        <script src="{% static 'sampler/js/colors.js' %}" type="module"></script>
+        <script src="{% static 'sampler/js/index.js' %}" type="module"></script>
+        <script src="{% static 'sampler/js/sampler.js' %}" type="module"></script>
     </html>
