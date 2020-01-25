@@ -21,7 +21,7 @@ class Sampler {
         this.el.appendChild(settings_el)
         this.el.appendChild(pads_el)
         
-        this.close = new Close(close_el)
+        this.close = new SamplerClose(close_el)
         this.waveform = new Waveform(waveform_el)
         this.settings = new Settings(settings_el)
         this.pads = new Pads(pads_el, 16)        
@@ -54,7 +54,7 @@ class Sampler {
     }
 }
 
-class Close {
+class SamplerClose {
     constructor(el) {
         this.render(el)
     }
@@ -400,7 +400,7 @@ class Pad {
         //~ this.audio.volume = 0 // MUTE
         
         this.icon = document.createElement('div')
-        this.icon.className = 'pad_icon'
+        this.icon.className = 'pad_icon' 
         
         this.el.classList.add('pad', 'empty')
                       
@@ -420,20 +420,21 @@ class Pad {
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
+    set_icon_color = color => this.icon.style.borderLeft = `35px solid ${color}`
+    
     refresh() {
         this.el.draggable = !this.empty()
         
         // adjust pad icon color to audio state
-        this.icon.style.borderLeft = this.empty() ?
-            '35px solid grey' 
+        this.empty() ?
+            this.set_icon_color('grey') 
         : 
-            '35px solid rgb(57 ,255, 20)'
+            this.set_icon_color('rgb(57 ,255, 20)')
     }
                     
     loadAudio(src) {
         this.audio.src = src
         this.el.classList.remove('empty')
-        this.loading = false
         this.refresh()
     }
     
@@ -482,14 +483,13 @@ class Pad {
         this._swap = f
     }
     
-    //~ loading() {
-        //~ let interval = setInterval(() => {
-            //~ this.audio.src ?
-                //~ clearInterval(interval)
-            //~ :
-                //~ this.refresh()
-        //~ }, 0)   
-    //~ }
+    loading() {
+        this.set_icon_color('rgb(248, 222, 126)')   
+    }
+    
+    errored() {
+        this.set_icon_color('rgb(251, 43, 17)')   
+    }
 }                
 
 class Settings {

@@ -115,8 +115,7 @@ class View {
 
         this.video_modal.sample_btn.addEventListener('click', e => {
             this.video_modal.close()
-            this.addSampler()
-            let sampler = this.samplers[this.samplers.length - 1]
+            let sampler = this.addSampler()
             self.download(this.video_modal.watch_url, sampler)
         })
         this.video_modal.close_btn.addEventListener('click', e => {
@@ -214,6 +213,8 @@ class View {
             let watch_url = e.detail
             this.download(watch_url, sampler)
         })
+        
+        return sampler
     }
 }
 
@@ -230,7 +231,7 @@ class Controller {
     
     handleGetVideos = async keyword => {
         let videos = await this.model.getVideos(keyword)
-            .catch(e => alert('Error!'))
+            .catch(e => alert('Error getting the videos list. Please try again in a sec.'))
         this.view.createThumbnails(videos)
     }
     
@@ -241,9 +242,7 @@ class Controller {
         sampler.waveform.displayMessage(message)
         
         let json = await this.model.download(watch_url)
-            .catch(e => 
-                sampler.waveform.displayMessage('Error!')
-            )
+            .catch(e => sampler.waveform.displayMessage('Error! Please try again in a sec or choose another video.'))
         
         sampler.waveform.loadAudio(json.downloaded_sample_url)
         sampler.waveform.sample_data = json
@@ -256,12 +255,15 @@ class Controller {
         let sample_id = sampler.waveform.sample_data.downloaded_sample_id
         let target_pad = sampler.pads.firstEmpty()
         
-        //~ target_pad.loading = true
+        target_pad.loading()
+        
         let slice = await this.model.slc(start_sec, end_sec, sample_id)
-            .catch(e => alert('Error!'))
-        
+            .catch(e => {
+                target_pad.errored()
+                alert('Error slicing the sample! Try again or choose another.')
+            })
+            
         console.log('received slice', slice.slice_id)
-        
         target_pad.audio.id = slice.slice_id
         target_pad.loadAudio(slice.slice_url)
     }
