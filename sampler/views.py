@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.conf import settings
-from django.http import HttpResponse, JsonResponse
+from django.http import  JsonResponse
 
 from .models import Sample
 from .utils import in_memory_zip

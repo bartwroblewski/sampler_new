@@ -10,30 +10,29 @@ from django.conf import settings
 
 pydub.AudioSegment.converter = settings.CONVERTER_PATH
 
-def download(watch_url):
-    class MyLogger(object):
-        def debug(self, msg):
-            pass
+class DownloadLogger(object):
+    def debug(self, msg):
+        pass
 
-        def warning(self, msg):
-            pass
+    def warning(self, msg):
+        pass
 
-        def error(self, msg):
-            print(msg)
-
+    def error(self, msg):
+        print(msg)
 
     def my_hook(d):
         if d['status'] == 'finished':
-            print('Done downloading, now converting ...')
-
-    
+            pass
+            #~ print('Done downloading, now converting ...')
+            
+def download(watch_url):
     filepath = os.path.join(
         settings.MEDIA_ROOT,
         'samples',
         str(uuid.uuid4()) + '.mp3',
     )
     
-    ydl_opts = {
+    opts = {
         'outtmpl': str(filepath),
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -41,10 +40,11 @@ def download(watch_url):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        'logger': MyLogger(),
-        'progress_hooks': [my_hook],
+        #~ 'logger': DownloadLogger(),
+        #~ 'progress_hooks': [my_hook],
     }
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+    
+    with youtube_dl.YoutubeDL(opts) as ydl:
         ydl.download([watch_url])
         
     return filepath

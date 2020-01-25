@@ -47,10 +47,10 @@ class Sampler {
     }
     
     fade_out() {
-        setTimeout(() => {
-            console.log(this.el.style.opacity)
-            this.el.style.opacity = 0
-        }, 0)
+        //~ setTimeout(() => {
+            //~ console.log(this.el.style.opacity)
+            //~ this.el.style.opacity = 0
+        //~ }, 0)
         this.el.parentNode.removeChild(this.el)
     }
 }
@@ -88,15 +88,11 @@ class Waveform {
         this.el.appendChild(this.canvas)
         
         // fit to container (sampler)
-        //~ this.canvas.style.width = '100%'
-        //~ this.canvas.style.height = '25%'
         this.canvas.width = this.el.offsetWidth
         this.canvas.height = this.el.offsetHeight
       
-        //~ this.canvas.style.border = '1px solid black'
         this.canvas.oncontextmenu = () => false
         
-        //~ this.box = this.box.getBoundingClientRect()
         this.ctx = this.canvas.getContext('2d')
         
         this.font_size = this.canvas.height * 15/100
@@ -151,8 +147,7 @@ class Waveform {
     }
     
     reset() {
-        // clear previous and show wait message
-        //this.audio.src = ''
+        // clear waveform and show wait message
         this.rects = []
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
@@ -162,7 +157,8 @@ class Waveform {
         let abs_max = this.sample_data.downloaded_sample_abs_max
     
         this.ctx.save()
-        this.ctx.translate(0, this.canvas.height / 2) // display waveform in the middle Y of canvas
+        // display waveform in the middle Y of canvas
+        this.ctx.translate(0, this.canvas.height / 2) 
         
         // set up scaling
         let y_zoom = (this.canvas.height / 100) * 55
@@ -237,16 +233,11 @@ class Waveform {
         
         if (this.drag && !this.move) {
             console.log('resizing rect')
+            
             // clear entire canvas
-
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
             
-            //~ // // redraw background image (waveform)
-            // let image = new Image(800, 150)
-            // image.src = 'Sticky.PNG'
-            // this.ctx.drawImage(image, 0, 0)
             this.drawWave()
-            
             
             //redraw all stored rects
             this.drawAllRects()
@@ -258,11 +249,13 @@ class Waveform {
         
         if (this.drag && this.move) {
             console.log('moving rect')
+            
+            // clear entire canvas
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)  
             
             this.drawWave()
             
-            // avoid drawing same rect again
+            // avoid drawing same rect again by passing it as an argument
             this.drawAllRects(this.rect)
             
             // move
@@ -300,8 +293,8 @@ class Waveform {
     }
     
     dblClick = async e => {
-        // if more than one region contains clicked x, the one on top (last created)
-        // will be exported
+        // NOTE: if more than one region contains clicked x, 
+        // the one on top (last created) will be exported
         let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))
         let event = new CustomEvent(
             'region_dblclick',
@@ -365,14 +358,7 @@ class Pads {
             this.el.appendChild(pad.el)
        }
     }   
-    
-    update() {
-        // update objects list order to match DOM order
-        let ids = Array.from(this.el.children).map(el => el.id)
-        let sorted = this.pads.map(pad => this.pads[ids.indexOf(pad.el.id)])
-        this.pads = sorted
-    }
-    
+       
     nonEmpty() {
         return this.pads.filter(pad => !pad.empty())
     }
@@ -395,7 +381,6 @@ class Pad {
     render(element_id) {
         this.el = document.createElement('div')
         this.el.id = element_id
-        //~ this.el.textContent = this.el.id
         
         this.audio = document.createElement('audio')               
         //~ this.audio.volume = 0 // MUTE
@@ -449,7 +434,7 @@ class Pad {
     
     mouseUp = e => {
         if (e.button === 0) {
-            this.audio.play() //loadAudio('bensound-summer.mp3')
+            this.audio.play()
         }
         if (e.button === 2) {
             this.removeAudio()
@@ -463,7 +448,6 @@ class Pad {
     
     dragOver = e => {
         e.preventDefault()
-        //e.dataTransfer.dropEffect = 'move'
     }
     
     drop = e => {
@@ -501,11 +485,6 @@ class Settings {
     render(el) {
         this.el = el
         this.el.className = 'settings'
-        
-        //~ this.el.style.width = '100%'
-        //~ this.el.style.height = '10%'
-        //~ this.el.style.display = 'flex'
-        //~ this.el.style.justifyContent = 'space-between'
         
         let serve_btn = document.createElement('button')
         serve_btn.textContent = 'Download current pads'
@@ -579,7 +558,8 @@ class Swapper {
         }
         
         swap(src_el, target_el) {
-            console.log('swapper is swapping elements:', src_el, target_el)
+            console.log('swapper is swapping the following elements:', src_el, target_el)
+            
             let src_obj = this.findObjectForEl(src_el)
             let target_obj = this.findObjectForEl(target_el)
                 
@@ -602,9 +582,7 @@ class Swapper {
 
                 // remove temporary marker node
             temp.parentNode.removeChild(temp);
-        }
-        
-        
+        }   
     }
     
 let SWAPPER = new Swapper()

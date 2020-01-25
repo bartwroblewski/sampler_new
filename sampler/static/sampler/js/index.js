@@ -46,8 +46,8 @@ class Model {
     }
     
     serve(sample_ids) {
-        let url = new URL(serve_url)
-        let params = new URLSearchParams({'sample_ids': sample_ids})
+        const url = new URL(serve_url)
+        const params = new URLSearchParams({'sample_ids': sample_ids})
         url.search = params
         window.location = url
     }
@@ -185,6 +185,7 @@ class View {
     
     addSampler(e) {
         console.log('adding sampler')
+        
         let el_id = `sampler_${this.samplers.length}`
         let sampler_el = this.createEl('div')
         sampler_el.id = el_id 
@@ -192,6 +193,7 @@ class View {
             sampler_el, 
             this.samplers_container.firstChild
         )
+        
         let sampler = new Sampler(sampler_el)
         this.samplers.push(sampler)
         
@@ -225,13 +227,13 @@ class Controller {
         this.model = model
         this.view = view
         
-        this.view.bindGetVideos(this.handleGetVideos)
-        this.view.bindDownload(this.handleDownload)
+        this.view.bindGetVideos(this.getVideos)
+        this.view.bindDownload(this.download)
         this.view.bindExportRegion(this.exportRegion)
-        this.view.bindServe(this.handleServe)
+        this.view.bindServe(this.serve)
     }
     
-    handleGetVideos = async keyword => {
+    getVideos = async keyword => {
         let videos = await this.model.getVideos(keyword)
             .catch(e => alert('Error getting the videos list. Please try again in a sec.'))
 
@@ -241,8 +243,9 @@ class Controller {
             alert('Seems like no videos could be found for this keyword.')
     }
     
-    handleDownload = async (watch_url, sampler) => {
+    download = async (watch_url, sampler) => {
         console.log('downloading', watch_url)
+        
         sampler.waveform.reset()
         let message = `Downloading ${watch_url}...`
         sampler.waveform.displayMessage(message)
@@ -258,6 +261,7 @@ class Controller {
     
     exportRegion = async (start_sec, end_sec, sampler) => {
 		console.log('exporting bounds:', start_sec, end_sec)
+        
         let sample_id = sampler.waveform.sample_data.downloaded_sample_id
         let target_pad = sampler.pads.firstEmpty()
         
@@ -274,7 +278,7 @@ class Controller {
         target_pad.loadAudio(slice.slice_url)
     }
     
-    handleServe = async sample_ids => {
+    serve = async sample_ids => {
         sample_ids.length > 0 ? 
             this.model.serve(sample_ids) 
         :
