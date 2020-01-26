@@ -294,7 +294,7 @@ class Waveform {
     
     dblClick = async e => {
         // NOTE: if more than one region contains clicked x, 
-        // the one on top (last created) will be exported
+        // the one on top (last created) will be exportboundsed
         let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))
         let event = new CustomEvent(
             'region_dblclick',
@@ -304,9 +304,13 @@ class Waveform {
     }
     
     rectToAudio(rect) {
+        let secs = [
+            this.xToSec(rect.x),
+            this.xToSec(rect.x + rect.w),
+        ].sort((a, b) => a - b)
         return {
-            'start_sec': this.xToSec(rect.x),
-            'end_sec': this.xToSec(rect.x + rect.w),
+                'start_sec': secs[0],
+                'end_sec': secs[1],
         }
     }
 
