@@ -18,7 +18,7 @@ def get_videos(request):
     
 def download(request):
     watch_url = request.GET.get('watch_url')
-    sample = Sample()#.objects.get(id=1706)
+    sample = Sample()
     sample.download(watch_url)
 
     samples = sample.raw()
@@ -60,5 +60,4 @@ def serve(request):
     
     response = HttpResponse(z, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
-    return response
-    
+    return response   

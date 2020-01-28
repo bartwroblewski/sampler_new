@@ -25,7 +25,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
+        'gunicorn': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
