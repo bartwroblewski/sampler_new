@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf import settings
-#~ from django.conf.urls.static import static
+from django.conf.urls.static import static
 
 from . import views
 
@@ -11,4 +11,8 @@ urlpatterns = [
     path('download_sample', views.download_sample, name='download_sample'),
     path('slice_sample', views.slice_sample, name='slice_sample'),
     path('serve_slices', views.serve_slices, name='serve_slices'),
-] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# local urls
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

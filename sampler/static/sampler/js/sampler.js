@@ -435,8 +435,11 @@ class Pad {
     }
     
     mouseUp = e => {
-        if (e.button === 0) {
-            this.set_icon_color('blue')   
+        if (e.button === 0) { 
+            //~ this.set_icon_color('blue')   
+            //~ setTimeout(function()
+                //~ this.set_icon_color('rgb(57 ,255, 20)')
+            //~ }, this.audio.duration)
             this.audio.play()
         }
         if (e.button === 2) {
