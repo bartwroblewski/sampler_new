@@ -1,11 +1,14 @@
 import os
+import datetime
 
 from django.db import models
+from django.utils import timezone
 
 from sampler import audio
 
 class Sample(models.Model):
     audio = models.FileField(upload_to='samples')
+    created = models.DateTimeField(auto_now_add=True)
     
     def download(self, watch_url):
         filepath = audio.download_audio(watch_url)
@@ -30,3 +33,16 @@ class Sample(models.Model):
     def as_samples(self):
         samples = audio.get_samples(self.audio.path)
         return samples
+        
+    def remove_if_old(self, threshold):
+        '''Remove old object from db 
+        and its associated file from disk.
+        ''' 
+        timedelta = timezone.now() - self.created
+        timedelta_in_hours = timedelta.total_seconds() / 3600
+        if timedelta_in_hours > threshold:
+            os.remove(self.audio.path)
+            self.delete()
+            
+    def __str__(self):
+        return '{}, {}'.format(self.audio.name, self.created)
