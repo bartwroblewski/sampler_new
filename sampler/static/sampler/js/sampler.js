@@ -392,7 +392,7 @@ class Pad {
         this.icon_colors = {
             'empty': 'grey',
             'loading': 'rgb(248, 222, 126)',
-            'not_empty': 'dodgerblue',
+            'stopped': 'dodgerblue',
             'playing': 'rgb(57 ,255, 20)',
             'errored': 'rgb(251, 43, 17)',
         }
@@ -415,6 +415,8 @@ class Pad {
     
     empty = () => this.el.classList.contains('empty') ? true : false
     
+    playing = () => this.audio.currentTime > 0 && !this.audio.paused ? true : false
+    
     set_icon_color = color => this.icon.style.borderLeft = `35px solid ${color}`
     
     refresh() {
@@ -424,7 +426,7 @@ class Pad {
         this.empty() ?
             this.set_icon_color(this.icon_colors.empty) 
         : 
-            this.set_icon_color(this.icon_colors.not_empty)
+            this.set_icon_color(this.icon_colors.stopped)
     }
                     
     loadAudio(src) {
@@ -443,12 +445,19 @@ class Pad {
     
     mouseUp = e => {
         if (e.button === 0) { 
+            if (this.playing()) { 
+                this.audio.pause()
+                this.set_icon_color(this.icon_colors.stopped)
+                this.audio.load()
+                return
+            }
+            
             this.set_icon_color(this.icon_colors.playing)
                
             let audio_duration = Math.round(this.audio.duration * 1000)
             
             setTimeout(() => {
-                this.set_icon_color(this.icon_colors.not_empty)
+                this.set_icon_color(this.icon_colors.stopped)
             }, audio_duration)
             
             this.audio.play()
