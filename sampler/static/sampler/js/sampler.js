@@ -389,6 +389,13 @@ class Pad {
         
         this.icon = document.createElement('div')
         this.icon.className = 'pad_icon' 
+        this.icon_colors = {
+            'empty': 'grey',
+            'loading': 'rgb(248, 222, 126)',
+            'not_empty': 'dodgerblue',
+            'playing': 'rgb(57 ,255, 20)',
+            'errored': 'rgb(251, 43, 17)',
+        }
         
         this.el.classList.add('pad', 'empty')
                       
@@ -415,9 +422,9 @@ class Pad {
         
         // adjust pad icon color to audio state
         this.empty() ?
-            this.set_icon_color('grey') 
+            this.set_icon_color(this.icon_colors.empty) 
         : 
-            this.set_icon_color('rgb(57 ,255, 20)')
+            this.set_icon_color(this.icon_colors.not_empty)
     }
                     
     loadAudio(src) {
@@ -436,10 +443,13 @@ class Pad {
     
     mouseUp = e => {
         if (e.button === 0) { 
-            //~ this.set_icon_color('blue')   
-            //~ setTimeout(function()
-                //~ this.set_icon_color('rgb(57 ,255, 20)')
-            //~ }, this.audio.duration)
+            this.set_icon_color(this.icon_colors.playing)
+               
+            let timeout = Math.round(this.audio.duration * 1000)
+            
+            setTimeout(() => {
+                this.set_icon_color(this.icon_colors.not_empty)
+            }, timeout)
             this.audio.play()
         }
         if (e.button === 2) {
@@ -475,11 +485,11 @@ class Pad {
     }
     
     loading() {
-        this.set_icon_color('rgb(248, 222, 126)')   
+        this.set_icon_color(this.icon_colors.loading)   
     }
     
     errored() {
-        this.set_icon_color('rgb(251, 43, 17)')   
+        this.set_icon_color(this.icon_colors.errored)   
     }
 }                
 
