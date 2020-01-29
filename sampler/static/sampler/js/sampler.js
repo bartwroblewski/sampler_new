@@ -445,22 +445,22 @@ class Pad {
     
     mouseUp = e => {
         if (e.button === 0) { 
-            if (this.playing()) { 
+            if (this.playing()) {  
+                clearTimeout(this.timeoutID)
                 this.audio.pause()
-                this.set_icon_color(this.icon_colors.stopped)
+                this.audio.currentTime = 0
                 this.audio.load()
-                return
-            }
-            
-            this.set_icon_color(this.icon_colors.playing)
-               
-            let audio_duration = Math.round(this.audio.duration * 1000)
-            
-            setTimeout(() => {
                 this.set_icon_color(this.icon_colors.stopped)
-            }, audio_duration)
-            
-            this.audio.play()
+                return
+            } else {
+                let audio_duration = Math.round(this.audio.duration * 1000)
+                this.timeoutID = setTimeout(() => {
+                    this.set_icon_color(this.icon_colors.stopped)
+                }, audio_duration)
+                
+                this.set_icon_color(this.icon_colors.playing)
+                this.audio.play()
+            }
         }
         if (e.button === 2) {
             this.removeAudio()
