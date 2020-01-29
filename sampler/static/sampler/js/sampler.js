@@ -436,6 +436,7 @@ class Pad {
     
     mouseUp = e => {
         if (e.button === 0) {
+            this.set_icon_color('blue')   
             this.audio.play()
         }
         if (e.button === 2) {
