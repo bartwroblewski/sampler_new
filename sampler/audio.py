@@ -25,7 +25,7 @@ class DownloadLogger(object):
             pass
             #~ print('Done downloading, now converting ...')
             
-def download(watch_url):
+def download_audio(watch_url):
     filepath = os.path.join(
         settings.MEDIA_ROOT,
         'samples',
@@ -49,7 +49,7 @@ def download(watch_url):
         
     return filepath
 
-def slc(parent_sample_name, parent_sample_path, start_sec, end_sec):    
+def slice_audio(parent_sample_name, parent_sample_path, start_sec, end_sec):    
     start_milisec = round(start_sec * 1000)
     end_milisec = round(end_sec * 1000)
     
@@ -72,5 +72,5 @@ def slc(parent_sample_name, parent_sample_path, start_sec, end_sec):
 def get_samples(filepath):
     audio_segment = pydub.AudioSegment.from_file(filepath)
     skip_every = 1000
-    samples = audio_segment.get_array_of_samples().tolist()[::skip_every]
+    samples = audio_segment.get_array_of_samples()[::skip_every].tolist()
     return samples

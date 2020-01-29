@@ -191,6 +191,7 @@ class Waveform {
     }
       
     mouseDown = e => {
+        this.memo_x = this.cursor_x(e)
         if (e.button === 2) {
                 console.log('removing rect')
                 this.rects = this.rects.filter(rect => !rect.contains_x(this.cursor_x(e)))
@@ -259,7 +260,8 @@ class Waveform {
             this.drawAllRects(this.rect)
             
             // move
-            this.rect.x = this.rect.x + (this.cursor_x(e) - this.rect.x) 
+            this.rect.x += this.cursor_x(e) - this.memo_x
+            this.memo_x += this.cursor_x(e) - this.memo_x
             
             // prevent dragging the rect past waveform end
             let past = (this.rect.x + this.rect.w) - this.canvas.width
@@ -294,7 +296,7 @@ class Waveform {
     
     dblClick = async e => {
         // NOTE: if more than one region contains clicked x, 
-        // the one on top (last created) will be exportboundsed
+        // the one on top (last created) will be exported
         let clicked_rect = this.rects.reverse().find(rect => rect.contains_x(this.cursor_x(e)))
         let event = new CustomEvent(
             'region_dblclick',
@@ -304,13 +306,9 @@ class Waveform {
     }
     
     rectToAudio(rect) {
-        let secs = [
-            this.xToSec(rect.x),
-            this.xToSec(rect.x + rect.w),
-        ].sort((a, b) => a - b)
         return {
-                'start_sec': secs[0],
-                'end_sec': secs[1],
+            'start_sec': this.xToSec(rect.x),
+            'end_sec': this.xToSec(rect.x + rect.w),
         }
     }
 

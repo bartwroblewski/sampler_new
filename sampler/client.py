@@ -1,8 +1,11 @@
 import os
+import logging
 
 import requests
 
 from django.conf import settings
+
+logger = logging.getLogger('gunicorn.errors')
 
 def video(item):
     v = {}
@@ -26,6 +29,7 @@ def get_videos(keyword):
     }
         
     response = requests.get(url, params)
+    logger.debug('{}'.format(response.text))
     items = response.json()['items']
     
     videos = []

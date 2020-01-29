@@ -8,14 +8,14 @@ class Sample(models.Model):
     audio = models.FileField(upload_to='samples')
     
     def download(self, watch_url):
-        filepath = audio.download(watch_url)
+        filepath = audio.download_audio(watch_url)
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as f:
             self.audio.save(filename, f)
         os.remove(filepath)
         
-    def slc(self, start_sec, end_sec):
-        _slice = audio.slc(
+    def slice_(self, start_sec, end_sec):
+        _slice = audio.slice_audio(
             self.audio.name,
             self.audio.path,
             start_sec, 
@@ -27,6 +27,6 @@ class Sample(models.Model):
         os.remove(_slice.path)  
         return slice_obj
     
-    def raw(self):
+    def as_samples(self):
         samples = audio.get_samples(self.audio.path)
         return samples

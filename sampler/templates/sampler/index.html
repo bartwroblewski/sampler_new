@@ -83,9 +83,9 @@
         </body>
         <script>
             const get_videos_url = "{% absurl 'sampler:get_videos' %}"
-            const download_url = "{% absurl 'sampler:download' %}"
-            const slice_url = "{% absurl 'sampler:slc' %}"
-            const serve_url = "{% absurl 'sampler:serve' %}"
+            const download_url = "{% absurl 'sampler:download_sample' %}"
+            const slice_url = "{% absurl 'sampler:slice_sample' %}"
+            const serve_url = "{% absurl 'sampler:serve_slices' %}"
         </script>
         <script src="{% static 'sampler/js/colors.js' %}" type="module"></script>
         <script src="{% static 'sampler/js/utils.js' %}" type="module"></script>

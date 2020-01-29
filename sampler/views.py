@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
@@ -16,12 +18,12 @@ def get_videos(request):
     }
     return JsonResponse(response)
     
-def download(request):
+def download_sample(request):
     watch_url = request.GET.get('watch_url')
-    sample = Sample()
+    sample = Sample()#.objects.get(id=1706)
     sample.download(watch_url)
 
-    samples = sample.raw()
+    samples = sample.as_samples()
     abs_max = max([abs(s) for s in samples])
     
     response = {
@@ -32,14 +34,14 @@ def download(request):
     }
     return JsonResponse(response)
     
-def slc(request):
+def slice_sample(request):
     sample_id = request.GET.get('sample_id')
     
     start_sec = float(request.GET.get('start_sec'))
     end_sec = float(request.GET.get('end_sec'))
 
     sample = Sample.objects.get(id=sample_id)
-    slice_obj = sample.slc(start_sec, end_sec)
+    slice_obj = sample.slice_(start_sec, end_sec)
     
     response = {
         'slice_url': slice_obj.audio.url,
@@ -48,7 +50,7 @@ def slc(request):
     return JsonResponse(response)
     
     
-def serve(request):
+def serve_slices(request):
     '''Returns a zip file containing the requested samples'''
     sample_ids = request.GET.get('sample_ids').split(',')
     sample_paths = [
@@ -60,4 +62,4 @@ def serve(request):
     
     response = HttpResponse(z, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="samples.zip"'
-    return response   
+    return response
