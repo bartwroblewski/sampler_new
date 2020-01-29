@@ -445,11 +445,12 @@ class Pad {
         if (e.button === 0) { 
             this.set_icon_color(this.icon_colors.playing)
                
-            let timeout = Math.round(this.audio.duration * 1000)
+            let audio_duration = Math.round(this.audio.duration * 1000)
             
             setTimeout(() => {
                 this.set_icon_color(this.icon_colors.not_empty)
-            }, timeout)
+            }, audio_duration)
+            
             this.audio.play()
         }
         if (e.button === 2) {
