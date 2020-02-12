@@ -269,6 +269,9 @@ class Waveform {
                 this.rect.x -= past
             }
             
+            // prevent dragging the rect past waveform start
+            if (this.rect.x < 0) this.rect.x = 0
+            
             this.drawRect(this.rect)
         }
     }
