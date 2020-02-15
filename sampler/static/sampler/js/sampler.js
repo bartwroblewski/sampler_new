@@ -317,9 +317,12 @@ class Waveform {
     }
     
     rectToAudio(rect) {
-        return {
-            'start_sec': this.xToSec(rect.x),
-            'end_sec': this.xToSec(rect.x + rect.w),
+        let start_sec = this.xToSec(rect.x)
+        let end_sec = this.xToSec(rect.x + rect.w)
+        if (start_sec <= end_sec) {
+            return {start_sec: start_sec, end_sec: end_sec}
+        } else {
+            return {start_sec: end_sec, end_sec: start_sec}
         }
     }
 

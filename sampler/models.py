@@ -45,4 +45,4 @@ class Sample(models.Model):
             self.delete()
             
     def __str__(self):
-        return '{}, {}'.format(self.audio.name, self.created)
+        return '{}_{}, {}'.format(self.id, self.audio.name, self.created)
