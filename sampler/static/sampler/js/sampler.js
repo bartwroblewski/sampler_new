@@ -263,14 +263,22 @@ class Waveform {
             this.rect.x += this.cursor_x(e) - this.memo_x
             this.memo_x += this.cursor_x(e) - this.memo_x
             
-            // prevent dragging the rect past waveform end
-            let past = (this.rect.x + this.rect.w) - this.canvas.width
-            if (past > 0) {
-                this.rect.x -= past
+            // prevent dragging right-left rect past waveform end
+            if (this.rect.x > this.canvas.width) {
+                this.rect.x = this.canvas.width
             }
-            
-            // prevent dragging the rect past waveform start
-            if (this.rect.x < 0) this.rect.x = 0
+            // prevent dragging right-left rect past waveform start 
+            else if ((this.rect.x + this.rect.w) < 0) {
+                this.rect.x = Math.abs(this.rect.w)
+            }
+            // prevent dragging left-right rect past waveform end
+            else if (this.rect.x + this.rect.w > this.canvas.width) {
+                this.rect.x = this.canvas.width - this.rect.w
+            }  
+            // prevent dragging left-right rect past waveform start
+            else if (this.rect.x < 0) {
+                this.rect.x = 0
+            }
             
             this.drawRect(this.rect)
         }
