@@ -26,7 +26,7 @@ Chopped samples are stored on app's server and available for download.
 
 Backend: Python & Django
 
-Frontend: vanilla JavaScript.
+Frontend: vanilla JavaScript with WebAudio API.
 
 ## Screenshot:
 ![Alt text](/screenshots/app.png?raw=true)
