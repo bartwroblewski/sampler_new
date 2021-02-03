@@ -25,7 +25,8 @@ Chopped samples are stored on app's server and available for download.
 ## Technology stack
 
 Backend: Python & Django
+
 Frontend: vanilla JavaScript.
 
-## Screenshots:
+## Screenshot:
 ![Alt text](/screenshots/app.png?raw=true)
