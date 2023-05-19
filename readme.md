@@ -6,7 +6,7 @@ An app to sample audio off YouTube videos.
 
 ## Usage
 
-Live version [here](http://134.209.236.65/).
+``Live version [here](http://134.209.236.65/).``
 
 1. Search for a YouTube video.
 2. Add a new sampler and drag the video to it.
