@@ -17,4 +17,4 @@ COPY . .
 
 RUN python manage.py migrate
 
-ENTRYPOINT ["python", "manage.py", "runserver",  "--settings", "sampler_proj.settings.local"]
+ENTRYPOINT ["python", "manage.py", "runserver", "0.0.0.0:8000"]
