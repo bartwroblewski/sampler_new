@@ -4,7 +4,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['134.209.236.65']
+ALLOWED_HOSTS = ['46.101.156.79']
 
 STATIC_ROOT = os.path.join(
     os.path.dirname(BASE_DIR),
