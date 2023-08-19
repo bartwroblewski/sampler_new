@@ -1,0 +1,20 @@
+FROM python:3.9
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+  ffmpeg \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+# https://github.com/ytdl-org/youtube-dl/issues/31530
+RUN pip install --upgrade --force-reinstall "git+https://github.com/ytdl-org/youtube-dl.git"
+
+COPY . .
+
+RUN python manage.py migrate
+
+ENTRYPOINT ["python", "manage.py", "runserver",  "--settings", "sampler_proj.settings.local"]
