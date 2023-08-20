@@ -1,9 +1,9 @@
 services:
   sampler_new:
-    image: barciewicz/sampler_new:latest
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.dev
+    # image: barciewicz/sampler_new:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - 8002:8000
     tty: true
