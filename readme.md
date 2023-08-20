@@ -1,4 +1,5 @@
 # YouTube Chop Chop
+![Alt text](/screenshots/app.png?raw=true)
 
 ## About
 
@@ -6,7 +7,7 @@ An app to sample audio off YouTube videos.
 
 ## Usage
 
-~~Live version [here](http://134.209.236.65/).~~
+Live version [here](http://46.101.156.79:8002/).
 
 1. Search for a YouTube video.
 2. Add a new sampler and drag the video to it.
@@ -28,5 +29,3 @@ Backend: Python & Django
 
 Frontend: vanilla JavaScript with WebAudio API.
 
-## Screenshot:
-![Alt text](/screenshots/app.png?raw=true)
