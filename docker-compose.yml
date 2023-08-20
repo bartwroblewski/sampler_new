@@ -4,5 +4,5 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - 8000:8000
+      - 8002:8000
     tty: true
